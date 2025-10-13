@@ -4,14 +4,14 @@
     "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\HandicraftShop_Prodject\\HandicraftShop_Prodject.csproj": {}
   },
   "projects": {
-    "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\HandicraftShop_Prodject\\HandicraftShop_Prodject.csproj": {
+    "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\BussinessObject\\BussinessObject.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\HandicraftShop_Prodject\\HandicraftShop_Prodject.csproj",
-        "projectName": "HandicraftShop_Prodject",
-        "projectPath": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\HandicraftShop_Prodject\\HandicraftShop_Prodject.csproj",
+        "projectUniqueName": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\BussinessObject\\BussinessObject.csproj",
+        "projectName": "BussinessObject",
+        "projectPath": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\BussinessObject\\BussinessObject.csproj",
         "packagesPath": "C:\\Users\\HAO\\.nuget\\packages\\",
-        "outputPath": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\HandicraftShop_Prodject\\obj\\",
+        "outputPath": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\BussinessObject\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -50,6 +50,165 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[9.0.9, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.9, )"
+            },
+            "Microsoft.Extensions.Configuration.Json": {
+              "target": "Package",
+              "version": "[9.0.9, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\DataAccessObject\\DataAccessObject.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\DataAccessObject\\DataAccessObject.csproj",
+        "projectName": "DataAccessObject",
+        "projectPath": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\DataAccessObject\\DataAccessObject.csproj",
+        "packagesPath": "C:\\Users\\HAO\\.nuget\\packages\\",
+        "outputPath": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\DataAccessObject\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\HAO\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\BussinessObject\\BussinessObject.csproj": {
+                "projectPath": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\BussinessObject\\BussinessObject.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\HandicraftShop_Prodject\\HandicraftShop_Prodject.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\HandicraftShop_Prodject\\HandicraftShop_Prodject.csproj",
+        "projectName": "HandicraftShop_Prodject",
+        "projectPath": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\HandicraftShop_Prodject\\HandicraftShop_Prodject.csproj",
+        "packagesPath": "C:\\Users\\HAO\\.nuget\\packages\\",
+        "outputPath": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\HandicraftShop_Prodject\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\HAO\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\BussinessObject\\BussinessObject.csproj": {
+                "projectPath": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\BussinessObject\\BussinessObject.csproj"
+              },
+              "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\Services\\Services.csproj": {
+                "projectPath": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\Services\\Services.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
           "imports": [
             "net461",
             "net462",
@@ -65,6 +224,152 @@
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
             },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\Repositories\\Repositories.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\Repositories\\Repositories.csproj",
+        "projectName": "Repositories",
+        "projectPath": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\Repositories\\Repositories.csproj",
+        "packagesPath": "C:\\Users\\HAO\\.nuget\\packages\\",
+        "outputPath": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\Repositories\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\HAO\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\BussinessObject\\BussinessObject.csproj": {
+                "projectPath": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\BussinessObject\\BussinessObject.csproj"
+              },
+              "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\DataAccessObject\\DataAccessObject.csproj": {
+                "projectPath": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\DataAccessObject\\DataAccessObject.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\Services\\Services.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\Services\\Services.csproj",
+        "projectName": "Services",
+        "projectPath": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\Services\\Services.csproj",
+        "packagesPath": "C:\\Users\\HAO\\.nuget\\packages\\",
+        "outputPath": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\Services\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\HAO\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\BussinessObject\\BussinessObject.csproj": {
+                "projectPath": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\BussinessObject\\BussinessObject.csproj"
+              },
+              "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\Repositories\\Repositories.csproj": {
+                "projectPath": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\Repositories\\Repositories.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
