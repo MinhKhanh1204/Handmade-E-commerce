@@ -163,6 +163,7 @@ public partial class MyStoreContext : DbContext
             entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
             entity.Property(e => e.CategoryName).HasMaxLength(100);
             entity.Property(e => e.Description).HasMaxLength(255);
+            entity.Property(e => e.Status).HasMaxLength(100);
         });
 
         modelBuilder.Entity<Customer>(entity =>

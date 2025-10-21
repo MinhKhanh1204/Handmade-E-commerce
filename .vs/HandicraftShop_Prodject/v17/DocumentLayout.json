@@ -3,24 +3,28 @@
   "WorkspaceRootPath": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{99EA8CC2-5DAB-4700-B0DF-7B5299F44D50}|DTO\\DTO.csproj|d:\\fpt_courses\\2025_fa25\\prn222\\project\\handicraftshop_prodject\\dto\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{99EA8CC2-5DAB-4700-B0DF-7B5299F44D50}|DTO\\DTO.csproj|solutionrelative:dto\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{730DAC6A-9462-4E12-A607-BD1B1AB6FCE7}|BussinessObject\\BussinessObject.csproj|d:\\fpt_courses\\2025_fa25\\prn222\\project\\handicraftshop_prodject\\bussinessobject\\staff.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{730DAC6A-9462-4E12-A607-BD1B1AB6FCE7}|BussinessObject\\BussinessObject.csproj|solutionrelative:bussinessobject\\staff.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{730DAC6A-9462-4E12-A607-BD1B1AB6FCE7}|BussinessObject\\BussinessObject.csproj|d:\\fpt_courses\\2025_fa25\\prn222\\project\\handicraftshop_prodject\\bussinessobject\\role.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{730DAC6A-9462-4E12-A607-BD1B1AB6FCE7}|BussinessObject\\BussinessObject.csproj|solutionrelative:bussinessobject\\role.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{730DAC6A-9462-4E12-A607-BD1B1AB6FCE7}|BussinessObject\\BussinessObject.csproj|d:\\fpt_courses\\2025_fa25\\prn222\\project\\handicraftshop_prodject\\bussinessobject\\voucher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{730DAC6A-9462-4E12-A607-BD1B1AB6FCE7}|BussinessObject\\BussinessObject.csproj|solutionrelative:bussinessobject\\voucher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{730DAC6A-9462-4E12-A607-BD1B1AB6FCE7}|BussinessObject\\BussinessObject.csproj|d:\\fpt_courses\\2025_fa25\\prn222\\project\\handicraftshop_prodject\\bussinessobject\\bussinessobject.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{730DAC6A-9462-4E12-A607-BD1B1AB6FCE7}|BussinessObject\\BussinessObject.csproj|solutionrelative:bussinessobject\\bussinessobject.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{E06B07CF-B06E-44BD-B69F-02FCF803394F}|DataAccessObject\\DataAccessObject.csproj|d:\\fpt_courses\\2025_fa25\\prn222\\project\\handicraftshop_prodject\\dataaccessobject\\mystorecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E06B07CF-B06E-44BD-B69F-02FCF803394F}|DataAccessObject\\DataAccessObject.csproj|solutionrelative:dataaccessobject\\mystorecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{730DAC6A-9462-4E12-A607-BD1B1AB6FCE7}|BussinessObject\\BussinessObject.csproj|d:\\fpt_courses\\2025_fa25\\prn222\\project\\handicraftshop_prodject\\bussinessobject\\article.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{730DAC6A-9462-4E12-A607-BD1B1AB6FCE7}|BussinessObject\\BussinessObject.csproj|solutionrelative:bussinessobject\\article.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{730DAC6A-9462-4E12-A607-BD1B1AB6FCE7}|BussinessObject\\BussinessObject.csproj|d:\\fpt_courses\\2025_fa25\\prn222\\project\\handicraftshop_prodject\\bussinessobject\\account.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{730DAC6A-9462-4E12-A607-BD1B1AB6FCE7}|BussinessObject\\BussinessObject.csproj|solutionrelative:bussinessobject\\account.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{730DAC6A-9462-4E12-A607-BD1B1AB6FCE7}|BussinessObject\\BussinessObject.csproj|d:\\fpt_courses\\2025_fa25\\prn222\\project\\handicraftshop_prodject\\bussinessobject\\bussinessobject.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{730DAC6A-9462-4E12-A607-BD1B1AB6FCE7}|BussinessObject\\BussinessObject.csproj|solutionrelative:bussinessobject\\bussinessobject.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+      "AbsoluteMoniker": "D:0:0:{99EA8CC2-5DAB-4700-B0DF-7B5299F44D50}|DTO\\DTO.csproj|d:\\fpt_courses\\2025_fa25\\prn222\\project\\handicraftshop_prodject\\dto\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{99EA8CC2-5DAB-4700-B0DF-7B5299F44D50}|DTO\\DTO.csproj|solutionrelative:dto\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{AA3528C6-5C7E-4DD6-BB93-E21DE95754F4}|Repositories\\Repositories.csproj|d:\\fpt_courses\\2025_fa25\\prn222\\project\\handicraftshop_prodject\\repositories\\repositories.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
@@ -71,6 +75,58 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "Staff.cs",
+              "DocumentMoniker": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\BussinessObject\\Staff.cs",
+              "RelativeDocumentMoniker": "BussinessObject\\Staff.cs",
+              "ToolTip": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\BussinessObject\\Staff.cs",
+              "RelativeToolTip": "BussinessObject\\Staff.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAA5wAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-21T16:37:01.88Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Role.cs",
+              "DocumentMoniker": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\BussinessObject\\Role.cs",
+              "RelativeDocumentMoniker": "BussinessObject\\Role.cs",
+              "ToolTip": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\BussinessObject\\Role.cs",
+              "RelativeToolTip": "BussinessObject\\Role.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-21T16:37:01.249Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Voucher.cs",
+              "DocumentMoniker": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\BussinessObject\\Voucher.cs",
+              "RelativeDocumentMoniker": "BussinessObject\\Voucher.cs",
+              "ToolTip": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\BussinessObject\\Voucher.cs",
+              "RelativeToolTip": "BussinessObject\\Voucher.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAxwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-21T16:36:53.174Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "MyStoreContext.cs",
+              "DocumentMoniker": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\DataAccessObject\\MyStoreContext.cs",
+              "RelativeDocumentMoniker": "DataAccessObject\\MyStoreContext.cs",
+              "ToolTip": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\DataAccessObject\\MyStoreContext.cs",
+              "RelativeToolTip": "DataAccessObject\\MyStoreContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-21T16:35:47.041Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "Class1.cs",
               "DocumentMoniker": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\DTO\\Class1.cs",
               "RelativeDocumentMoniker": "DTO\\Class1.cs",
@@ -83,44 +139,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "MyStoreContext.cs",
-              "DocumentMoniker": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\DataAccessObject\\MyStoreContext.cs",
-              "RelativeDocumentMoniker": "DataAccessObject\\MyStoreContext.cs",
-              "ToolTip": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\DataAccessObject\\MyStoreContext.cs",
-              "RelativeToolTip": "DataAccessObject\\MyStoreContext.cs",
-              "ViewState": "AgIAALMAAAAAAAAAAAAgwAMAAAAWAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-21T16:21:46.081Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Article.cs",
-              "DocumentMoniker": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\BussinessObject\\Article.cs",
-              "RelativeDocumentMoniker": "BussinessObject\\Article.cs",
-              "ToolTip": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\BussinessObject\\Article.cs",
-              "RelativeToolTip": "BussinessObject\\Article.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAA1wAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-21T16:21:29.857Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "Account.cs",
-              "DocumentMoniker": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\BussinessObject\\Account.cs",
-              "RelativeDocumentMoniker": "BussinessObject\\Account.cs",
-              "ToolTip": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\BussinessObject\\Account.cs",
-              "RelativeToolTip": "BussinessObject\\Account.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAA1wAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-21T16:21:22.854Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
               "Title": "BussinessObject.csproj",
               "DocumentMoniker": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\BussinessObject\\BussinessObject.csproj",
               "RelativeDocumentMoniker": "BussinessObject\\BussinessObject.csproj",
@@ -128,11 +147,12 @@
               "RelativeToolTip": "BussinessObject\\BussinessObject.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-10-13T09:15:08.426Z"
+              "WhenOpened": "2025-10-13T09:15:08.426Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "Repositories.csproj",
               "DocumentMoniker": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\Repositories\\Repositories.csproj",
               "RelativeDocumentMoniker": "Repositories\\Repositories.csproj",
@@ -144,7 +164,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "Class1.cs",
               "DocumentMoniker": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\Services\\Class1.cs",
               "RelativeDocumentMoniker": "Services\\Class1.cs",
@@ -156,7 +176,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "Class1.cs",
               "DocumentMoniker": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\Repositories\\Class1.cs",
               "RelativeDocumentMoniker": "Repositories\\Class1.cs",
@@ -168,7 +188,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "HandicraftShop_Prodject.csproj",
               "DocumentMoniker": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\HandicraftShop_Prodject\\HandicraftShop_Prodject.csproj",
               "RelativeDocumentMoniker": "HandicraftShop_Prodject\\HandicraftShop_Prodject.csproj",
