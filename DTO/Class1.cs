@@ -1,4 +1,4 @@
-﻿namespace BussinessObject
+﻿namespace DTO
 {
     public class Class1
     {

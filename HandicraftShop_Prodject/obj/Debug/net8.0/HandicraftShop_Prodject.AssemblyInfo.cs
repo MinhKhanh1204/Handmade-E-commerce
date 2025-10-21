@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HandicraftShop_Prodject")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e924c12f6e44e68789515d0bc8b24289f783a846")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+810f49225ed87669faf1e56e001731dd1c6be6d8")]
 [assembly: System.Reflection.AssemblyProductAttribute("HandicraftShop_Prodject")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HandicraftShop_Prodject")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
