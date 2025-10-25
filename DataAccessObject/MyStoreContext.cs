@@ -4,7 +4,7 @@ using BussinessObject;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace BussinessAccessObject;
+namespace DataAccessObject;
 
 public partial class MyStoreContext : DbContext
 {
