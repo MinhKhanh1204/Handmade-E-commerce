@@ -1,0 +1,96 @@
+# ===============================
+# Build results
+# ===============================
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+artifacts/
+publish/
+
+# ===============================
+# User-specific files
+# ===============================
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.DotSettings.user
+
+# ===============================
+# Visual Studio / IDE
+# ===============================
+.vs/             # Visual Studio temporary files
+.vscode/         # VSCode settings
+.history/        # VSCode history
+.idea/           # JetBrains Rider
+*.sln.iml
+
+# ===============================
+# ASP.NET / Web
+# ===============================
+ScaffoldingReadMe.txt
+wwwroot/lib/
+wwwroot/node_modules/
+project.lock.json
+project.fragment.lock.json
+
+# ===============================
+# NuGet
+# ===============================
+*.nupkg
+**/packages/*
+!**/packages/build/
+!**/packages/repositories.config
+
+# ===============================
+# OS-specific files
+# ===============================
+.DS_Store
+*.swp
+*.swo
+Thumbs.db
+
+# ===============================
+# Backup / temporary / logs
+# ===============================
+*.bak
+*.tmp
+*.log
+
+# ===============================
+# Environment / secrets
+# ===============================
+.env
+.env.*
+secrets.json
+appsettings.Development.json
+appsettings.Local.json
+appsettings.*.json
+
+# ===============================
+# Resharper
+# ===============================
+_ReSharper*/
+*.[Rr]e[Ss]harper
+
+# ===============================
+# Entity Framework
+# ===============================
+Migrations/
+
+# ===============================
+# Database / coverage
+# ===============================
+*.dbmdl
+*.snupkg
+*.coverage
+*.coveragexml
+
+# ===============================
+# Publish
+# ===============================
+*.Publish.xml
+*.pubxml
+*.publishproj
