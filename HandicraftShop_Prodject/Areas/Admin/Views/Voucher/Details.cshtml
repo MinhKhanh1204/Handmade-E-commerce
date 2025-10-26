@@ -1,0 +1,132 @@
+@model HandicraftShop_Prodject.Models.VoucherDetailsVm
+@{
+    ViewData["Title"] = "Voucher Details";
+}
+
+<div class="pagetitle">
+    <h1>Voucher Details</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard", new { area = "Admin" })">Home</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Voucher", new { area = "Admin" })">Voucher Management</a></li>
+            <li class="breadcrumb-item active">Details</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
+
+<section class="section">
+    <div class="row">
+        <div class="col-lg-12">
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Voucher Information</h5>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Voucher Name</label>
+                            <p class="form-control-plaintext">@Model.VoucherName</p>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Voucher Code</label>
+                            <p class="form-control-plaintext"><strong>@Model.Code</strong></p>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-bold">Description</label>
+                            <p class="form-control-plaintext">@(Model.Description ?? "No description")</p>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Discount Percentage</label>
+                            <p class="form-control-plaintext">@Model.DiscountPercentage.ToString("N2")%</p>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Max Reducing Amount</label>
+                            <p class="form-control-plaintext">@Model.MaxReducing.ToString("C")</p>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Quantity</label>
+                            <p class="form-control-plaintext">@Model.Quantity</p>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Expiry Date</label>
+                            <p class="form-control-plaintext">
+                                @Model.ExpiryDate.ToString("dd/MM/yyyy HH:mm")
+                                @if (Model.IsExpired)
+                                {
+                                    <span class="badge bg-danger ms-2">Expired</span>
+                                }
+                            </p>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Min Order Value</label>
+                            <p class="form-control-plaintext">@Model.MinOrderValue.ToString("C")</p>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Max Usage Per User</label>
+                            <p class="form-control-plaintext">@Model.MaxUsagePerUser</p>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Usage Count</label>
+                            <p class="form-control-plaintext">@Model.UsageCount times</p>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Status</label>
+                            <p class="form-control-plaintext">
+                                @if (Model.IsActive)
+                                {
+                                    <span class="badge bg-success">Active</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Inactive</span>
+                                }
+                            </p>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Availability</label>
+                            <p class="form-control-plaintext">
+                                @if (Model.IsActive && !Model.IsExpired)
+                                {
+                                    <span class="badge bg-success">Available</span>
+                                }
+                                else if (Model.IsExpired)
+                                {
+                                    <span class="badge bg-danger">Expired</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Inactive</span>
+                                }
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <a href="@Url.Action("Edit", "Voucher", new { area = "Admin", id = Model.VoucherId })" class="btn btn-warning">
+                            <i class="bi bi-pencil"></i> Edit
+                        </a>
+                        <a href="@Url.Action("Delete", "Voucher", new { area = "Admin", id = Model.VoucherId })" class="btn btn-danger">
+                            <i class="bi bi-trash"></i> Delete
+                        </a>
+                        <a href="@Url.Action("Index", "Voucher", new { area = "Admin" })" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Back to List
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

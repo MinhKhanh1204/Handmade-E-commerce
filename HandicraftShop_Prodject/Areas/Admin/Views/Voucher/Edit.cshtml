@@ -1,0 +1,171 @@
+@model HandicraftShop_Prodject.Models.VoucherEditVm
+@{
+    ViewData["Title"] = "Edit Voucher";
+}
+
+<div class="pagetitle">
+    <h1>Edit Voucher</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard", new { area = "Admin" })">Home</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Voucher", new { area = "Admin" })">Voucher Management</a></li>
+            <li class="breadcrumb-item active">Edit</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
+
+<section class="section">
+    <div class="row">
+        <div class="col-lg-12">
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Voucher Information</h5>
+
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            @TempData["ErrorMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <!-- Edit Form -->
+                    <form asp-action="Edit" method="post" class="row g-3">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input asp-for="VoucherId" type="hidden" />
+
+                        <div class="col-md-6">
+                            <label asp-for="VoucherName" class="form-label">Voucher Name *</label>
+                            <input asp-for="VoucherName" class="form-control" />
+                            <span asp-validation-for="VoucherName" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Code" class="form-label">Mã Voucher *</label>
+                            <input asp-for="Code" class="form-control" id="voucherCode" placeholder="VD: WELCOME10" />
+                            <span asp-validation-for="Code" class="text-danger"></span>
+                            <small class="form-text text-muted">Chỉ được chứa chữ cái A-Z, số 0-9, dấu gạch ngang (-) hoặc gạch dưới (_)</small>
+                        </div>
+
+                        <div class="col-12">
+                            <label asp-for="Description" class="form-label">Description</label>
+                            <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label asp-for="DiscountPercentage" class="form-label">Discount Percentage (%) *</label>
+                            <input asp-for="DiscountPercentage" class="form-control" type="number" step="0.01" min="0" max="100" />
+                            <span asp-validation-for="DiscountPercentage" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label asp-for="MaxReducing" class="form-label">Max Reducing Amount *</label>
+                            <input asp-for="MaxReducing" class="form-control" type="number" step="0.01" min="0" />
+                            <span asp-validation-for="MaxReducing" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label asp-for="Quantity" class="form-label">Quantity *</label>
+                            <input asp-for="Quantity" class="form-control" type="number" min="0" />
+                            <span asp-validation-for="Quantity" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="ExpiryDate" class="form-label">Expiry Date *</label>
+                            <input asp-for="ExpiryDate" 
+                                   class="form-control" 
+                                   type="date" 
+                                   id="ExpiryDate"
+                                   value="@(Model.ExpiryDate.ToString("yyyy-MM-dd"))" 
+                                   min="@(DateTime.Today.ToString("yyyy-MM-dd"))" />
+                            <span asp-validation-for="ExpiryDate" class="text-danger"></span>
+                            <small class="form-text text-muted">Chỉ được chọn ngày từ hôm nay trở đi</small>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="MinOrderValue" class="form-label">Min Order Value *</label>
+                            <input asp-for="MinOrderValue" class="form-control" type="number" step="0.01" min="0" />
+                            <span asp-validation-for="MinOrderValue" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="MaxUsagePerUser" class="form-label">Max Usage Per User *</label>
+                            <input asp-for="MaxUsagePerUser" class="form-control" type="number" min="0" />
+                            <span asp-validation-for="MaxUsagePerUser" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-check mt-4">
+                                <input asp-for="IsActive" class="form-check-input" type="checkbox" />
+                                <label asp-for="IsActive" class="form-check-label">Active</label>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="alert alert-info">
+                                <strong>Usage Count:</strong> @Model.UsageCount times
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Update Voucher</button>
+                            <a href="@Url.Action("Index", "Voucher", new { area = "Admin" })" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle voucher code input
+            const codeInput = document.getElementById('voucherCode');
+            
+            if (codeInput) {
+                // Auto uppercase and remove spaces
+                codeInput.addEventListener('input', function(e) {
+                    let value = e.target.value;
+                    
+                    // Remove spaces and convert to uppercase
+                    value = value.replace(/\s/g, '').toUpperCase();
+                    
+                    // Only allow A-Z, 0-9, -, _
+                    value = value.replace(/[^A-Z0-9_-]/g, '');
+                    
+                    e.target.value = value;
+                });
+                
+                // Prevent spaces on paste
+                codeInput.addEventListener('paste', function(e) {
+                    setTimeout(() => {
+                        let value = e.target.value;
+                        value = value.replace(/\s/g, '').toUpperCase();
+                        value = value.replace(/[^A-Z0-9_-]/g, '');
+                        e.target.value = value;
+                    }, 0);
+                });
+            }
+
+            // Handle expiry date fallback for DateTime.MinValue
+            const expiryDateInput = document.getElementById('ExpiryDate');
+            if (expiryDateInput) {
+                if (!expiryDateInput.value || 
+                    expiryDateInput.value.startsWith('0001') || 
+                    expiryDateInput.value.startsWith('0002')) {
+                    const tomorrow = new Date();
+                    tomorrow.setDate(tomorrow.getDate() + 1);
+                    expiryDateInput.value = tomorrow.toISOString().split('T')[0];
+                }
+            }
+        });
+    </script>
+}

@@ -1,0 +1,287 @@
+@model HandicraftShop_Prodject.Models.PagedList<BussinessObject.Voucher>
+@{
+    ViewData["Title"] = "Voucher Management";
+    var searchVm = ViewBag.SearchVm as HandicraftShop_Prodject.Models.VoucherSearchVm ?? new HandicraftShop_Prodject.Models.VoucherSearchVm();
+}
+
+<div class="pagetitle">
+    <h1>Voucher Management</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard", new { area = "Admin" })">Home</a></li>
+            <li class="breadcrumb-item active">Voucher Management</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
+
+<section class="section">
+    <div class="row">
+        <div class="col-lg-12">
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Search Vouchers</h5>
+
+                    <!-- Search Form -->
+                    <form method="get" class="row g-3">
+                        <!-- Row 1: Basic Search -->
+                        <div class="col-md-4">
+                            <label for="Q" class="form-label">
+                                <i class="bi bi-search"></i> Search Keywords
+                            </label>
+                            <input type="text" class="form-control" id="Q" name="Q" value="@searchVm.Q" placeholder="Search by name, code, or description...">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="IsActive" class="form-label">
+                                <i class="bi bi-toggle-on"></i> Status
+                            </label>
+                            <select class="form-select" id="IsActive" name="IsActive">
+                                <option value="">All Status</option>
+                                <option value="true" selected="@(searchVm.IsActive == true)">Active Only</option>
+                                <option value="false" selected="@(searchVm.IsActive == false)">Inactive Only</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="SortBy" class="form-label">
+                                <i class="bi bi-sort-down"></i> Sort By
+                            </label>
+                            <select class="form-select" id="SortBy" name="SortBy">
+                                <option value="">Default Order</option>
+                                <option value="Name" selected="@(searchVm.SortBy == "Name")">Voucher Name</option>
+                                <option value="Code" selected="@(searchVm.SortBy == "Code")">Voucher Code</option>
+                                <option value="ExpiryDate" selected="@(searchVm.SortBy == "ExpiryDate")">Expiry Date</option>
+                                <option value="DiscountPercentage" selected="@(searchVm.SortBy == "DiscountPercentage")">Discount Percentage</option>
+                                <option value="IsActive" selected="@(searchVm.SortBy == "IsActive")">Status</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="PageSize" class="form-label">
+                                <i class="bi bi-list-ol"></i> Items Per Page
+                            </label>
+                            <select class="form-select" id="PageSize" name="PageSize">
+                                <option value="10" selected="@(searchVm.PageSize == 10)">10 items</option>
+                                <option value="25" selected="@(searchVm.PageSize == 25)">25 items</option>
+                                <option value="50" selected="@(searchVm.PageSize == 50)">50 items</option>
+                            </select>
+                        </div>
+
+                        <!-- Row 2: Date Range -->
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                <i class="bi bi-calendar-range"></i> Expiry Date Range
+                            </label>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <input type="date" class="form-control" id="ExpireFrom" name="ExpireFrom" value="@searchVm.ExpireFrom?.ToString("yyyy-MM-dd")" placeholder="From date">
+                                </div>
+                                <div class="col-6">
+                                    <input type="date" class="form-control" id="ExpireTo" name="ExpireTo" value="@searchVm.ExpireTo?.ToString("yyyy-MM-dd")" placeholder="To date">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Row 2: Order Value Range -->
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                <i class="bi bi-currency-dollar"></i> Minimum Order Value Range
+                            </label>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <input type="number" class="form-control" id="MinOrderFrom" name="MinOrderFrom" value="@searchVm.MinOrderFrom" step="0.01" placeholder="From amount">
+                                </div>
+                                <div class="col-6">
+                                    <input type="number" class="form-control" id="MinOrderTo" name="MinOrderTo" value="@searchVm.MinOrderTo" step="0.01" placeholder="To amount">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Row 3: Action Buttons -->
+                        <div class="col-12">
+                            <div class="d-flex gap-2 justify-content-end">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-search"></i> Search Vouchers
+                                </button>
+                                <a href="@Url.Action("Index", "Voucher", new { area = "Admin" })" class="btn btn-outline-secondary">
+                                    <i class="bi bi-arrow-clockwise"></i> Clear Filters
+                                </a>
+                            </div>
+                        </div>
+                        <input type="hidden" name="Page" value="1">
+                    </form>
+
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title">Voucher List</h5>
+                        <a href="@Url.Action("Create", "Voucher", new { area = "Admin" })" class="btn btn-primary">
+                            <i class="bi bi-plus-circle"></i> Add New Voucher
+                        </a>
+                    </div>
+
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            @TempData["SuccessMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            @TempData["ErrorMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <!-- Table with hoverable rows -->
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">Code</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Discount %</th>
+                                <th scope="col">Max Reducing</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Usage Count</th>
+                                <th scope="col">Expiry Date</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Min Order</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Items.Any())
+                            {
+                                @foreach (var voucher in Model.Items)
+                                {
+                                    <tr>
+                                        <td><strong>@voucher.Code</strong></td>
+                                        <td>@voucher.VoucherName</td>
+                                        <td>@voucher.DiscountPercentage?.ToString("N2")%</td>
+                                        <td>@voucher.MaxReducing?.ToString("C")</td>
+                                        <td>@voucher.Quantity</td>
+                                        <td>@voucher.UsageCount</td>
+                                        <td>
+                                            @voucher.ExpiryDate?.ToString("dd/MM/yyyy")
+                                            @if (voucher.ExpiryDate < DateOnly.FromDateTime(DateTime.Now))
+                                            {
+                                                <span class="badge bg-danger ms-1">Expired</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (voucher.IsActive == true)
+                                            {
+                                                <span class="badge bg-success">Active</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-danger">Inactive</span>
+                                            }
+                                        </td>
+                                        <td>@voucher.MinOrderValue?.ToString("C")</td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <a href="@Url.Action("Details", "Voucher", new { area = "Admin", id = voucher.VoucherId })" 
+                                                   class="btn btn-outline-info btn-sm" title="Details">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                                <a href="@Url.Action("Edit", "Voucher", new { area = "Admin", id = voucher.VoucherId })" 
+                                                   class="btn btn-outline-warning btn-sm" title="Edit">
+                                                    <i class="bi bi-pencil"></i>
+                                                </a>
+                                                <a href="@Url.Action("Delete", "Voucher", new { area = "Admin", id = voucher.VoucherId })" 
+                                                   class="btn btn-outline-danger btn-sm" title="Delete">
+                                                    <i class="bi bi-trash"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="10" class="text-center">No vouchers found.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <!-- Pagination -->
+                    @if (Model.TotalPages > 1)
+                    {
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                @if (Model.HasPrevious)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("Index", "Voucher", new { 
+                                            area = "Admin", 
+                                            Q = searchVm.Q, 
+                                            IsActive = searchVm.IsActive, 
+                                            ExpireFrom = searchVm.ExpireFrom?.ToString("yyyy-MM-dd"), 
+                                            ExpireTo = searchVm.ExpireTo?.ToString("yyyy-MM-dd"), 
+                                            MinOrderFrom = searchVm.MinOrderFrom, 
+                                            MinOrderTo = searchVm.MinOrderTo, 
+                                            Page = Model.Page - 1, 
+                                            PageSize = searchVm.PageSize, 
+                                            SortBy = searchVm.SortBy
+                                        })">Previous</a>
+                                    </li>
+                                }
+
+                                @for (int i = Math.Max(1, Model.Page - 2); i <= Math.Min(Model.TotalPages, Model.Page + 2); i++)
+                                {
+                                    <li class="page-item @(i == Model.Page ? "active" : "")">
+                                        <a class="page-link" href="@Url.Action("Index", "Voucher", new { 
+                                            area = "Admin", 
+                                            Q = searchVm.Q, 
+                                            IsActive = searchVm.IsActive, 
+                                            ExpireFrom = searchVm.ExpireFrom?.ToString("yyyy-MM-dd"), 
+                                            ExpireTo = searchVm.ExpireTo?.ToString("yyyy-MM-dd"), 
+                                            MinOrderFrom = searchVm.MinOrderFrom, 
+                                            MinOrderTo = searchVm.MinOrderTo, 
+                                            Page = i, 
+                                            PageSize = searchVm.PageSize, 
+                                            SortBy = searchVm.SortBy
+                                        })">@i</a>
+                                    </li>
+                                }
+
+                                @if (Model.HasNext)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("Index", "Voucher", new { 
+                                            area = "Admin", 
+                                            Q = searchVm.Q, 
+                                            IsActive = searchVm.IsActive, 
+                                            ExpireFrom = searchVm.ExpireFrom?.ToString("yyyy-MM-dd"), 
+                                            ExpireTo = searchVm.ExpireTo?.ToString("yyyy-MM-dd"), 
+                                            MinOrderFrom = searchVm.MinOrderFrom, 
+                                            MinOrderTo = searchVm.MinOrderTo, 
+                                            Page = Model.Page + 1, 
+                                            PageSize = searchVm.PageSize, 
+                                            SortBy = searchVm.SortBy
+                                        })">Next</a>
+                                    </li>
+                                }
+                            </ul>
+                        </nav>
+                    }
+
+                    <div class="text-center">
+                        <small class="text-muted">
+                            Showing @((Model.Page - 1) * Model.PageSize + 1) to @(Math.Min(Model.Page * Model.PageSize, Model.Total)) of @Model.Total entries
+                        </small>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

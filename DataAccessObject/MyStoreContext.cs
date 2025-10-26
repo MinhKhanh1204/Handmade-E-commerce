@@ -424,10 +424,15 @@ public partial class MyStoreContext : DbContext
 
             entity.HasIndex(e => e.VoucherName, "UQ__VOUCHERS__91A6F6294AAA9266").IsUnique();
 
+            // Create unique index for Code (case-insensitive)
+            entity.HasIndex(v => v.Code)
+                .IsUnique()
+                .HasDatabaseName("UQ_Vouchers_Code");
+
             entity.Property(e => e.VoucherId).HasColumnName("VoucherID");
-            entity.Property(e => e.Code).HasMaxLength(50);
+            entity.Property(e => e.Code).HasMaxLength(40);
             entity.Property(e => e.Description).HasMaxLength(255);
-            entity.Property(e => e.DiscountPercentage).HasColumnType("decimal(10, 2)");
+            entity.Property(e => e.DiscountPercentage).HasColumnType("decimal(5, 2)");
             entity.Property(e => e.IsActive).HasDefaultValue(true);
             entity.Property(e => e.MaxReducing).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.MinOrderValue).HasColumnType("decimal(18, 2)");
