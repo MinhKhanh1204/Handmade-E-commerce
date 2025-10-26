@@ -79,5 +79,5 @@ namespace HandicraftShop_Prodject.Controllers
 			HttpContext.Session.Clear();
 			return RedirectToAction("Login");
 		}
-	}
+    }
 }
