@@ -10,5 +10,7 @@ namespace Repositories
     public interface IAccountRepository
     {
         Account GetByEmail(string email);
-    }
+		void Add(Account account);
+		void SaveChanges();
+	}
 }

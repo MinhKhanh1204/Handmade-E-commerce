@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -133,6 +135,9 @@
                             <i class="bi bi-search"></i>
                         </button>
 
+                        @{
+                            var username = HttpContextAccessor.HttpContext?.Session.GetString("Username");
+                        }
                         <!-- Account -->
                         <div class="dropdown account-dropdown">
                             <button class="header-action-btn" data-bs-toggle="dropdown">
@@ -141,7 +146,10 @@
                             <div class="dropdown-menu">
                                 <div class="dropdown-header">
                                     <h6>Welcome to <span class="sitename">eStore</span></h6>
-                                    <p class="mb-0">Access account &amp; manage orders</p>
+                                    @if (!string.IsNullOrEmpty(username))
+                                    {
+                                        <p class="mb-0">Hello, @username</p>
+                                    }
                                 </div>
                                 <div class="dropdown-body">
                                     <a class="dropdown-item d-flex align-items-center" href="account.html">
@@ -162,8 +170,15 @@
                                     </a>
                                 </div>
                                 <div class="dropdown-footer">
-                                    <a href="/Auth/Login" class="btn btn-primary w-100 mb-2">Sign In</a>
-                                    <a href="/Auth/Login" class="btn btn-outline-primary w-100">Register</a>
+                                    @if (!string.IsNullOrEmpty(username))
+                                    {
+                                        <a href="/Auth/Logout" class="btn btn-outline-primary w-100">Logout</a>
+                                    }
+                                    else
+                                    {
+                                        <a href="/Auth/Login" class="btn btn-primary w-100 mb-2">Sign In</a>
+                                        <a href="/Auth/Login" class="btn btn-outline-primary w-100">Register</a>
+                                    }
                                 </div>
                             </div>
                         </div>
