@@ -57,5 +57,10 @@ namespace Repositories
 		{
 			_context.SaveChanges();
 		}
+
+		public void AddCustomer(Customer customer)
+		{
+			_context.Customers.Add(customer);
+		}
 	}
 }

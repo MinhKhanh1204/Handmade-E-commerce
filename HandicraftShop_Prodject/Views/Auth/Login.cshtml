@@ -86,11 +86,55 @@
 										</div>
 									</div>
 
+									<div class="col-sm-12">
+										<div class="mb-4">
+											<label for="login-register-reg-firstname" class="form-label">Full Name</label>
+											<input type="text" asp-for="Register.FullName" class="form-control" id="login-register-reg-firstname" required="">
+											<span asp-validation-for="Register.FullName" class="text-danger"></span>
+										</div>
+									</div>
+
+									<div class="col-sm-12">
+										<div class="mb-4">
+											<label for="login-register-reg-firstname" class="form-label">Date of birth</label>
+											<input type="date" asp-for="Register.DateOfBirth" class="form-control" id="login-register-reg-firstname" required="">
+											<span asp-validation-for="Register.DateOfBirth" class="text-danger"></span>
+										</div>
+									</div>
+
+									<div class="col-sm-12">
+										<div class="mb-4">
+											<label for="login-register-reg-firstname" class="form-label">Gender</label>
+											<select asp-for="Register.Gender" class="form-control">
+												<option>Male</option>
+												<option>Female</option>
+												<option>Other</option>
+											</select>
+											<span asp-validation-for="Register.Gender" class="text-danger"></span>
+										</div>
+									</div>
+
+									<div class="col-sm-12">
+										<div class="mb-4">
+											<label for="login-register-reg-firstname" class="form-label">Address</label>
+											<input type="text" asp-for="Register.Address" class="form-control" id="login-register-reg-firstname" required="">
+											<span asp-validation-for="Register.Address" class="text-danger"></span>
+										</div>
+									</div>
+
 									<div class="col-12">
 										<div class="mb-4">
 											<label for="login-register-reg-email" class="form-label">Email address</label>
 											<input type="email" asp-for="Register.Email" class="form-control" id="login-register-reg-email" required="">
 											<span asp-validation-for="Register.Email" class="text-danger"></span>
+										</div>
+									</div>
+
+									<div class="col-sm-12">
+										<div class="mb-4">
+											<label for="login-register-reg-firstname" class="form-label">Phone</label>
+											<input type="text" asp-for="Register.Phone" class="form-control" id="login-register-reg-firstname" required="">
+											<span asp-validation-for="Register.Phone" class="text-danger"></span>
 										</div>
 									</div>
 

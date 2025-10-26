@@ -11,6 +11,7 @@ namespace Repositories
     {
         Account GetByEmail(string email);
 		void Add(Account account);
+		void AddCustomer(Customer customer);
 		void SaveChanges();
 	}
 }
