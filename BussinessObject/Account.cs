@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BussinessObject.Models;
+using System;
 using System.Collections.Generic;
 
 namespace BussinessObject;
@@ -26,4 +27,6 @@ public partial class Account
     public virtual Customer? Customer { get; set; }
 
     public virtual Staff? Staff { get; set; }
+
+    public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
 }
