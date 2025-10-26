@@ -1153,11 +1153,25 @@
           "bin/placeholder/DataAccessObject.dll": {}
         }
       },
+      "DTO/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "BussinessObject": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/DTO.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/DTO.dll": {}
+        }
+      },
       "Repositories/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
           "BussinessObject": "1.0.0",
+          "DTO": "1.0.0",
           "DataAccessObject": "1.0.0"
         },
         "compile": {
@@ -1172,6 +1186,7 @@
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
           "BussinessObject": "1.0.0",
+          "DTO": "1.0.0",
           "Repositories": "1.0.0"
         },
         "compile": {
@@ -3146,6 +3161,11 @@
       "path": "../DataAccessObject/DataAccessObject.csproj",
       "msbuildProject": "../DataAccessObject/DataAccessObject.csproj"
     },
+    "DTO/1.0.0": {
+      "type": "project",
+      "path": "../DTO/DTO.csproj",
+      "msbuildProject": "../DTO/DTO.csproj"
+    },
     "Repositories/1.0.0": {
       "type": "project",
       "path": "../Repositories/Repositories.csproj",
@@ -3160,27 +3180,29 @@
   "projectFileDependencyGroups": {
     "net8.0": [
       "BussinessObject >= 1.0.0",
+      "DTO >= 1.0.0",
+      "Repositories >= 1.0.0",
       "Services >= 1.0.0"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\HAO\\.nuget\\packages\\": {},
+    "C:\\Users\\ADMIN\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\HandicraftShop_Prodject\\HandicraftShop_Prodject.csproj",
+      "projectUniqueName": "C:\\Users\\ADMIN\\source\\repos\\Handmade-E-commerce\\HandicraftShop_Prodject\\HandicraftShop_Prodject.csproj",
       "projectName": "HandicraftShop_Prodject",
-      "projectPath": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\HandicraftShop_Prodject\\HandicraftShop_Prodject.csproj",
-      "packagesPath": "C:\\Users\\HAO\\.nuget\\packages\\",
-      "outputPath": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\HandicraftShop_Prodject\\obj\\",
+      "projectPath": "C:\\Users\\ADMIN\\source\\repos\\Handmade-E-commerce\\HandicraftShop_Prodject\\HandicraftShop_Prodject.csproj",
+      "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\ADMIN\\source\\repos\\Handmade-E-commerce\\HandicraftShop_Prodject\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\HAO\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -3189,18 +3211,23 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\BussinessObject\\BussinessObject.csproj": {
-              "projectPath": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\BussinessObject\\BussinessObject.csproj"
+            "C:\\Users\\ADMIN\\source\\repos\\Handmade-E-commerce\\BussinessObject\\BussinessObject.csproj": {
+              "projectPath": "C:\\Users\\ADMIN\\source\\repos\\Handmade-E-commerce\\BussinessObject\\BussinessObject.csproj"
             },
-            "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\Services\\Services.csproj": {
-              "projectPath": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\Services\\Services.csproj"
+            "C:\\Users\\ADMIN\\source\\repos\\Handmade-E-commerce\\DTO\\DTO.csproj": {
+              "projectPath": "C:\\Users\\ADMIN\\source\\repos\\Handmade-E-commerce\\DTO\\DTO.csproj"
+            },
+            "C:\\Users\\ADMIN\\source\\repos\\Handmade-E-commerce\\Repositories\\Repositories.csproj": {
+              "projectPath": "C:\\Users\\ADMIN\\source\\repos\\Handmade-E-commerce\\Repositories\\Repositories.csproj"
+            },
+            "C:\\Users\\ADMIN\\source\\repos\\Handmade-E-commerce\\Services\\Services.csproj": {
+              "projectPath": "C:\\Users\\ADMIN\\source\\repos\\Handmade-E-commerce\\Services\\Services.csproj"
             }
           }
         }
@@ -3239,7 +3266,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

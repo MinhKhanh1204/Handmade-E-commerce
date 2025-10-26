@@ -1152,6 +1152,19 @@
         "runtime": {
           "bin/placeholder/DataAccessObject.dll": {}
         }
+      },
+      "DTO/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "BussinessObject": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/DTO.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/DTO.dll": {}
+        }
       }
     }
   },
@@ -3117,32 +3130,38 @@
       "type": "project",
       "path": "../DataAccessObject/DataAccessObject.csproj",
       "msbuildProject": "../DataAccessObject/DataAccessObject.csproj"
+    },
+    "DTO/1.0.0": {
+      "type": "project",
+      "path": "../DTO/DTO.csproj",
+      "msbuildProject": "../DTO/DTO.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net8.0": [
       "BussinessObject >= 1.0.0",
+      "DTO >= 1.0.0",
       "DataAccessObject >= 1.0.0"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\HAO\\.nuget\\packages\\": {},
+    "C:\\Users\\ADMIN\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\Repositories\\Repositories.csproj",
+      "projectUniqueName": "C:\\Users\\ADMIN\\source\\repos\\Handmade-E-commerce\\Repositories\\Repositories.csproj",
       "projectName": "Repositories",
-      "projectPath": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\Repositories\\Repositories.csproj",
-      "packagesPath": "C:\\Users\\HAO\\.nuget\\packages\\",
-      "outputPath": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\Repositories\\obj\\",
+      "projectPath": "C:\\Users\\ADMIN\\source\\repos\\Handmade-E-commerce\\Repositories\\Repositories.csproj",
+      "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\ADMIN\\source\\repos\\Handmade-E-commerce\\Repositories\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\HAO\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -3151,18 +3170,20 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\BussinessObject\\BussinessObject.csproj": {
-              "projectPath": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\BussinessObject\\BussinessObject.csproj"
+            "C:\\Users\\ADMIN\\source\\repos\\Handmade-E-commerce\\BussinessObject\\BussinessObject.csproj": {
+              "projectPath": "C:\\Users\\ADMIN\\source\\repos\\Handmade-E-commerce\\BussinessObject\\BussinessObject.csproj"
             },
-            "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\DataAccessObject\\DataAccessObject.csproj": {
-              "projectPath": "D:\\FPT_courses\\2025_FA25\\PRN222\\Project\\HandicraftShop_Prodject\\DataAccessObject\\DataAccessObject.csproj"
+            "C:\\Users\\ADMIN\\source\\repos\\Handmade-E-commerce\\DataAccessObject\\DataAccessObject.csproj": {
+              "projectPath": "C:\\Users\\ADMIN\\source\\repos\\Handmade-E-commerce\\DataAccessObject\\DataAccessObject.csproj"
+            },
+            "C:\\Users\\ADMIN\\source\\repos\\Handmade-E-commerce\\DTO\\DTO.csproj": {
+              "projectPath": "C:\\Users\\ADMIN\\source\\repos\\Handmade-E-commerce\\DTO\\DTO.csproj"
             }
           }
         }
@@ -3198,7 +3219,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
