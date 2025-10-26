@@ -1,0 +1,89 @@
+@model HandicraftShop_Prodject.Models.VoucherDeleteVm
+@{
+    ViewData["Title"] = "Delete Voucher";
+}
+
+<div class="pagetitle">
+    <h1>Delete Voucher</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard", new { area = "Admin" })">Home</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Voucher", new { area = "Admin" })">Voucher Management</a></li>
+            <li class="breadcrumb-item active">Delete</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
+
+<section class="section">
+    <div class="row">
+        <div class="col-lg-12">
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title text-danger">Confirm Deletion</h5>
+
+                    <div class="alert alert-warning" role="alert">
+                        <h4 class="alert-heading">Warning!</h4>
+                        <p>Are you sure you want to delete this voucher? This action cannot be undone.</p>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Voucher Name</label>
+                            <p class="form-control-plaintext">@Model.VoucherName</p>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Voucher Code</label>
+                            <p class="form-control-plaintext"><strong>@Model.Code</strong></p>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Discount Percentage</label>
+                            <p class="form-control-plaintext">@Model.DiscountPercentage.ToString("N2")%</p>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Expiry Date</label>
+                            <p class="form-control-plaintext">
+                                @Model.ExpiryDate.ToString("dd/MM/yyyy")
+                                @if (Model.IsExpired)
+                                {
+                                    <span class="badge bg-danger ms-2">Expired</span>
+                                }
+                            </p>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Status</label>
+                            <p class="form-control-plaintext">
+                                @if (Model.IsActive)
+                                {
+                                    <span class="badge bg-success">Active</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Inactive</span>
+                                }
+                            </p>
+                        </div>
+                    </div>
+
+                    <form asp-action="Delete" method="post" class="mt-4">
+                        <input asp-for="VoucherId" type="hidden" />
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-trash"></i> Yes, Delete Voucher
+                            </button>
+                            <a href="@Url.Action("Index", "Voucher", new { area = "Admin" })" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
