@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BussinessObject.Models;
+using System;
 using System.Collections.Generic;
 
 namespace BussinessObject;
@@ -10,4 +11,6 @@ public partial class Role
     public string RoleName { get; set; } = null!;
 
     public string? Description { get; set; }
+
+    public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
 }
