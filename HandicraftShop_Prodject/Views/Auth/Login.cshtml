@@ -1,6 +1,7 @@
 ﻿@{
 	ViewData["Title"] = "Login Page";
 }
+@model AuthViewModel
 <!-- Page Title -->
 <div class="page-title light-background">
 	<div class="container d-lg-flex justify-content-between align-items-center">
@@ -44,21 +45,23 @@
 							<form method="post" asp-action="Login" asp-controller="Auth">
 								<div class="mb-4">
 									<label for="login-register-login-email" class="form-label">Email address</label>
-									<input type="email" class="form-control" name="email" id="login-register-login-email" required="">
+									<input type="email" class="form-control" asp-for="Login.Email" id="login-register-login-email" required="">
+									<span asp-validation-for="Login.Email" class="text-danger"></span>
 								</div>
 
 								<div class="mb-4">
 									<label for="login-register-login-password" class="form-label">Password</label>
-									<input type="password" class="form-control" name="password" id="login-register-login-password" required="">
+									<input type="password" class="form-control" asp-for="Login.Password" id="login-register-login-password" required="">
+									<span asp-validation-for="Login.Password" class="text-danger"></span>
 								</div>
 
-								<div class="d-flex justify-content-between align-items-center mb-4">
+								@* <div class="d-flex justify-content-between align-items-center mb-4">
 									<div class="form-check">
 										<input type="checkbox" class="form-check-input" id="login-register-remember-me">
 										<label class="form-check-label" for="login-register-remember-me">Remember me</label>
 									</div>
 									<a href="#" class="forgot-password">Forgot Password?</a>
-								</div>
+								</div> *@
 
 								@if (ViewBag.Error != null)
 								{
@@ -73,51 +76,48 @@
 
 						<!-- Registration Form -->
 						<div class="tab-pane fade" id="login-register-registration-form" role="tabpanel">
-							<form>
+							<form asp-action="Register" asp-controller="Auth" method="post">
 								<div class="row g-3">
-									<div class="col-sm-6">
+									<div class="col-sm-12">
 										<div class="mb-4">
-											<label for="login-register-reg-firstname" class="form-label">First name</label>
-											<input type="text" class="form-control" id="login-register-reg-firstname" required="">
-										</div>
-									</div>
-
-									<div class="col-sm-6">
-										<div class="mb-4">
-											<label for="login-register-reg-lastname" class="form-label">Last name</label>
-											<input type="text" class="form-control" id="login-register-reg-lastname" required="">
+											<label for="login-register-reg-firstname" class="form-label">Username</label>
+											<input type="text" asp-for="Register.Username" class="form-control" id="login-register-reg-firstname" required="">
+											<span asp-validation-for="Register.Username" class="text-danger"></span>
 										</div>
 									</div>
 
 									<div class="col-12">
 										<div class="mb-4">
 											<label for="login-register-reg-email" class="form-label">Email address</label>
-											<input type="email" class="form-control" id="login-register-reg-email" required="">
+											<input type="email" asp-for="Register.Email" class="form-control" id="login-register-reg-email" required="">
+											<span asp-validation-for="Register.Email" class="text-danger"></span>
 										</div>
 									</div>
 
 									<div class="col-12">
 										<div class="mb-4">
 											<label for="login-register-reg-password" class="form-label">Password</label>
-											<input type="password" class="form-control" id="login-register-reg-password" required="">
+											<input type="password" asp-for="Register.Password" class="form-control" id="login-register-reg-password" required="">
+											<span asp-validation-for="Register.Password" class="text-danger"></span>
 										</div>
 									</div>
 
 									<div class="col-12">
 										<div class="mb-4">
 											<label for="login-register-reg-confirm-password" class="form-label">Confirm password</label>
-											<input type="password" class="form-control" id="login-register-reg-confirm-password" required="">
+											<input type="password" asp-for="Register.ConfirmPassword" class="form-control" id="login-register-reg-confirm-password" required="">
+											<span asp-validation-for="Register.ConfirmPassword" class="text-danger"></span>
 										</div>
 									</div>
 
-									<div class="col-12">
+									@* <div class="col-12">
 										<div class="form-check">
 											<input type="checkbox" class="form-check-input" id="login-register-terms" required="">
 											<label class="form-check-label" for="login-register-terms">
 												I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
 											</label>
 										</div>
-									</div>
+									</div> *@
 
 									<div class="col-12">
 										<div class="d-grid">

@@ -1,4 +1,5 @@
 ﻿using BussinessObject;
+using DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace Services
 {
     public interface IAccountService
     {
-        Account Login(string email, string password);
-    }
+        Account Login(LoginDTO account);
+		bool Register(RegisterDTO account);
+	}
 }

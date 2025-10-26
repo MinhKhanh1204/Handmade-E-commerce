@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DTO;
+using Microsoft.EntityFrameworkCore;
+using BussinessObject.Models;
 
 namespace Services
 {
@@ -17,16 +20,45 @@ namespace Services
         {
             _accountRepository = accountRepository;
         }
-        public Account Login(string email, string password)
+        public Account Login(LoginDTO acc)
         {
-            var account = _accountRepository.GetByEmail(email);
+            var account = _accountRepository.GetByEmail(acc.Email);
             if (account == null) return null;
 
             // Giả sử password trong DB được mã hoá SHA256
-            var hashedPassword = HashPassword(password);
+            var hashedPassword = HashPassword(acc.Password);
             return account.Password == hashedPassword ? account : null;
         }
-        private string HashPassword(string password)
+
+		public bool Register(RegisterDTO registerDto)
+		{
+			var existing = _accountRepository.GetByEmail(registerDto.Email);
+			if (existing != null)
+				return false;
+
+			var account = new Account
+			{
+				Username = registerDto.Username,
+				Email = registerDto.Email,
+				Status = "Active",
+				CreatedAt = DateTime.Now
+			};
+
+			account.Password = HashPassword(registerDto.Password);
+            account.UserRoles.Add(new UserRole
+            {
+				Account = account,
+                RoleId = 3,
+                Status = "Active"
+            });
+
+			_accountRepository.Add(account);
+			_accountRepository.SaveChanges();
+
+			return true;
+		}
+
+		private string HashPassword(string password)
         {
             using (SHA256 sha256 = SHA256.Create())
             {
