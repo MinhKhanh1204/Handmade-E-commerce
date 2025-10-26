@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using DTO;
 using Microsoft.EntityFrameworkCore;
 using BussinessObject.Models;
+using Microsoft.Identity.Client;
 
 namespace Services
 {
@@ -53,6 +54,19 @@ namespace Services
             });
 
 			_accountRepository.Add(account);
+
+			var customer = new Customer
+			{
+				CustomerId = account.AccountId,
+				FullName = registerDto.FullName,
+                DateOfBirth = registerDto.DateOfBirth,
+                Gender = registerDto.Gender,
+				Phone = registerDto.Phone,
+                Address = registerDto.Address,
+				Status = "Active"
+			};
+
+			_accountRepository.AddCustomer(customer);
 			_accountRepository.SaveChanges();
 
 			return true;
