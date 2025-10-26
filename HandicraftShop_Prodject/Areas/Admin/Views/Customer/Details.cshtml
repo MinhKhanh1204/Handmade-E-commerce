@@ -1,0 +1,108 @@
+@model BussinessObject.Customer
+@{
+    ViewData["Title"] = "Customer Details";
+}
+
+<div class="pagetitle">
+    <h1>Customer Details</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/Admin/Dashboard">Home</a></li>
+            <li class="breadcrumb-item"><a href="/Admin/Customer">Customer Management</a></li>
+            <li class="breadcrumb-item active">Details</li>
+        </ol>
+    </nav>
+</div>
+
+<section class="section">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Customer Information</h5>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row mb-3">
+                                <div class="col-sm-4">
+                                    <label class="form-label fw-bold">Customer ID:</label>
+                                </div>
+                                <div class="col-sm-8">
+                                    <span class="form-control-plaintext">@Model.CustomerId</span>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-sm-4">
+                                    <label class="form-label fw-bold">Name:</label>
+                                </div>
+                                <div class="col-sm-8">
+                                    <span class="form-control-plaintext">@Model.FullName</span>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-sm-4">
+                                    <label class="form-label fw-bold">Date of Birth:</label>
+                                </div>
+                                <div class="col-sm-8">
+                                    <span class="form-control-plaintext">@Model.DateOfBirth?.ToString("dd/MM/yyyy")</span>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-sm-4">
+                                    <label class="form-label fw-bold">Gender:</label>
+                                </div>
+                                <div class="col-sm-8">
+                                    <span class="form-control-plaintext">@Model.Gender</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row mb-3">
+                                <div class="col-sm-4">
+                                    <label class="form-label fw-bold">Phone:</label>
+                                </div>
+                                <div class="col-sm-8">
+                                    <span class="form-control-plaintext">@Model.Phone</span>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-sm-4">
+                                    <label class="form-label fw-bold">Address:</label>
+                                </div>
+                                <div class="col-sm-8">
+                                    <span class="form-control-plaintext">@Model.Address</span>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-sm-4">
+                                    <label class="form-label fw-bold">Status:</label>
+                                </div>
+                                <div class="col-sm-8">
+                                    <span class="badge @(Model.Status == "Active" ? "bg-success" : "bg-danger")">
+                                        @Model.Status
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-end">
+                        <a href="/Admin/Customer/Edit/@Model.CustomerId" class="btn btn-warning">
+                            <i class="bi bi-pencil"></i> Edit Customer
+                        </a>
+                        <a href="/Admin/Customer" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Back to List
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>

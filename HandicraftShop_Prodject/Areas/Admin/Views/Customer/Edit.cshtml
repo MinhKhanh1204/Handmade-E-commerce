@@ -1,0 +1,186 @@
+@model BussinessObject.Customer
+@{
+    ViewData["Title"] = "Edit Customer";
+}
+
+<div class="pagetitle">
+    <h1>Edit Customer</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/Admin/Dashboard">Home</a></li>
+            <li class="breadcrumb-item"><a href="/Admin/Customer">Customer Management</a></li>
+            <li class="breadcrumb-item active">Edit</li>
+        </ol>
+    </nav>
+</div>
+
+<section class="section">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Edit Customer Information</h5>
+                    
+                        <form action="/Admin/Customer/Edit/@Model.CustomerId" method="post">
+                            @Html.AntiForgeryToken()
+                            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+                            
+
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row mb-3">
+                                    <label asp-for="CustomerId" class="col-sm-4 col-form-label">Customer ID</label>
+                                    <div class="col-sm-8">
+                                        <input asp-for="CustomerId" class="form-control" readonly />
+                                        <small class="text-muted">Customer ID cannot be changed</small>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label asp-for="FullName" class="col-sm-4 col-form-label">Full Name *</label>
+                                    <div class="col-sm-8">
+                                        <input asp-for="FullName" class="form-control" placeholder="Enter full name (2-32 characters)" />
+                                        <div class="form-text">2-32 characters allowed</div>
+                                        <span asp-validation-for="FullName" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label asp-for="DateOfBirth" class="col-sm-4 col-form-label">Date of Birth</label>
+                                    <div class="col-sm-8">
+                                        <input asp-for="DateOfBirth" type="date" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                        <div class="form-text">Must be between 1900 and 2024</div>
+                                        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label asp-for="Gender" class="col-sm-4 col-form-label">Gender</label>
+                                    <div class="col-sm-8">
+                                        <select asp-for="Gender" class="form-select">
+                                            <option value="">-- Select Gender --</option>
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                        <div class="form-text">Choose from the dropdown options</div>
+                                        <span asp-validation-for="Gender" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="row mb-3">
+                                    <label asp-for="Phone" class="col-sm-4 col-form-label">Phone Number *</label>
+                                    <div class="col-sm-8">
+                                        <input asp-for="Phone" class="form-control" placeholder="Enter phone number (10-15 digits)" />
+                                        <div class="form-text">Numbers, +, -, spaces, and parentheses allowed</div>
+                                        <span asp-validation-for="Phone" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label asp-for="Address" class="col-sm-4 col-form-label">Address</label>
+                                    <div class="col-sm-8">
+                                        <textarea asp-for="Address" class="form-control" rows="3" placeholder="Enter address (max 255 characters)"></textarea>
+                                        <div class="form-text">Letters, numbers, and common punctuation allowed</div>
+                                        <span asp-validation-for="Address" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label asp-for="Status" class="col-sm-4 col-form-label">Status *</label>
+                                    <div class="col-sm-8">
+                                        <select asp-for="Status" class="form-select">
+                                            <option value="">-- Select Status --</option>
+                                            <option value="Active">Active</option>
+                                            <option value="Inactive">Inactive</option>
+                                        </select>
+                                        <div class="form-text">Choose customer status</div>
+                                        <span asp-validation-for="Status" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> Update Customer
+                            </button>
+                            <a href="/Admin/Customer" class="btn btn-secondary">
+                                <i class="bi bi-x-circle"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Real-time validation for Full Name
+            const fullNameInput = document.querySelector('input[name="FullName"]');
+            if (fullNameInput) {
+                fullNameInput.addEventListener('input', function() {
+                    const value = this.value;
+                    const isValid = value.length >= 2 && value.length <= 32;
+                    this.classList.toggle('is-valid', isValid && value.length > 0);
+                    this.classList.toggle('is-invalid', !isValid && value.length > 0);
+                });
+            }
+
+            // Real-time validation for Phone
+            const phoneInput = document.querySelector('input[name="Phone"]');
+            if (phoneInput) {
+                phoneInput.addEventListener('input', function() {
+                    const value = this.value;
+                    const isValid = /^[0-9+\-\s\(\)]*$/.test(value) && value.length >= 10 && value.length <= 15;
+                    this.classList.toggle('is-valid', isValid && value.length > 0);
+                    this.classList.toggle('is-invalid', !isValid && value.length > 0);
+                });
+            }
+
+            // Real-time validation for Date of Birth
+            const dobInput = document.querySelector('input[name="DateOfBirth"]');
+            if (dobInput) {
+                dobInput.addEventListener('change', function() {
+                    const value = new Date(this.value);
+                    const today = new Date();
+                    const minDate = new Date('1900-01-01');
+                    const isValid = value >= minDate && value <= today;
+                    this.classList.toggle('is-valid', isValid && this.value);
+                    this.classList.toggle('is-invalid', !isValid && this.value);
+                });
+            }
+
+            // Form submission validation
+            const form = document.querySelector('form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    let isValid = true;
+                    
+                    // Check required fields
+                    const requiredFields = ['FullName', 'Phone', 'Status'];
+                    requiredFields.forEach(fieldName => {
+                        const field = document.querySelector(`[name="${fieldName}"]`);
+                        if (field && !field.value.trim()) {
+                            field.classList.add('is-invalid');
+                            isValid = false;
+                        }
+                    });
+
+                    if (!isValid) {
+                        e.preventDefault();
+                        alert('Please fill in all required fields correctly.');
+                    }
+                });
+            }
+        });
+    </script>
+}
