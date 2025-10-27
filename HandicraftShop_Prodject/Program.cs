@@ -14,6 +14,10 @@ builder.Services.AddDbContext<MyStoreContext>(options =>
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 
+// Register Category Repository and Service
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession();
 
