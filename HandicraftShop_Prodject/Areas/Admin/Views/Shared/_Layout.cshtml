@@ -275,11 +275,19 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
-        <a class="nav-link " href="index.html">
+        <a class="nav-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
           <i class="bi bi-grid"></i>
           <span>Dashboard</span>
         </a>
       </li><!-- End Dashboard Nav -->
+
+            <li class="nav-item">
+                <a class="nav-link collapsed @(ViewContext.RouteData.Values["controller"]?.ToString() == "Staffs" ? "active" : "")"
+                   asp-area="Admin" asp-controller="Staffs" asp-action="Index">
+                    <i class="bi bi-people"></i>
+                    <span>Staff Management</span>
+                </a>
+            </li>
 
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
