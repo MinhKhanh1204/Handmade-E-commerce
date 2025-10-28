@@ -1,0 +1,282 @@
+﻿@{
+    ViewData["Title"] = "Product Page";
+}
+<!-- Page Title -->
+<div class="page-title light-background">
+    <div class="container d-lg-flex justify-content-between align-items-center">
+        <h1 class="mb-2 mb-lg-0">Product</h1>
+        <nav class="breadcrumbs">
+            <ol>
+                <li><a href="/Product">Home</a></li>
+                <li class="current">Product</li>
+            </ol>
+        </nav>
+    </div>
+</div><!-- End Page Title -->
+
+<div class="container">
+    <div class="row">
+
+        <div class="col-lg-3 sidebar">
+
+            <div class="widgets-container">
+
+                <!-- Product Categories Widget -->
+                <div class="product-categories-widget widget-item">
+
+                    <h3 class="widget-title">Categories</h3>
+
+                    <ul class="category-tree list-unstyled mb-0">
+
+
+                        <!-- Books Category (no subcategories) -->
+                        <li class="category-item">
+                            <div class="d-flex justify-content-between align-items-center category-header">
+                                <a href="#" class="category-link">Books</a>
+                            </div>
+                        </li>
+
+                         <li class="category-item">
+                            <div class="d-flex justify-content-between align-items-center category-header">
+                                <a href="#" class="category-link">Books</a>
+                            </div>
+                        </li>
+
+                         <li class="category-item">
+                            <div class="d-flex justify-content-between align-items-center category-header">
+                                <a href="#" class="category-link">Books</a>
+                            </div>
+                        </li>
+
+                        <li class="category-item">
+                            <div class="d-flex justify-content-between align-items-center category-header">
+                                <a href="#" class="category-link">Books</a>
+                            </div>
+                        </li>
+
+                        <li class="category-item">
+                            <div class="d-flex justify-content-between align-items-center category-header">
+                                <a href="#" class="category-link">Books</a>
+                            </div>
+                        </li>
+
+                       
+                    </ul>
+
+                </div><!--/Product Categories Widget -->
+            </div>
+
+        </div>
+
+        <div class="col-lg-9">
+
+            <!-- Category Header Section -->
+            <section id="category-header" class="category-header section">
+
+                <div class="container" data-aos="fade-up">
+
+                    <!-- Filter and Sort Options -->
+                    <div class="filter-container mb-4" data-aos="fade-up" data-aos-delay="100">
+                        <div class="row g-3">
+                            <div class="col-md-6 col-lg-8"></div>
+                            <div class="col-12 col-md-6 col-lg-4">
+                                <div class="filter-item search-form">
+                                    <label for="productSearch" class="form-label">Search Products</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="productSearch" placeholder="Search for products..." aria-label="Search for products">
+                                        <button class="btn search-btn" type="button">
+                                            <i class="bi bi-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section><!-- /Category Header Section -->
+            <!-- Category Product List Section -->
+            <section id="category-product-list" class="category-product-list section">
+
+                <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+                    <div class="row gy-4">
+                        <!-- Product 1 -->
+                        <div class="col-lg-4">
+                            <div class="product-box">
+                                <div class="product-thumb">
+                                    <span class="product-label">New Season</span>
+                                    <img src="assets/img/product/product-3.webp" alt="Product Image" class="main-img" loading="lazy">
+                                    <div class="product-overlay">
+                                        <div class="product-quick-actions">
+                                            <button type="button" class="quick-action-btn">
+                                                <i class="bi bi-heart"></i>
+                                            </button>
+                                            <button type="button" class="quick-action-btn">
+                                                <i class="bi bi-arrow-repeat"></i>
+                                            </button>
+                                            <button type="button" class="quick-action-btn">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                        </div>
+                                        <div class="add-to-cart-container">
+                                            <button type="button" class="add-to-cart-btn">Add to Cart</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-content">
+                                    <div class="product-details">
+                                        <h3 class="product-title"><a href="product-details.html">Vestibulum ante ipsum primis</a></h3>
+                                        <div class="product-price">
+                                            <span>$149.99</span>
+                                        </div>
+                                    </div>
+                                    <div class="product-rating-container">
+                                        <div class="rating-stars">
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star"></i>
+                                        </div>
+                                        <span class="rating-number">4.0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Product 1 -->
+                        <!-- Product 2 -->
+                        <div class="col-lg-4">
+                            <div class="product-box">
+                                <div class="product-thumb">
+                                    <span class="product-label product-label-sale">-30%</span>
+                                    <img src="assets/img/product/product-6.webp" alt="Product Image" class="main-img" loading="lazy">
+                                    <div class="product-overlay">
+                                        <div class="product-quick-actions">
+                                            <button type="button" class="quick-action-btn">
+                                                <i class="bi bi-heart"></i>
+                                            </button>
+                                            <button type="button" class="quick-action-btn">
+                                                <i class="bi bi-arrow-repeat"></i>
+                                            </button>
+                                            <button type="button" class="quick-action-btn">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                        </div>
+                                        <div class="add-to-cart-container">
+                                            <button type="button" class="add-to-cart-btn">Add to Cart</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-content">
+                                    <div class="product-details">
+                                        <h3 class="product-title"><a href="product-details.html">Aliquam tincidunt mauris eu risus</a></h3>
+                                        <div class="product-price">
+                                            <span class="original">$199.99</span>
+                                            <span class="sale">$139.99</span>
+                                        </div>
+                                    </div>
+                                    <div class="product-rating-container">
+                                        <div class="rating-stars">
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-half"></i>
+                                        </div>
+                                        <span class="rating-number">4.5</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Product 2 -->
+                        <!-- Product 2 -->
+                        <div class="col-lg-4">
+                            <div class="product-box">
+                                <div class="product-thumb">
+                                    <span class="product-label product-label-sale">-30%</span>
+                                    <img src="assets/img/product/product-6.webp" alt="Product Image" class="main-img" loading="lazy">
+                                    <div class="product-overlay">
+                                        <div class="product-quick-actions">
+                                            <button type="button" class="quick-action-btn">
+                                                <i class="bi bi-heart"></i>
+                                            </button>
+                                            <button type="button" class="quick-action-btn">
+                                                <i class="bi bi-arrow-repeat"></i>
+                                            </button>
+                                            <button type="button" class="quick-action-btn">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                        </div>
+                                        <div class="add-to-cart-container">
+                                            <button type="button" class="add-to-cart-btn">Add to Cart</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-content">
+                                    <div class="product-details">
+                                        <h3 class="product-title"><a href="product-details.html">Aliquam tincidunt mauris eu risus</a></h3>
+                                        <div class="product-price">
+                                            <span class="original">$199.99</span>
+                                            <span class="sale">$139.99</span>
+                                        </div>
+                                    </div>
+                                    <div class="product-rating-container">
+                                        <div class="rating-stars">
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-half"></i>
+                                        </div>
+                                        <span class="rating-number">4.5</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Product 2 -->
+                    </div>
+
+                </div>
+
+            </section><!-- /Category Product List Section -->
+            <!-- Category Pagination Section -->
+            <section id="category-pagination" class="category-pagination section">
+
+                <div class="container">
+                    <nav class="d-flex justify-content-center" aria-label="Page navigation">
+                        <ul>
+                            <li>
+                                <a href="#" aria-label="Previous page">
+                                    <i class="bi bi-arrow-left"></i>
+                                    <span class="d-none d-sm-inline">Previous</span>
+                                </a>
+                            </li>
+
+                            <li><a href="#" class="active">1</a></li>
+                            <li><a href="#">2</a></li>
+                            <li><a href="#">3</a></li>
+                            <li class="ellipsis">...</li>
+                            <li><a href="#">8</a></li>
+                            <li><a href="#">9</a></li>
+                            <li><a href="#">10</a></li>
+
+                            <li>
+                                <a href="#" aria-label="Next page">
+                                    <span class="d-none d-sm-inline">Next</span>
+                                    <i class="bi bi-arrow-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+            </section><!-- /Category Pagination Section -->
+
+        </div>
+
+    </div>
+</div>
