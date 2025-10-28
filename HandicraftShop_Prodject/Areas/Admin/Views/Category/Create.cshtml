@@ -1,8 +1,7 @@
 @model BussinessObject.Category
 
 @{
-    ViewData["Title"] = "Create Category";
-    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Create Category - Admin";
 }
 
 <div class="container-fluid">
@@ -18,32 +17,36 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <form asp-action="Create">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <form asp-action="Create" id="categoryForm">
+                        <div asp-validation-summary="All" class="alert alert-danger" role="alert"></div>
                         
                         <div class="form-group mb-3">
-                            <label asp-for="CategoryName" class="form-label">Category Name *</label>
-                            <input asp-for="CategoryName" class="form-control" placeholder="Enter category name" />
+                            <label asp-for="CategoryName" class="form-label">Category Name <span class="text-danger">*</span></label>
+                            <input asp-for="CategoryName" class="form-control" placeholder="Enter category name" required maxlength="100" />
                             <span asp-validation-for="CategoryName" class="text-danger"></span>
+                            <small class="form-text text-muted">Required. Maximum 100 characters.</small>
                         </div>
                         
                         <div class="form-group mb-3">
                             <label asp-for="Description" class="form-label">Description</label>
-                            <textarea asp-for="Description" class="form-control" rows="4" placeholder="Enter category description"></textarea>
+                            <textarea asp-for="Description" class="form-control" rows="4" placeholder="Enter category description" maxlength="255"></textarea>
                             <span asp-validation-for="Description" class="text-danger"></span>
+                            <small class="form-text text-muted">Optional. Maximum 255 characters.</small>
                         </div>
                         
                         <div class="form-group mb-3">
-                            <label asp-for="Status" class="form-label">Status *</label>
-                            <select asp-for="Status" class="form-control">
+                            <label asp-for="Status" class="form-label">Status <span class="text-danger">*</span></label>
+                            <select asp-for="Status" class="form-control" required>
+                                <option value="">-- Please select --</option>
                                 <option value="Active">Active</option>
                                 <option value="Inactive">Inactive</option>
                             </select>
                             <span asp-validation-for="Status" class="text-danger"></span>
+                            <small class="form-text text-muted">Required. Select category status.</small>
                         </div>
                         
                         <div class="form-group">
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-primary" id="submitBtn">
                                 <i class="fas fa-save"></i> Create Category
                             </button>
                             <a asp-action="Index" class="btn btn-secondary">
@@ -59,4 +62,34 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // Client-side validation
+        document.getElementById('categoryForm').addEventListener('submit', function(e) {
+            if (!this.checkValidity()) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            this.classList.add('was-validated');
+        });
+
+        // Real-time validation feedback
+        const inputs = document.querySelectorAll('#categoryForm input[required], #categoryForm select[required]');
+        inputs.forEach(input => {
+            input.addEventListener('blur', function() {
+                if (this.value.trim() === '') {
+                    this.classList.add('is-invalid');
+                } else {
+                    this.classList.remove('is-invalid');
+                    this.classList.add('is-valid');
+                }
+            });
+
+            input.addEventListener('input', function() {
+                if (this.value.trim() !== '') {
+                    this.classList.remove('is-invalid');
+                    this.classList.add('is-valid');
+                }
+            });
+        });
+    </script>
 }
