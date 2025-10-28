@@ -8,5 +8,10 @@ namespace HandicraftShop_Prodject.Controllers
         {
             return View();
         }
+
+        public IActionResult Detail()
+        {
+            return View();
+        }
     }
 }
