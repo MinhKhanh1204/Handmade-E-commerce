@@ -2,7 +2,9 @@
 using Services;
 using DTO;
 using HandicraftShop_Prodject.Models;
-
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using HandicraftShop_Prodject.Utils;
 
 namespace HandicraftShop_Prodject.Controllers
 {
@@ -19,7 +21,7 @@ namespace HandicraftShop_Prodject.Controllers
 			return View();
 		}
 		[HttpPost]
-		public IActionResult Login(AuthViewModel model)
+		public async Task<IActionResult> LoginAsync(AuthViewModel model)
 		{
 			// Xóa lỗi liên quan đến Register
 			foreach (var key in ModelState.Keys
@@ -37,9 +39,18 @@ namespace HandicraftShop_Prodject.Controllers
 
 				if (account != null)
 				{
-					HttpContext.Session.SetString("AccountId", account.AccountId.ToString());
-					HttpContext.Session.SetString("Username", account.Username);
-					return RedirectToAction("Index", "Home");
+					//Thiết lập phiên đăng nhập cho tài khoản
+					await HttpContext.SignInAsync(AccountUtils.CreatePrincipal(account));
+					var firstRole = account.UserRoles.FirstOrDefault()?.Role?.RoleName;
+					switch (firstRole)
+					{
+						case "Admin":
+							return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+						case "Employee":
+							return RedirectToAction("Index", "Dashboard", new { area = "Employee" });
+						default:
+							return RedirectToAction("Index", "Home");
+					}
 				}
 
 				ViewBag.Error = "Invalid email or password.";
@@ -74,10 +85,16 @@ namespace HandicraftShop_Prodject.Controllers
 			return View("Login", model);
 		}
 
-		public IActionResult Logout()
+		public async Task<IActionResult> LogoutAsync()
 		{
 			HttpContext.Session.Clear();
+			await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 			return RedirectToAction("Login");
 		}
-    }
+		public IActionResult AccessDenied()
+		{
+			return View();
+		}
+		
+	}
 }

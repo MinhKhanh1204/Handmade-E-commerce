@@ -1,4 +1,5 @@
 using DataAccessObject;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Repositories;
 using Services;
@@ -15,7 +16,25 @@ builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddSession();
+
+//add session
+builder.Services.AddSession(option =>
+{
+	option.IdleTimeout = TimeSpan.FromMinutes(60);
+	option.Cookie.HttpOnly = true;
+	option.Cookie.IsEssential = true;
+});
+
+//authen
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+				.AddCookie(option =>
+				{
+					option.Cookie.Name = "AuthenticationCookie";
+					option.LoginPath = "/Auth/Login";
+					option.AccessDeniedPath = "/Auth/AccessDenied";
+					option.ExpireTimeSpan = TimeSpan.FromMinutes(120);
+				});
+
 
 var app = builder.Build();
 
@@ -31,7 +50,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseSession();

@@ -1,6 +1,7 @@
 ﻿using BussinessObject;
 using DataAccessObject;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,5 +63,19 @@ namespace Repositories
 		{
 			_context.Customers.Add(customer);
 		}
-	}
+
+        public Account GetAccountByID(string id)
+        {
+            return _context.Accounts
+				.Include(a => a.UserRoles)
+			   .ThenInclude(ur => ur.Role)
+			   .Include(a => a.Customer)
+               .FirstOrDefault(a => a.AccountId == id && a.Status == "Active");
+        }
+
+        public void UpdateProfile(Account account)
+        {
+            _context.Accounts.Update(account);
+        }
+    }
 }
