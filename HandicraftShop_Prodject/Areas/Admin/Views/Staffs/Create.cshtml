@@ -1,0 +1,114 @@
+﻿@model DTO.StaffDTO
+
+@{
+    ViewData["Title"] = "Create Staff";
+}
+
+<div class="pagetitle">
+    <h1>Create Staff</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-area="Admin" asp-controller="Staffs" asp-action="Index">Staff Management</a>
+            </li>
+            <li class="breadcrumb-item active">Create</li>
+        </ol>
+    </nav>
+</div>
+
+<section class="section">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-sm p-4">
+                    <form asp-area="Admin" asp-controller="Staffs" asp-action="Create" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="StaffId" />
+
+                        <!-- Row 1: Full Name + Date of Birth -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" class="form-control" asp-for="FullName" />
+                                <span class="text-danger" asp-validation-for="FullName"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Date of Birth</label>
+                                <input type="date" class="form-control" asp-for="DateOfBirth" />
+                                <span class="text-danger" asp-validation-for="DateOfBirth"></span>
+                            </div>
+                        </div>
+
+                        <!-- Row 2: Gender + Phone -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Gender</label>
+                                <select class="form-select" asp-for="Gender">
+                                    <option value="">Select gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                                <span class="text-danger" asp-validation-for="Gender"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Phone</label>
+                                <input type="text" class="form-control" asp-for="Phone" />
+                                <span class="text-danger" asp-validation-for="Phone"></span>
+                            </div>
+                        </div>
+
+                        <!-- Row 3: Citizen ID + Hire Date -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Citizen ID</label>
+                                <input type="text" class="form-control" asp-for="CitizenId" />
+                                <span class="text-danger" asp-validation-for="CitizenId"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Hire Date</label>
+                                <input type="date" class="form-control" asp-for="HireDate" />
+                                <span class="text-danger" asp-validation-for="HireDate"></span>
+                            </div>
+                        </div>
+
+                        <!-- Row 4: Address (full width) -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-12">
+                                <label class="form-label">Address</label>
+                                <textarea class="form-control" rows="2" asp-for="Address"></textarea>
+                                <span class="text-danger" asp-validation-for="Address"></span>
+                            </div>
+                        </div>
+
+                        <!-- Row 5: Status + (Optional placeholder) -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-12">
+                                <label class="form-label">Status</label>
+                                <select class="form-select" asp-for="Status">
+                                    <option value="Active">Active</option>
+                                    <option value="Inactive">Inactive</option>
+                                </select>
+                                <span class="text-danger" asp-validation-for="Status"></span>
+                            </div>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="row mt-4">
+                            <div class="col-12 text-center">
+                                <button type="submit" class="btn btn-primary me-2">
+                                    <i class="bi bi-save"></i> Create
+                                </button>
+                                <a asp-area="Admin" asp-action="Index" class="btn btn-secondary ms-2">
+                                    <i class="bi bi-arrow-left"></i> Back
+                                </a>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
