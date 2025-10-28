@@ -12,5 +12,7 @@ namespace Services
     {
         Account Login(LoginDTO account);
 		bool Register(RegisterDTO account);
-	}
+        Account GetAccountByID(string id);
+        void UpdateProfile(Account account);
+    }
 }

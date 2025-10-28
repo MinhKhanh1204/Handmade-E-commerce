@@ -13,5 +13,8 @@ namespace Repositories
 		void Add(Account account);
 		void AddCustomer(Customer customer);
 		void SaveChanges();
-	}
+        Account GetAccountByID(string id);
+        void UpdateProfile(Account account);
+
+    }
 }

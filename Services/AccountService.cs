@@ -21,6 +21,12 @@ namespace Services
         {
             _accountRepository = accountRepository;
         }
+
+        public Account GetAccountByID(string id)
+        {
+            return _accountRepository.GetAccountByID(id);
+        }
+
         public Account Login(LoginDTO acc)
         {
             var account = _accountRepository.GetByEmail(acc.Email);
@@ -72,7 +78,13 @@ namespace Services
 			return true;
 		}
 
-		private string HashPassword(string password)
+        public void UpdateProfile(Account account)
+        {
+            _accountRepository.UpdateProfile(account);
+            _accountRepository.SaveChanges();
+        }
+
+        private string HashPassword(string password)
         {
             using (SHA256 sha256 = SHA256.Create())
             {
