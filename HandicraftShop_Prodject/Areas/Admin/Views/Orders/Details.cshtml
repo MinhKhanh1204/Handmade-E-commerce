@@ -1,0 +1,161 @@
+﻿@model BussinessObject.Order
+
+@{
+    ViewData["Title"] = "Order Details";
+}
+
+<section class="section py-4">
+    <div class="container">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold text-primary mb-0">
+                <i class="bi bi-receipt-cutoff me-2"></i>Order Details
+                <small class="text-muted">#@Model.OrderId</small>
+            </h2>
+            <div>
+                <a asp-area="Admin" asp-controller="Orders" asp-action="Edit" asp-route-id="@Model.OrderId"
+                   class="btn btn-outline-primary me-2">
+                    <i class="bi bi-pencil"></i> Edit
+                </a>
+                <a asp-area="Admin" asp-controller="Orders" asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to List
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Card -->
+        <div class="card shadow-lg border-0 rounded-4">
+            <div class="card-body p-4">
+                <!-- CUSTOMER & STAFF -->
+                <h5 class="fw-semibold border-bottom pb-2 mb-3 text-secondary">
+                    <i class="bi bi-person-circle me-2"></i>Customer & Staff Info
+                </h5>
+
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <p class="mb-1 text-muted">Customer</p>
+                        <p class="fw-semibold">@Model.Customer?.FullName (@Model.CustomerId)</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="mb-1 text-muted">Staff</p>
+                        <p class="fw-semibold">@Model.Staff?.FullName</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="mb-1 text-muted">Voucher</p>
+                        <p class="fw-semibold">@Model.Voucher?.Code</p>
+                    </div>
+                </div>
+
+                <!-- ORDER INFO -->
+                <h5 class="fw-semibold border-bottom pb-2 mb-3 text-secondary">
+                    <i class="bi bi-cart-check me-2"></i>Order Information
+                </h5>
+
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <p class="mb-1 text-muted">Order Date</p>
+                        <p class="fw-semibold">@Model.OrderDate?.ToString("dd/MM/yyyy HH:mm")</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="mb-1 text-muted">Total Amount</p>
+                        <p class="fw-semibold text-success">$@Model.TotalAmount?.ToString("N2")</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="mb-1 text-muted">Last Updated</p>
+                        <p class="fw-semibold">@Model.UpdatedAt?.ToString("dd/MM/yyyy HH:mm")</p>
+                    </div>
+                </div>
+
+                <!-- PAYMENT & SHIPPING -->
+                <h5 class="fw-semibold border-bottom pb-2 mb-3 text-secondary">
+                    <i class="bi bi-wallet2 me-2"></i>Payment & Shipping
+                </h5>
+
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <p class="mb-1 text-muted">Payment Method</p>
+                        <p class="fw-semibold">@Model.PaymentMethod</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="mb-1 text-muted">Payment Status</p>
+                        <span class="badge bg-@(
+                              Model.PaymentStatus == "Paid" ? "success" :
+                              Model.PaymentStatus == "Pending" ? "warning text-dark" :
+                              "secondary") px-3 py-2">
+                            @Model.PaymentStatus
+                        </span>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="mb-1 text-muted">Shipping Status</p>
+                        <span class="badge bg-@(
+                                                          Model.ShippingStatus == "Pending" ? "warning text-dark" :
+                                                          Model.ShippingStatus == "Approved" ? "info text-dark" :
+                                                          Model.ShippingStatus == "Delivered" ? "success" : "danger") px-3 py-2">
+                            @Model.ShippingStatus
+                        </span>
+                    </div>
+                </div>
+
+                <!-- ADDRESS & NOTES -->
+                <h5 class="fw-semibold border-bottom pb-2 mb-3 text-secondary">
+                    <i class="bi bi-geo-alt me-2"></i>Shipping & Notes
+                </h5>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="mb-1 text-muted">Shipping Address</p>
+                        <div class="p-3 bg-light rounded-3">
+                            @Model.ShippingAddress
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-1 text-muted">Note</p>
+                        <div class="p-3 bg-light rounded-3">
+                            @Model.Note ?? "No notes provided."
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    body {
+        background-color: #f9fafc;
+    }
+
+    .section {
+        background-color: #f9fafc;
+    }
+
+    .card {
+        background-color: #ffffff;
+        transition: all 0.3s ease;
+    }
+
+        .card:hover {
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+
+    h2 {
+        color: #0d6efd;
+    }
+
+    h5 {
+        color: #0d6efd;
+    }
+
+    p.text-muted {
+        font-size: 0.9rem;
+    }
+
+    .badge {
+        font-size: 0.9rem;
+        border-radius: 0.5rem;
+    }
+
+    .bg-light {
+        background-color: #f8f9fa !important;
+    }
+</style>

@@ -1,0 +1,85 @@
+﻿@model BussinessObject.Order
+
+@{
+    ViewData["Title"] = "Order Details";
+}
+
+<main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title light-background">
+        <div class="container d-lg-flex justify-content-between align-items-center">
+            <h1 class="mb-2 mb-lg-0">Order Details</h1>
+            <nav class="breadcrumbs">
+                <ol>
+                    <li><a asp-action="Index">My Orders</a></li>
+                    <li class="current">Details</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Order Details Section -->
+    <section class="section" id="order-details" data-aos="fade-up">
+        <div class="container">
+
+            <div class="order-card shadow-sm p-4 rounded-3 mb-4 bg-white">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5>Order <span class="text-primary">#@Model.OrderId</span></h5>
+                    <span class="badge bg-info">@Model.ShippingStatus</span>
+                </div>
+
+                <div class="order-meta mb-3 text-muted small">
+                    <p><strong>Date:</strong> @(Model.OrderDate?.ToString("MMM dd, yyyy") ?? "N/A")</p>
+                    <p><strong>Total:</strong> $@(Model.TotalAmount?.ToString("N2") ?? "0.00")</p>
+                    <p><strong>Payment:</strong> @Model.PaymentMethod</p>
+                    <p><strong>Address:</strong> @Model.ShippingAddress</p>
+                </div>
+
+                <hr />
+
+                <h5 class="mb-3">Order Items</h5>
+                @if (Model.OrderItems != null && Model.OrderItems.Any())
+                {
+                    <div class="list-group">
+                        @foreach (var item in Model.OrderItems)
+                        {
+                            <div class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                <div class="d-flex align-items-center">
+                                    <img src="@Url.Content($"~/images/{item.Product?.ProductId}/{item.Product?.ProductImages?.FirstOrDefault()?.ImageUrl}")" alt="@item.Product?.ProductName"
+                                         style="width:60px;height:60px;object-fit:cover;border-radius:8px;margin-right:15px;" />
+                                    <div>
+                                        <h6 class="mb-1">@item.Product?.ProductName</h6>
+                                        <small class="text-muted">x @item.Quantity</small>
+                                    </div>
+                                </div>
+                                <span class="fw-bold text-dark">$@((item.UnitPrice * item.Quantity * (1 - (item.Discount / 100)))?.ToString("N2"))</span>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted">No items found in this order.</p>
+                }
+
+                <hr class="my-4" />
+
+                <div class="d-flex justify-content-between">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left"></i> Back to My Orders
+                    </a>
+                    @if (Model.ShippingStatus != null && Model.ShippingStatus.ToLower() == "pending")
+                    {
+                        <form asp-action="Cancel" method="post" asp-route-id="@Model.OrderId" onsubmit="return confirm('Are you sure you want to cancel this order?');">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-x-circle"></i> Cancel Order
+                            </button>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>

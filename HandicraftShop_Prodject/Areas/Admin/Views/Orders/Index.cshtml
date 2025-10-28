@@ -1,0 +1,200 @@
+﻿@model IEnumerable<BussinessObject.Order>
+
+@{
+    ViewData["Title"] = "Order Management";
+}
+
+<section id="orders" class="orders section light-background">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-0">Order Management</h2>
+        </div>
+
+        <!-- 🔍 Search Form -->
+        <form id="searchForm" class="bg-white p-3 rounded shadow-sm mb-4">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-2">
+                    <label class="form-label">Order ID</label>
+                    <input type="text" name="orderId" class="form-control" placeholder="e.g., ORD123" />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Customer</label>
+                    <input type="text" name="customerName" class="form-control" placeholder="Customer name" />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">From</label>
+                    <input type="date" name="from" class="form-control" />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">To</label>
+                    <input type="date" name="to" class="form-control" />
+                </div>
+                <div class="col-md-2 text-end">
+                    <button type="submit" class="btn btn-primary px-4">
+                        <i class="bi bi-search me-1"></i> Search
+                    </button>
+                    <button type="button" id="resetBtn" class="btn btn-outline-secondary px-3 ms-2">
+                        <i class="bi bi-arrow-repeat"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <!-- 🧭 Tabs -->
+        <ul class="nav nav-tabs mb-3" id="orderTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="pending-tab" data-bs-toggle="tab"
+                        data-bs-target="#pending" type="button" role="tab">
+                    Pending
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="history-tab" data-bs-toggle="tab"
+                        data-bs-target="#history" type="button" role="tab">
+                    History
+                </button>
+            </li>
+        </ul>
+        <div class="d-flex justify-content-end mb-3">
+            <select id="sortSelect" class="form-select w-auto">
+                <option value="">Sort by...</option>
+                <option value="date-asc">Date ↑</option>
+                <option value="date-desc">Date ↓</option>
+                <option value="total-asc">Total ↑</option>
+                <option value="total-desc">Total ↓</option>
+                <option value="status-asc">Status ↑</option>
+                <option value="status-desc">Status ↓</option>
+            </select>
+        </div>
+
+        <div class="tab-content" id="orderTabContent">
+            <div class="tab-pane fade show active" id="pending" role="tabpanel">
+                <div id="pendingOrders">
+                    @await Html.PartialAsync("_OrderListPartial", Model.Where(o => o.ShippingStatus == "Pending"))
+                </div>
+            </div>
+            <div class="tab-pane fade" id="history" role="tabpanel">
+                <div id="historyOrders">
+                    @await Html.PartialAsync("_OrderListPartial", Model.Where(o => o.ShippingStatus != "Pending"))
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.getElementById("searchForm");
+            const resetBtn = document.getElementById("resetBtn");
+            const pendingOrders = document.getElementById("pendingOrders");
+            const historyOrders = document.getElementById("historyOrders");
+            const sortSelect = document.getElementById("sortSelect");
+
+            // --- Search ---
+            form?.addEventListener("submit", e => {
+                e.preventDefault();
+                const params = new URLSearchParams(new FormData(form)).toString();
+                fetch(`/Admin/Orders/Search?${params}`, {
+                    method: "GET",
+                    headers: { "X-Requested-With": "XMLHttpRequest" }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        pendingOrders.innerHTML = data.pendingHtml;
+                        historyOrders.innerHTML = data.historyHtml;
+                        attachActionEvents(); // rebind buttons
+                    } else {
+                        alert("❌ " + (data.message || "Search failed."));
+                    }
+                })
+                .catch(err => console.error("Search failed:", err));
+            });
+
+            // --- Reset ---
+            resetBtn?.addEventListener("click", () => {
+                form?.reset();
+                fetch("/Admin/Orders/Search", {
+                    headers: { "X-Requested-With": "XMLHttpRequest" }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        pendingOrders.innerHTML = data.pendingHtml;
+                        historyOrders.innerHTML = data.historyHtml;
+                        attachActionEvents(); // rebind
+                    }
+                });
+            });
+
+            // --- Sort ---
+            sortSelect?.addEventListener("change", e => {
+                const value = e.target.value;
+                if (!value) return;
+                const [sortBy, direction] = value.split("-");
+                fetch(`/Admin/Orders/Sort?sortBy=${sortBy}&direction=${direction}`, {
+                    headers: { "X-Requested-With": "XMLHttpRequest" }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        pendingOrders.innerHTML = data.pendingHtml;
+                        historyOrders.innerHTML = data.historyHtml;
+                        attachActionEvents(); // rebind after sort
+                    }
+                })
+                .catch(err => console.error("Sort failed:", err));
+            });
+
+            // --- Attach event cho nút Approve / Reject ---
+            function attachActionEvents() {
+                document.querySelectorAll(".btn-action").forEach(btn => {
+                    btn.onclick = async () => {
+                        const orderId = btn.dataset.id;
+                        const action = btn.dataset.action;
+                        if (!confirm(`${action === "approve" ? "Approve" : "Reject"} order ${orderId}?`)) return;
+
+                        btn.disabled = true;
+                        const originalHtml = btn.innerHTML;
+                        btn.innerHTML = `<span class="spinner-border spinner-border-sm"></span>`;
+
+                        try {
+                            const res = await fetch(`/Admin/Orders/UpdateStatus?id=${orderId}&actionType=${action}`, {
+                                method: "POST",
+                                headers: { "X-Requested-With": "XMLHttpRequest" }
+                            });
+                            const data = await res.json();
+
+                            if (data.success) {
+                                const row = document.getElementById(`order-${orderId}`);
+                                const badge = row?.querySelector("#ship-status-" + orderId);
+                                if (badge) {
+                                    badge.className = "badge " + (
+                                        data.newStatus === "Approved" ? "bg-info text-dark" :
+                                        data.newStatus === "Cancelled" ? "bg-danger" : "bg-secondary"
+                                    );
+                                    badge.textContent = data.newStatus;
+                                }
+                                row.querySelectorAll(".btn-action").forEach(b => b.remove());
+                                alert("✅ " + data.message);
+                            } else {
+                                alert("❌ " + data.message);
+                            }
+                        } catch (err) {
+                            console.error("Update failed:", err);
+                            alert("⚠️ Error processing the order.");
+                        } finally {
+                            btn.disabled = false;
+                            btn.innerHTML = originalHtml;
+                        }
+                    };
+                });
+            }
+
+            // Gắn khi load trang
+            attachActionEvents();
+        });
+    </script>
+}
+
