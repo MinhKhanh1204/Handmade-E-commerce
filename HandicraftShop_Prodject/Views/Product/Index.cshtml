@@ -1,4 +1,5 @@
-﻿@{
+﻿@model HandicraftShop_Prodject.Models.ProductViewModel
+@{
     ViewData["Title"] = "Product Page";
 }
 <!-- Page Title -->
@@ -17,74 +18,22 @@
 <div class="container">
     <div class="row">
 
-        <div class="col-lg-3 sidebar">
-
-            <div class="widgets-container">
-
-                <!-- Product Categories Widget -->
-                <div class="product-categories-widget widget-item">
-
-                    <h3 class="widget-title">Categories</h3>
-
-                    <ul class="category-tree list-unstyled mb-0">
-
-
-                        <!-- Books Category (no subcategories) -->
-                        <li class="category-item">
-                            <div class="d-flex justify-content-between align-items-center category-header">
-                                <a href="#" class="category-link">Books</a>
-                            </div>
-                        </li>
-
-                         <li class="category-item">
-                            <div class="d-flex justify-content-between align-items-center category-header">
-                                <a href="#" class="category-link">Books</a>
-                            </div>
-                        </li>
-
-                         <li class="category-item">
-                            <div class="d-flex justify-content-between align-items-center category-header">
-                                <a href="#" class="category-link">Books</a>
-                            </div>
-                        </li>
-
-                        <li class="category-item">
-                            <div class="d-flex justify-content-between align-items-center category-header">
-                                <a href="#" class="category-link">Books</a>
-                            </div>
-                        </li>
-
-                        <li class="category-item">
-                            <div class="d-flex justify-content-between align-items-center category-header">
-                                <a href="#" class="category-link">Books</a>
-                            </div>
-                        </li>
-
-                       
-                    </ul>
-
-                </div><!--/Product Categories Widget -->
-            </div>
-
-        </div>
-
-        <div class="col-lg-9">
-
+        <div class="col-lg-12">
             <!-- Category Header Section -->
-            <section id="category-header" class="category-header section">
+            <section id="category-header" class="category-header section" style="padding-top: 10px">
 
                 <div class="container" data-aos="fade-up">
 
                     <!-- Filter and Sort Options -->
-                    <div class="filter-container mb-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="filter-container mb-4" data-aos="fade-up" data-aos-delay="100" style="padding: 0px">
                         <div class="row g-3">
                             <div class="col-md-6 col-lg-8"></div>
                             <div class="col-12 col-md-6 col-lg-4">
                                 <div class="filter-item search-form">
                                     <label for="productSearch" class="form-label">Search Products</label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="productSearch" placeholder="Search for products..." aria-label="Search for products">
-                                        <button class="btn search-btn" type="button">
+                                        <input type="text" value="@Model.Search" class="form-control" id="productSearch" placeholder="Search for products..." aria-label="Search for products">
+                                        <button id="btnSearch" class="btn search-btn" type="button">
                                             <i class="bi bi-search"></i>
                                         </button>
                                     </div>
@@ -98,185 +47,99 @@
                 </div>
 
             </section><!-- /Category Header Section -->
-            <!-- Category Product List Section -->
-            <section id="category-product-list" class="category-product-list section">
+        </div>
 
-                <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="col-lg-3 sidebar">
 
-                    <div class="row gy-4">
-                        <!-- Product 1 -->
-                        <div class="col-lg-4">
-                            <div class="product-box">
-                                <div class="product-thumb">
-                                    <span class="product-label">New Season</span>
-                                    <img src="assets/img/product/product-3.webp" alt="Product Image" class="main-img" loading="lazy">
-                                    <div class="product-overlay">
-                                        <div class="product-quick-actions">
-                                            <button type="button" class="quick-action-btn">
-                                                <i class="bi bi-heart"></i>
-                                            </button>
-                                            <button type="button" class="quick-action-btn">
-                                                <i class="bi bi-arrow-repeat"></i>
-                                            </button>
-                                            <button type="button" class="quick-action-btn">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                        </div>
-                                        <div class="add-to-cart-container">
-                                            <button type="button" class="add-to-cart-btn">Add to Cart</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="product-content">
-                                    <div class="product-details">
-                                        <h3 class="product-title"><a href="/Product/Detail">Vestibulum ante ipsum primis</a></h3>
-                                        <div class="product-price">
-                                            <span>$149.99</span>
-                                        </div>
-                                    </div>
-                                    <div class="product-rating-container">
-                                        <div class="rating-stars">
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star"></i>
-                                        </div>
-                                        <span class="rating-number">4.0</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- End Product 1 -->
-                        <!-- Product 2 -->
-                        <div class="col-lg-4">
-                            <div class="product-box">
-                                <div class="product-thumb">
-                                    <span class="product-label product-label-sale">-30%</span>
-                                    <img src="assets/img/product/product-6.webp" alt="Product Image" class="main-img" loading="lazy">
-                                    <div class="product-overlay">
-                                        <div class="product-quick-actions">
-                                            <button type="button" class="quick-action-btn">
-                                                <i class="bi bi-heart"></i>
-                                            </button>
-                                            <button type="button" class="quick-action-btn">
-                                                <i class="bi bi-arrow-repeat"></i>
-                                            </button>
-                                            <button type="button" class="quick-action-btn">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                        </div>
-                                        <div class="add-to-cart-container">
-                                            <button type="button" class="add-to-cart-btn">Add to Cart</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="product-content">
-                                    <div class="product-details">
-                                        <h3 class="product-title"><a href="/Product/Detail">Aliquam tincidunt mauris eu risus</a></h3>
-                                        <div class="product-price">
-                                            <span class="original">$199.99</span>
-                                            <span class="sale">$139.99</span>
-                                        </div>
-                                    </div>
-                                    <div class="product-rating-container">
-                                        <div class="rating-stars">
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star-half"></i>
-                                        </div>
-                                        <span class="rating-number">4.5</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- End Product 2 -->
-                        <!-- Product 2 -->
-                        <div class="col-lg-4">
-                            <div class="product-box">
-                                <div class="product-thumb">
-                                    <span class="product-label product-label-sale">-30%</span>
-                                    <img src="assets/img/product/product-6.webp" alt="Product Image" class="main-img" loading="lazy">
-                                    <div class="product-overlay">
-                                        <div class="product-quick-actions">
-                                            <button type="button" class="quick-action-btn">
-                                                <i class="bi bi-heart"></i>
-                                            </button>
-                                            <button type="button" class="quick-action-btn">
-                                                <i class="bi bi-arrow-repeat"></i>
-                                            </button>
-                                            <button type="button" class="quick-action-btn">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                        </div>
-                                        <div class="add-to-cart-container">
-                                            <button type="button" class="add-to-cart-btn">Add to Cart</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="product-content">
-                                    <div class="product-details">
-                                        <h3 class="product-title"><a href="/Product/Detail">Aliquam tincidunt mauris eu risus</a></h3>
-                                        <div class="product-price">
-                                            <span class="original">$199.99</span>
-                                            <span class="sale">$139.99</span>
-                                        </div>
-                                    </div>
-                                    <div class="product-rating-container">
-                                        <div class="rating-stars">
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star-half"></i>
-                                        </div>
-                                        <span class="rating-number">4.5</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- End Product 2 -->
-                    </div>
+            <div class="widgets-container" style="margin-top: 0px">
 
-                </div>
+                <!-- Product Categories Widget -->
+                <div class="product-categories-widget widget-item">
 
-            </section><!-- /Category Product List Section -->
-            <!-- Category Pagination Section -->
-            <section id="category-pagination" class="category-pagination section">
-
-                <div class="container">
-                    <nav class="d-flex justify-content-center" aria-label="Page navigation">
-                        <ul>
-                            <li>
-                                <a href="#" aria-label="Previous page">
-                                    <i class="bi bi-arrow-left"></i>
-                                    <span class="d-none d-sm-inline">Previous</span>
-                                </a>
+                    <h3 class="widget-title">Categories</h3>
+                    <ul class="category-tree mb-0">
+                        <!-- Books Category (no subcategories) -->
+                        @foreach (var item in Model.Categories)
+                        {
+                            <li class="category-item @(Model.CategoryId == item.CategoryId ? "active" : "")"
+                                data-category="@item.CategoryId">
+                                <div class="d-flex justify-content-between align-items-center category-header" style="padding-left:20px">
+                                    <a href="#" class="category-link">@item.CategoryName</a>
+                                </div>
                             </li>
+                        }
+                    </ul>
 
-                            <li><a href="#" class="active">1</a></li>
-                            <li><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li class="ellipsis">...</li>
-                            <li><a href="#">8</a></li>
-                            <li><a href="#">9</a></li>
-                            <li><a href="#">10</a></li>
+                </div><!--/Product Categories Widget -->
+            </div>
 
-                            <li>
-                                <a href="#" aria-label="Next page">
-                                    <span class="d-none d-sm-inline">Next</span>
-                                    <i class="bi bi-arrow-right"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
+        </div>
 
-            </section><!-- /Category Pagination Section -->
-
+        <div class="col-lg-9" id="product-list">
+            @Html.Partial("_ProductListPartial", Model.Products)
         </div>
 
     </div>
 </div>
+
+
+@section Scripts {
+    <script>
+        // Hàm load sản phẩm bằng AJAX
+        function loadProducts(search, categoryId, page) {
+            $.ajax({
+                url: '/Product/Index',
+                type: 'GET',
+                data: {
+                    search: search,
+                    categoryId: categoryId,
+                    page: page
+                },
+                headers: { "X-Requested-With": "XMLHttpRequest" },
+                success: function (response) {
+                    $("#product-list").html(response);
+                },
+                error: function () {
+                    alert("Không thể tải danh sách sản phẩm.");
+                }
+            });
+        }
+
+        function updateCategoryHighlight(categoryId) {
+            $('.category-item').removeClass('active');
+            $('.category-item[data-category="' + categoryId + '"]').addClass('active');
+        }
+
+        $(document).ready(function () {
+            // Sự kiện search
+            $("#btnSearch").click(function () {
+                const search = $("#productSearch").val();
+                const categoryId = $(".category-item.active").data("category");
+                loadProducts(search, categoryId, 1);
+            });
+
+            // Enter để search
+            $("#productSearch").keypress(function (e) {
+                if (e.which === 13) {
+                    $("#btnSearch").click();
+                }
+            });
+
+            // Click category
+            $(".category-item").click(function () {
+                const categoryId = $(this).data("category");
+                updateCategoryHighlight(categoryId);
+                loadProducts($("#productSearch").val(), categoryId, 1);
+            });
+
+            // Click phân trang (sẽ bind lại mỗi lần load partial)
+            $(document).on("click", ".page-link", function (e) {
+                e.preventDefault();
+                const page = $(this).data("page");
+                const search = $("#productSearch").val();
+                const categoryId = $(".category-item.active").data("category");
+                loadProducts(search, categoryId, page);
+            });
+        });
+    </script>
+}

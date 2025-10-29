@@ -12204,3 +12204,16 @@ section,
   color: color-mix(in srgb, var(--default-color), transparent 60%);
   font-size: 14px;
 }
+.category-tree {
+    list-style: none;
+    padding-left: 0px;
+}
+.category-item.active, .category-item:hover {
+    background-color: var(--accent-color) !important;
+    font-weight: bold;
+    border-radius: 6px;
+}
+
+.category-item.active div a, .category-item:hover div a {
+    color: var(--contrast-color) !important;
+}

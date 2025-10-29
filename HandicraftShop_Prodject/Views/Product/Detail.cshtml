@@ -1,4 +1,5 @@
-﻿@{
+﻿@model BussinessObject.Product
+@{
     ViewData["Title"] = "Product Detail Page";
 }
 <!-- Page Title -->
@@ -24,7 +25,7 @@
                 <div class="product-images">
                     <div class="main-image-container mb-3">
                         <div class="image-zoom-container">
-                            <img src="/assets/img/product/product-details-1.webp" alt="Product Image" class="img-fluid main-image drift-zoom" id="main-product-image" data-zoom="/assets/img/product/product-details-1.webp">
+                            <img src="/assets/img/product/@Model.ProductImages.First().ImageUrl" alt="Product Image" class="img-fluid main-image drift-zoom" id="main-product-image" data-zoom="/assets/img/product/@Model.ProductImages.First().ImageUrl">
                         </div>
                     </div>
 
@@ -51,21 +52,12 @@
                                 }
                             </script>
                             <div class="swiper-wrapper">
-                                <div class="swiper-slide thumbnail-item active" data-image="/assets/img/product/product-details-1.webp">
-                                    <img src="/assets/img/product/product-details-1.webp" alt="Product Thumbnail" class="img-fluid">
+                                @foreach (var item in Model.ProductImages)
+                                    {
+                                    <div class="swiper-slide thumbnail-item active" data-image="/assets/img/product/@item.ImageUrl">
+                                    <img src="/assets/img/product/@item.ImageUrl" alt="Product Thumbnail" class="img-fluid">
                                 </div>
-                                <div class="swiper-slide thumbnail-item" data-image="/assets/img/product/product-details-2.webp">
-                                    <img src="/assets/img/product/product-details-2.webp" alt="Product Thumbnail" class="img-fluid">
-                                </div>
-                                <div class="swiper-slide thumbnail-item" data-image="/assets/img/product/product-details-3.webp">
-                                    <img src="/assets/img/product/product-details-3.webp" alt="Product Thumbnail" class="img-fluid">
-                                </div>
-                                <div class="swiper-slide thumbnail-item" data-image="/assets/img/product/product-details-4.webp">
-                                    <img src="/assets/img/product/product-details-4.webp" alt="Product Thumbnail" class="img-fluid">
-                                </div>
-                                <div class="swiper-slide thumbnail-item" data-image="/assets/img/product/product-details-5.webp">
-                                    <img src="/assets/img/product/product-details-5.webp" alt="Product Thumbnail" class="img-fluid">
-                                </div>
+                                }
                             </div>
                             <div class="swiper-button-next"></div>
                             <div class="swiper-button-prev"></div>
@@ -78,33 +70,64 @@
             <div class="col-lg-6" data-aos="fade-left" data-aos-delay="200">
                 <div class="product-info">
                     <div class="product-meta mb-2">
-                        <span class="product-category">Headphones</span>
+                        <span class="product-category">@Model.Category.CategoryName</span>
+                        @{
+                            var avgRating = Model.Feedbacks.Any()
+                            ? Math.Round(Model.Feedbacks.Average(f => f.Rating ?? 0), 1)
+                            : 0;
+                        }
                         <div class="product-rating">
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-half"></i>
-                            <span class="rating-count">(42)</span>
+                            @for (var i = 1; i <= 5; i++)
+                            {
+                                if (avgRating >= i)
+                                {
+                                // Sao vàng đầy
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                }
+                                else if (avgRating >= i - 0.5)
+                                {
+                                // Sao nửa vàng
+                                    <i class="bi bi-star-half text-warning"></i>
+                                }
+                                else
+                                {
+                                // Sao rỗng
+                                    <i class="bi bi-star text-warning"></i>
+                                }
+                            }
+                            <span class="rating-count">(@Model.Feedbacks.Count)</span>
                         </div>
                     </div>
 
-                    <h1 class="product-title">Lorem Ipsum Wireless Noise Cancelling Headphones</h1>
+                    <h1 class="product-title">@Model.ProductName</h1>
 
                     <div class="product-price-container mb-4">
-                        <span class="current-price">$249.99</span>
-                        <span class="original-price">$299.99</span>
-                        <span class="discount-badge">-17%</span>
+                        @{
+                            var originalPrice = Model.Price ?? 0;
+                            var discountedPrice = originalPrice - Model.Discount ?? 0;
+                        }
+                        @if (originalPrice != discountedPrice){
+                            <span class="current-price">@discountedPrice.ToString("N0") VNĐ</span>
+                            <span class="original-price">@Model.Price?.ToString("N0") VNĐ</span>
+                            <span class="discount-badge">@Model.Discount?.ToString("N0") VNĐ</span>
+                        }else{
+                            <span class="current-price">@Model.Price?.ToString("N0") VNĐ</span>
+                        }
                     </div>
 
                     <div class="product-short-description mb-4">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum at lacus congue, suscipit elit nec, tincidunt orci. Phasellus egestas nisi vitae lectus imperdiet venenatis.</p>
+                        <p>@Model.Description</p>
                     </div>
 
                     <div class="product-availability mb-4">
-                        <i class="bi bi-check-circle-fill text-success"></i>
-                        <span>In Stock</span>
-                        <span class="stock-count">(24 items left)</span>
+                        @if (@Model.StockQuantity > 0){
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            <span>In Stock</span>
+                            <span class="stock-count">(@Model.StockQuantity items left)</span>
+                        }else{
+                            <i class="bi bi-x-circle-fill text-danger"></i>
+                            <span>Out Stock</span>
+                        }
                     </div>
 
                     <!-- Quantity Selector -->
@@ -162,10 +185,7 @@
                             <button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab" aria-controls="description" aria-selected="true">Description</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="specifications-tab" data-bs-toggle="tab" data-bs-target="#specifications" type="button" role="tab" aria-controls="specifications" aria-selected="false">Specifications</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab" aria-controls="reviews" aria-selected="false">Reviews (42)</button>
+                            <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab" aria-controls="reviews" aria-selected="false">Reviews (@Model.Feedbacks.Count)</button>
                         </li>
                     </ul>
                     <div class="tab-content" id="productTabsContent">
@@ -173,86 +193,7 @@
                         <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
                             <div class="product-description">
                                 <h4>Product Overview</h4>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum at lacus congue, suscipit elit nec, tincidunt orci. Phasellus egestas nisi vitae lectus imperdiet venenatis. Suspendisse vulputate quam diam, et consectetur augue condimentum in. Aenean dapibus urna eget nisi pharetra, in iaculis nulla blandit. Praesent at consectetur sem, sed sollicitudin nibh. Ut interdum risus ac nulla placerat aliquet.</p>
-
-                                <h4>Key Features</h4>
-                                <ul>
-                                    <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit</li>
-                                    <li>Vestibulum at lacus congue, suscipit elit nec, tincidunt orci</li>
-                                    <li>Phasellus egestas nisi vitae lectus imperdiet venenatis</li>
-                                    <li>Suspendisse vulputate quam diam, et consectetur augue condimentum in</li>
-                                    <li>Aenean dapibus urna eget nisi pharetra, in iaculis nulla blandit</li>
-                                </ul>
-
-                                <h4>What's in the Box</h4>
-                                <ul>
-                                    <li>Lorem Ipsum Wireless Headphones</li>
-                                    <li>Carrying Case</li>
-                                    <li>USB-C Charging Cable</li>
-                                    <li>3.5mm Audio Cable</li>
-                                    <li>User Manual</li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <!-- Specifications Tab -->
-                        <div class="tab-pane fade" id="specifications" role="tabpanel" aria-labelledby="specifications-tab">
-                            <div class="product-specifications">
-                                <div class="specs-group">
-                                    <h4>Technical Specifications</h4>
-                                    <div class="specs-table">
-                                        <div class="specs-row">
-                                            <div class="specs-label">Connectivity</div>
-                                            <div class="specs-value">Bluetooth 5.0, 3.5mm jack</div>
-                                        </div>
-                                        <div class="specs-row">
-                                            <div class="specs-label">Battery Life</div>
-                                            <div class="specs-value">Up to 30 hours</div>
-                                        </div>
-                                        <div class="specs-row">
-                                            <div class="specs-label">Charging Time</div>
-                                            <div class="specs-value">3 hours</div>
-                                        </div>
-                                        <div class="specs-row">
-                                            <div class="specs-label">Driver Size</div>
-                                            <div class="specs-value">40mm</div>
-                                        </div>
-                                        <div class="specs-row">
-                                            <div class="specs-label">Frequency Response</div>
-                                            <div class="specs-value">20Hz - 20kHz</div>
-                                        </div>
-                                        <div class="specs-row">
-                                            <div class="specs-label">Impedance</div>
-                                            <div class="specs-value">32 Ohm</div>
-                                        </div>
-                                        <div class="specs-row">
-                                            <div class="specs-label">Weight</div>
-                                            <div class="specs-value">250g</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="specs-group">
-                                    <h4>Features</h4>
-                                    <div class="specs-table">
-                                        <div class="specs-row">
-                                            <div class="specs-label">Noise Cancellation</div>
-                                            <div class="specs-value">Active Noise Cancellation (ANC)</div>
-                                        </div>
-                                        <div class="specs-row">
-                                            <div class="specs-label">Controls</div>
-                                            <div class="specs-value">Touch controls, Voice assistant</div>
-                                        </div>
-                                        <div class="specs-row">
-                                            <div class="specs-label">Microphone</div>
-                                            <div class="specs-value">Dual beamforming microphones</div>
-                                        </div>
-                                        <div class="specs-row">
-                                            <div class="specs-label">Water Resistance</div>
-                                            <div class="specs-value">IPX4 (splash resistant)</div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <p>@Model.Description</p>
                             </div>
                         </div>
 
@@ -261,53 +202,55 @@
                             <div class="product-reviews">
                                 <div class="reviews-summary">
                                     <div class="overall-rating">
-                                        <div class="rating-number">4.5</div>
+                                        <div class="rating-number">@avgRating</div>
                                         <div class="rating-stars">
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star-half"></i>
+                                            @for (var i = 1; i <= 5; i++)
+                                            {
+                                                if (avgRating >= i)
+                                                {
+                                                // Sao vàng đầy
+                                                    <i class="bi bi-star-fill text-warning"></i>
+                                                }
+                                                else if (avgRating >= i - 0.5)
+                                                {
+                                                // Sao nửa vàng
+                                                    <i class="bi bi-star-half text-warning"></i>
+                                                }
+                                                else
+                                                {
+                                                // Sao rỗng
+                                                    <i class="bi bi-star text-warning"></i>
+                                                }
+                                            }
                                         </div>
-                                        <div class="rating-count">Based on 42 reviews</div>
+                                        <div class="rating-count">Based on @Model.Feedbacks.Count reviews</div>
                                     </div>
 
+                                    @{
+                                        var feedbacks = Model.Feedbacks;
+                                        var totalFeedback = feedbacks.Count();
+                                        var ratingCounts = Enumerable.Range(1, 5)
+                                        .Select(r => new
+                                        {
+                                            Star = r,
+                                            Count = feedbacks.Count(f => f.Rating == r)
+                                        })
+                                        .OrderByDescending(r => r.Star) // hiển thị từ 5 sao xuống 1 sao
+                                        .ToList();
+                                    }
+
                                     <div class="rating-breakdown">
-                                        <div class="rating-bar">
-                                            <div class="rating-label">5 stars</div>
-                                            <div class="progress">
-                                                <div class="progress-bar" role="progressbar" style="width: 65%;" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
+                                        @foreach (var r in ratingCounts)
+                                        {
+                                            var percentage = totalFeedback > 0 ? (r.Count * 100.0 / totalFeedback) : 0;
+                                            <div class="rating-bar">
+                                                <div class="rating-label">@r.Star @((r.Star == 1) ? "star" : "stars")</div>
+                                                <div class="progress">
+                                                    <div class="progress-bar" role="progressbar" style="width: @percentage%;" aria-valuenow="percentage" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                                <div class="rating-count">@r.Count</div>
                                             </div>
-                                            <div class="rating-count">27</div>
-                                        </div>
-                                        <div class="rating-bar">
-                                            <div class="rating-label">4 stars</div>
-                                            <div class="progress">
-                                                <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
-                                            <div class="rating-count">10</div>
-                                        </div>
-                                        <div class="rating-bar">
-                                            <div class="rating-label">3 stars</div>
-                                            <div class="progress">
-                                                <div class="progress-bar" role="progressbar" style="width: 8%;" aria-valuenow="8" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
-                                            <div class="rating-count">3</div>
-                                        </div>
-                                        <div class="rating-bar">
-                                            <div class="rating-label">2 stars</div>
-                                            <div class="progress">
-                                                <div class="progress-bar" role="progressbar" style="width: 2%;" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
-                                            <div class="rating-count">1</div>
-                                        </div>
-                                        <div class="rating-bar">
-                                            <div class="rating-label">1 star</div>
-                                            <div class="progress">
-                                                <div class="progress-bar" role="progressbar" style="width: 2%;" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
-                                            <div class="rating-count">1</div>
-                                        </div>
+                                        }
                                     </div>
                                 </div>
 
@@ -356,79 +299,44 @@
                                 <div class="reviews-list mt-5">
                                     <h4>Customer Reviews</h4>
 
-                                    <!-- Review Item -->
-                                    <div class="review-item">
-                                        <div class="review-header">
-                                            <div class="reviewer-info">
-                                                <img src="/assets/img/person/person-m-1.webp" alt="Reviewer" class="reviewer-avatar">
-                                                <div>
-                                                    <h5 class="reviewer-name">John Doe</h5>
-                                                    <div class="review-date">03/15/2024</div>
+                                   @foreach (var item in Model.Feedbacks)
+                                    {
+                                        <div class="review-item">
+                                            <div class="review-header">
+                                                <div class="reviewer-info">
+                                                    <img src="/assets/img/person/@item.Customer.CustomerNavigation.Avatar" alt="Reviewer" class="reviewer-avatar">
+                                                    <div>
+                                                        <h5 class="reviewer-name">@item.Customer.CustomerNavigation.Username</h5>
+                                                        <div class="review-date">@Model.CreatedAt?.ToString("dd/MM/yyyy")</div>
+                                                    </div>
+                                                </div>
+                                                <div class="review-rating">
+                                                    @for (var i = 1; i <= 5; i++)
+                                                    {
+                                                        if (item.Rating >= i)
+                                                        {
+                                                        // Sao vàng đầy
+                                                            <i class="bi bi-star-fill text-warning"></i>
+                                                        }
+                                                        else if (item.Rating >= i - 0.5)
+                                                        {
+                                                        // Sao nửa vàng
+                                                            <i class="bi bi-star-half text-warning"></i>
+                                                        }
+                                                        else
+                                                        {
+                                                        // Sao rỗng
+                                                            <i class="bi bi-star text-warning"></i>
+                                                        }
+                                                    }
                                                 </div>
                                             </div>
-                                            <div class="review-rating">
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
+                                            <h5 class="review-title">Comment</h5>
+                                            <div class="review-content">
+                                                <p>@item.Comment</p>
                                             </div>
                                         </div>
-                                        <h5 class="review-title">Exceptional sound quality and comfort</h5>
-                                        <div class="review-content">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum at lacus congue, suscipit elit nec, tincidunt orci. Phasellus egestas nisi vitae lectus imperdiet venenatis. Suspendisse vulputate quam diam, et consectetur augue condimentum in.</p>
-                                        </div>
-                                    </div><!-- End Review Item -->
-                                    <!-- Review Item -->
-                                    <div class="review-item">
-                                        <div class="review-header">
-                                            <div class="reviewer-info">
-                                                <img src="/assets/img/person/person-f-2.webp" alt="Reviewer" class="reviewer-avatar">
-                                                <div>
-                                                    <h5 class="reviewer-name">Jane Smith</h5>
-                                                    <div class="review-date">02/28/2024</div>
-                                                </div>
-                                            </div>
-                                            <div class="review-rating">
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star"></i>
-                                            </div>
-                                        </div>
-                                        <h5 class="review-title">Great headphones, battery could be better</h5>
-                                        <div class="review-content">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum at lacus congue, suscipit elit nec, tincidunt orci. Phasellus egestas nisi vitae lectus imperdiet venenatis.</p>
-                                        </div>
-                                    </div><!-- End Review Item -->
-                                    <!-- Review Item -->
-                                    <div class="review-item">
-                                        <div class="review-header">
-                                            <div class="reviewer-info">
-                                                <img src="/assets/img/person/person-m-3.webp" alt="Reviewer" class="reviewer-avatar">
-                                                <div>
-                                                    <h5 class="reviewer-name">Michael Johnson</h5>
-                                                    <div class="review-date">02/15/2024</div>
-                                                </div>
-                                            </div>
-                                            <div class="review-rating">
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-half"></i>
-                                            </div>
-                                        </div>
-                                        <h5 class="review-title">Impressive noise cancellation</h5>
-                                        <div class="review-content">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum at lacus congue, suscipit elit nec, tincidunt orci. Phasellus egestas nisi vitae lectus imperdiet venenatis. Suspendisse vulputate quam diam.</p>
-                                        </div>
-                                    </div><!-- End Review Item -->
-
-                                    <div class="text-center mt-4">
-                                        <button class="btn btn-outline-primary load-more-btn">Load More Reviews</button>
-                                    </div>
+                                    }
                                 </div>
                             </div>
                         </div>
