@@ -53,7 +53,7 @@ namespace HandicraftShop_Prodject.Controllers
 					}
 				}
 
-				ViewBag.Error = "Invalid email or password.";
+                TempData["error"] = "Invalid email or password.";
 			}
 			return View(model);
 		}

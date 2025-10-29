@@ -1,0 +1,93 @@
+﻿@using DTO
+@model PagedResult<ProductDTO>
+<!-- Category Product List Section -->
+<section id="category-product-list" class="category-product-list section">
+
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row gy-4">
+            @foreach (var item in Model.Items)
+            {
+                <div class="col-lg-4">
+                    <div class="product-box">
+                        <div class="product-thumb">
+                            <span class="product-label">New Season</span>
+                            <img src="assets/img/product/@item.ImageUrl" alt="Product Image" class="main-img" loading="lazy">
+                            <div class="product-overlay">
+                                <div class="product-quick-actions">
+                                    <button type="button" class="quick-action-btn">
+                                        <i class="bi bi-heart"></i>
+                                    </button>
+                                    <button type="button" class="quick-action-btn">
+                                        <i class="bi bi-arrow-repeat"></i>
+                                    </button>
+                                    <button type="button" class="quick-action-btn">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="add-to-cart-container">
+                                    <button type="button" class="add-to-cart-btn">Add to Cart</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product-content">
+                            <div class="product-details">
+                                <h3 class="product-title"><a href="/Product/Detail/@item.ProductId">@item.ProductName</a></h3>
+                                <div class="product-price">
+                                    <span>@item.Price?.ToString("N0") VNĐ</span>
+                                </div>
+                            </div>
+                            <div class="product-rating-container">
+                                <div class="rating-stars">
+                                    @for (var i = 1; i <= 5; i++)
+                                    {
+                                        if (item.AverageRating >= i)
+                                        {
+                                        // Sao vàng đầy
+                                            <i class="bi bi-star-fill text-warning"></i>
+                                        }
+                                        else if (item.AverageRating >= i - 0.5)
+                                        {
+                                        // Sao nửa vàng
+                                            <i class="bi bi-star-half text-warning"></i>
+                                        }
+                                        else
+                                        {
+                                        // Sao rỗng
+                                            <i class="bi bi-star text-warning"></i>
+                                        }
+                                    }
+                                </div>
+                                <span class="rating-number">@item.AverageRating</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+    </div>
+
+</section>
+<!-- /Category Product List Section -->
+<!-- Category Pagination Section -->
+@if (Model.TotalPages > 1)
+{
+    <section id="category-pagination" class="category-pagination section">
+
+    <div class="container">
+        <nav class="d-flex justify-content-center" aria-label="Page navigation">
+            <ul>
+             
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item">
+                            <a href="#" class="page-link @(i == Model.CurrentPage ? "active" : "")" data-page="@i">@i</a>
+                        </li>
+                    }
+            </ul>
+        </nav>
+    </div>
+
+</section>
+}
