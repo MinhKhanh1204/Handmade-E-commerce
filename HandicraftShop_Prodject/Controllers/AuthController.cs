@@ -5,6 +5,9 @@ using HandicraftShop_Prodject.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using HandicraftShop_Prodject.Utils;
+using Microsoft.AspNetCore.Authentication.Google;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Facebook;
 
 namespace HandicraftShop_Prodject.Controllers
 {
@@ -95,6 +98,105 @@ namespace HandicraftShop_Prodject.Controllers
 		{
 			return View();
 		}
-		
+
+		public async Task LoginGoogle()
+		{
+			await HttpContext.ChallengeAsync(GoogleDefaults.AuthenticationScheme,
+				new AuthenticationProperties
+				{
+					RedirectUri = Url.Action("GoogleResponse")
+				});
+		}
+
+		public async Task<IActionResult> GoogleResponse()
+		{
+			var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+			var claims = result.Principal.Identities.FirstOrDefault().Claims;
+			// Lấy thông tin từ Google
+			var email = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+			var name = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+
+			var account = _accountService.GetAccountByEmail(email);
+
+			if (account == null)
+			{
+				//register account
+				var success = _accountService.Register(new RegisterDTO
+				{
+					Username = name,
+					Email = email,
+					Password = "123456",
+					FullName = name
+				});
+
+                account = _accountService.GetAccountByEmail(email);
+            }
+
+            //login
+            //Thiết lập phiên đăng nhập cho tài khoản
+            await HttpContext.SignInAsync(AccountUtils.CreatePrincipal(account));
+			var firstRole = account.UserRoles.FirstOrDefault()?.Role?.RoleName;
+			switch (firstRole)
+			{
+				case "Admin":
+					return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+				case "Employee":
+					return RedirectToAction("Index", "Dashboard", new { area = "Employee" });
+				default:
+					return RedirectToAction("Index", "Home");
+			}
+		}
+
+		public async Task LoginFacebook()
+		{
+			await HttpContext.ChallengeAsync(
+				FacebookDefaults.AuthenticationScheme,
+				new AuthenticationProperties { RedirectUri = Url.Action("FacebookResponse") }
+			);
+		}
+
+		public async Task<IActionResult> FacebookResponse()
+		{
+			var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+			if (!result.Succeeded)
+				return RedirectToAction("Login");
+
+			var claims = result.Principal.Identities.FirstOrDefault().Claims;
+
+			var email = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+			var name = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+
+			var account = _accountService.GetAccountByEmail(email);
+
+			if (account == null)
+			{
+				//register account
+				var success = _accountService.Register(new RegisterDTO
+				{
+					Username = name,
+					Email = email,
+					Password = "123456",
+					FullName = name
+				});
+                account = _accountService.GetAccountByEmail(email);
+            }
+
+			//login
+			//Thiết lập phiên đăng nhập cho tài khoản
+			await HttpContext.SignInAsync(AccountUtils.CreatePrincipal(account));
+			var firstRole = account.UserRoles.FirstOrDefault()?.Role?.RoleName;
+			switch (firstRole)
+			{
+				case "Admin":
+					return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+				case "Employee":
+					return RedirectToAction("Index", "Dashboard", new { area = "Employee" });
+				default:
+					return RedirectToAction("Index", "Home");
+			}
+		}
+
+
 	}
 }

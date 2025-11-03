@@ -13,5 +13,6 @@ namespace Services
         Product? GetProductById(string productId);
 
         PagedResult<ProductDTO> GetPagedProducts(string? search, int? categoryId, int page, int pageSize);
+        IEnumerable<ProductDTO> GetTop4PromotionProducts();
     }
 }

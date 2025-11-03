@@ -1,4 +1,5 @@
-﻿using BussinessObject;
+﻿using Azure;
+using BussinessObject;
 using DTO;
 using Repositories;
 using System;
@@ -42,6 +43,7 @@ namespace Services
                     ProductName = p.ProductName,
                     Description = p.Description,
                     Price = p.Price,
+                    StockQuantity = p.StockQuantity,
                     Discount = p.Discount,
                     CategoryName = p.Category?.CategoryName,
                     ImageUrl = p.ProductImages.FirstOrDefault(img => img.IsMain == true)?.ImageUrl
@@ -64,6 +66,35 @@ namespace Services
         public Product? GetProductById(string productId)
         {
             return _productRepository.GetProductById(productId);
+        }
+
+        public IEnumerable<ProductDTO> GetTop4PromotionProducts()
+        {
+            var query = _productRepository.GetAllProducts();
+            var items = query
+                .Where(p => p.Discount > 0)
+                .OrderByDescending(p => p.ProductId)
+                .Take(4)
+                .AsEnumerable()
+                .Select(p => new ProductDTO
+                {
+                    ProductId = p.ProductId,
+                    ProductName = p.ProductName,
+                    Description = p.Description,
+                    Price = p.Price,
+                    StockQuantity = p.StockQuantity,
+                    Discount = p.Discount,
+                    CategoryName = p.Category?.CategoryName,
+                    ImageUrl = p.ProductImages.FirstOrDefault(img => img.IsMain == true)?.ImageUrl
+                                   ?? p.ProductImages.FirstOrDefault()?.ImageUrl
+                                   ?? "/images/no-image.png",
+                    AverageRating = p.Feedbacks.Any()
+                            ? Math.Round(p.Feedbacks.Average(f => f.Rating ?? 0), 1)
+                            : 0
+                })
+                .ToList();
+
+            return items;
         }
     }
 }

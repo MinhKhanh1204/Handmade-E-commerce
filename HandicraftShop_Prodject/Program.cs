@@ -1,5 +1,6 @@
 using DataAccessObject;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.EntityFrameworkCore;
 using Repositories;
 using Services;
@@ -39,6 +40,20 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 					option.LoginPath = "/Auth/Login";
 					option.AccessDeniedPath = "/Auth/AccessDenied";
 					option.ExpireTimeSpan = TimeSpan.FromMinutes(120);
+				})
+				.AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
+				{
+					options.ClientId = builder.Configuration.GetSection("GoogleKeys:ClientId").Value;
+					options.ClientSecret = builder.Configuration.GetSection("GoogleKeys:ClientSecret").Value;
+				})
+				.AddFacebook(options =>
+				{
+					options.AppId = builder.Configuration["FacebookKeys:AppId"];
+					options.AppSecret = builder.Configuration["FacebookKeys:AppSecret"];
+					options.Fields.Add("name");
+					options.Fields.Add("email");
+					options.Fields.Add("picture");
+					options.SaveTokens = true;
 				});
 
 

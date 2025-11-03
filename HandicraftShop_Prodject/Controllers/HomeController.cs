@@ -1,27 +1,21 @@
-using System.Diagnostics;
-using HandicraftShop_Prodject.Models;
 using Microsoft.AspNetCore.Mvc;
+using Services;
 
 namespace HandicraftShop_Prodject.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IProductService _productService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IProductService productService)
         {
-            _logger = logger;
+            _productService = productService;
         }
 
         public IActionResult Index()
         {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var model = _productService.GetTop4PromotionProducts();
+            return View(model);
         }
     }
 }

@@ -77,5 +77,14 @@ namespace Repositories
         {
             _context.Accounts.Update(account);
         }
-    }
+
+		public Account GetAccountByEmail(string email)
+		{
+			return _context.Accounts
+				.Include(a => a.UserRoles)
+			   .ThenInclude(ur => ur.Role)
+			   .Include(a => a.Customer)
+			   .FirstOrDefault(a => a.Email == email && a.Status == "Active");
+		}
+	}
 }
