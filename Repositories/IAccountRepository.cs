@@ -15,6 +15,6 @@ namespace Repositories
 		void SaveChanges();
         Account GetAccountByID(string id);
         void UpdateProfile(Account account);
-
-    }
+		Account GetAccountByEmail(string email);
+	}
 }

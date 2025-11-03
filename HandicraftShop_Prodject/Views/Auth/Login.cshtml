@@ -65,6 +65,17 @@
 
 								<div class="d-grid">
 									<button type="submit" class="btn btn-primary btn-lg">Login</button>
+									<div class="d-flex justify-content-between" style="margin-top:20px">
+										<a asp-action="LoginGoogle" asp-controller="Auth">
+										<i class="bi bi-google" style="font-size:20px;"></i>
+										<span>Sign in with Google</span>
+									</a>
+
+										<a asp-action="LoginFacebook" asp-controller="Auth">
+										<i class="bi bi-facebook" style="font-size:22px;"></i>
+										<span>Sign in with Facebook</span>
+									</a>
+									</div>
 								</div>
 							</form>
 						</div>

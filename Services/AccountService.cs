@@ -22,7 +22,12 @@ namespace Services
             _accountRepository = accountRepository;
         }
 
-        public Account GetAccountByID(string id)
+		public Account GetAccountByEmail(string email)
+		{
+			return _accountRepository.GetAccountByEmail(email);
+		}
+
+		public Account GetAccountByID(string id)
         {
             return _accountRepository.GetAccountByID(id);
         }

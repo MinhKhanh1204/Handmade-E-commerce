@@ -11,7 +11,14 @@
                 <div class="col-lg-4">
                     <div class="product-box">
                         <div class="product-thumb">
-                            <span class="product-label">New Season</span>
+                            @if (item.StockQuantity == 0)
+                            {
+                                <span class="product-label" style="background-color: #6c757d; color: var(--contrast-color);">Sold Out</span>
+                            }
+                            else if (item.Discount > 0)
+                            {
+                                <span class="product-label" style="background-color: #ff6b6b; color: var(--contrast-color);">Sale</span>
+                            }
                             <img src="assets/img/product/@item.ImageUrl" alt="Product Image" class="main-img" loading="lazy">
                             <div class="product-overlay">
                                 <div class="product-quick-actions">
@@ -25,16 +32,34 @@
                                         <i class="bi bi-eye"></i>
                                     </button>
                                 </div>
-                                <div class="add-to-cart-container">
-                                    <button type="button" class="add-to-cart-btn">Add to Cart</button>
-                                </div>
+                                @if (item.StockQuantity > 0)
+                                {
+                                    <div class="add-to-cart-container">
+                                        <button type="button" class="add-to-cart-btn">Add to Cart</button>
+                                    </div>
+                                }else{
+                                    <div class="product-tags">
+                                        <span class="badge bg-sold-out">Sold Out</span>
+                                    </div>
+                                }
                             </div>
                         </div>
                         <div class="product-content">
                             <div class="product-details">
                                 <h3 class="product-title"><a href="/Product/Detail/@item.ProductId">@item.ProductName</a></h3>
                                 <div class="product-price">
-                                    <span>@item.Price?.ToString("N0") VNĐ</span>
+                                    @{
+                                        var originalPrice = item.Price ?? 0;
+                                        var discountedPrice = originalPrice - item.Discount ?? 0;
+                                    }
+                                    @if (originalPrice != discountedPrice)
+                                    {
+                                        <span class="current-price">@discountedPrice.ToString("N0") VNĐ</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="current-price">@item.Price?.ToString("N0") VNĐ</span>
+                                    }
                                 </div>
                             </div>
                             <div class="product-rating-container">
