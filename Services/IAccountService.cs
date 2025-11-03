@@ -14,5 +14,8 @@ namespace Services
 		bool Register(RegisterDTO account);
         Account GetAccountByID(string id);
         void UpdateProfile(Account account);
+		bool ChangePassword(string accountId, ChangePasswordDTO changePasswordDto);
+		Task<bool> ForgotPasswordAsync(ForgotPasswordDTO forgotPasswordDto);
+		bool ResetPassword(ResetPasswordDTO resetPasswordDto);
     }
 }

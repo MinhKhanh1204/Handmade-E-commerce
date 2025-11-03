@@ -20,6 +20,7 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
 builder.Services.AddScoped<IFeedbackService, FeedbackService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 builder.Services.AddHttpContextAccessor();
 
@@ -38,7 +39,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 					option.Cookie.Name = "AuthenticationCookie";
 					option.LoginPath = "/Auth/Login";
 					option.AccessDeniedPath = "/Auth/AccessDenied";
-					option.ExpireTimeSpan = TimeSpan.FromMinutes(120);
+					option.SlidingExpiration = true; // Tự động gia hạn cookie khi user hoạt động
+					// Không set ExpireTimeSpan để dùng thời gian từ AuthenticationProperties
 				});
 
 

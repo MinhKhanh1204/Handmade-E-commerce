@@ -77,5 +77,49 @@ namespace Repositories
         {
             _context.Accounts.Update(account);
         }
+
+		public void UpdatePassword(string accountId, string newPassword)
+		{
+			var account = _context.Accounts.FirstOrDefault(a => a.AccountId == accountId);
+			if (account != null)
+			{
+				account.Password = newPassword;
+				_context.Accounts.Update(account);
+			}
+		}
+
+		public void UpdatePasswordResetToken(string email, string token, DateTime expiry)
+		{
+			var account = _context.Accounts.FirstOrDefault(a => a.Email == email);
+			if (account != null)
+			{
+				account.PasswordRecoveryToken = token;
+				account.TokenExpiry = expiry;
+				_context.Accounts.Update(account);
+			}
+		}
+
+		public Account GetAccountByResetToken(string email, string token)
+		{
+			return _context.Accounts
+				.Include(a => a.UserRoles)
+				.ThenInclude(ur => ur.Role)
+				.Include(a => a.Customer)
+				.FirstOrDefault(a => a.Email == email 
+					&& a.PasswordRecoveryToken == token 
+					&& a.TokenExpiry > DateTime.Now
+					&& a.Status == "Active");
+		}
+
+		public void ClearPasswordResetToken(string email)
+		{
+			var account = _context.Accounts.FirstOrDefault(a => a.Email == email);
+			if (account != null)
+			{
+				account.PasswordRecoveryToken = null;
+				account.TokenExpiry = null;
+				_context.Accounts.Update(account);
+			}
+		}
     }
 }

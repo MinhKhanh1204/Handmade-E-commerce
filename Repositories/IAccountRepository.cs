@@ -15,6 +15,9 @@ namespace Repositories
 		void SaveChanges();
         Account GetAccountByID(string id);
         void UpdateProfile(Account account);
-
+		void UpdatePassword(string accountId, string newPassword);
+		void UpdatePasswordResetToken(string email, string token, DateTime expiry);
+		Account GetAccountByResetToken(string email, string token);
+		void ClearPasswordResetToken(string email);
     }
 }

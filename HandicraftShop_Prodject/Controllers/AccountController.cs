@@ -1,4 +1,5 @@
 ﻿using BussinessObject;
+using DTO;
 using HandicraftShop_Prodject.Models;
 using HandicraftShop_Prodject.Utils;
 using Microsoft.AspNetCore.Authentication;
@@ -96,6 +97,33 @@ namespace HandicraftShop_Prodject.Controllers
                 }
 			}
 			return View(account);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult ChangePassword(ChangePasswordDTO model)
+		{
+			if (ModelState.IsValid)
+			{
+				var userData = AccountUtils.GetUserData(User);
+				var result = _accountService.ChangePassword(userData.AccountId, model);
+
+				if (result)
+				{
+					TempData["success"] = "Password updated successfully!";
+					return RedirectToAction("Profile");
+				}
+				else
+				{
+					TempData["error"] = "Current password is incorrect.";
+				}
+			}
+			else
+			{
+				TempData["error"] = "Please check your input.";
+			}
+
+			return RedirectToAction("Profile");
 		}
 	}
 }

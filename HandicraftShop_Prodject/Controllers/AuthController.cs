@@ -25,8 +25,8 @@ namespace HandicraftShop_Prodject.Controllers
 		{
 			// Xóa lỗi liên quan đến Register
 			foreach (var key in ModelState.Keys
-										 .Where(k => k.StartsWith("Register."))
-										 .ToList())
+									 .Where(k => k.StartsWith("Register."))
+									 .ToList())
 			{
 				ModelState.Remove(key);
 			}
@@ -39,8 +39,22 @@ namespace HandicraftShop_Prodject.Controllers
 
 				if (account != null)
 				{
+					// Cấu hình thời gian cookie dựa vào RememberMe
+					var authProperties = new AuthenticationProperties
+					{
+						IsPersistent = model.Login.RememberMe,
+						ExpiresUtc = model.Login.RememberMe 
+							? DateTimeOffset.UtcNow.AddDays(30)  // Remember for 30 days
+							: DateTimeOffset.UtcNow.AddHours(2)  // Session only (2 hours)
+					};
+
 					//Thiết lập phiên đăng nhập cho tài khoản
-					await HttpContext.SignInAsync(AccountUtils.CreatePrincipal(account));
+					await HttpContext.SignInAsync(
+						CookieAuthenticationDefaults.AuthenticationScheme,
+						AccountUtils.CreatePrincipal(account),
+						authProperties
+					);
+
 					var firstRole = account.UserRoles.FirstOrDefault()?.Role?.RoleName;
 					switch (firstRole)
 					{
@@ -91,10 +105,74 @@ namespace HandicraftShop_Prodject.Controllers
 			await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 			return RedirectToAction("Login");
 		}
+
 		public IActionResult AccessDenied()
 		{
 			return View();
 		}
-		
+
+		// GET: ForgotPassword
+		public IActionResult ForgotPassword()
+		{
+			return View();
+		}
+
+		// POST: ForgotPassword
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> ForgotPassword(ForgotPasswordDTO model)
+		{
+			if (ModelState.IsValid)
+			{
+				var result = await _accountService.ForgotPasswordAsync(model);
+
+				if (result)
+				{
+					TempData["success"] = "A reset code has been sent to your email.";
+					return RedirectToAction("ResetPassword", new { email = model.Email });
+				}
+				else
+				{
+					TempData["error"] = "Email not found or failed to send reset code.";
+				}
+			}
+
+			return View(model);
+		}
+
+		// GET: ResetPassword
+		public IActionResult ResetPassword(string email)
+		{
+			if (string.IsNullOrEmpty(email))
+			{
+				return RedirectToAction("ForgotPassword");
+			}
+
+			var model = new ResetPasswordDTO { Email = email };
+			return View(model);
+		}
+
+		// POST: ResetPassword
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult ResetPassword(ResetPasswordDTO model)
+		{
+			if (ModelState.IsValid)
+			{
+				var result = _accountService.ResetPassword(model);
+
+				if (result)
+				{
+					TempData["success"] = "Password has been reset successfully! Please login.";
+					return RedirectToAction("Login");
+				}
+				else
+				{
+					TempData["error"] = "Invalid or expired reset code.";
+				}
+			}
+
+			return View(model);
+		}
 	}
 }

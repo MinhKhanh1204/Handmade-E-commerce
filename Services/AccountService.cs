@@ -16,10 +16,12 @@ namespace Services
     public class AccountService : IAccountService
     {
         private readonly IAccountRepository _accountRepository;
+		private readonly IEmailService _emailService;
 
-        public AccountService(IAccountRepository accountRepository)
+        public AccountService(IAccountRepository accountRepository, IEmailService emailService)
         {
             _accountRepository = accountRepository;
+			_emailService = emailService;
         }
 
         public Account GetAccountByID(string id)
@@ -83,6 +85,80 @@ namespace Services
             _accountRepository.UpdateProfile(account);
             _accountRepository.SaveChanges();
         }
+
+		public bool ChangePassword(string accountId, ChangePasswordDTO changePasswordDto)
+		{
+			var account = _accountRepository.GetAccountByID(accountId);
+			if (account == null)
+				return false;
+
+			// Verify current password
+			var hashedCurrentPassword = HashPassword(changePasswordDto.CurrentPassword);
+			if (account.Password != hashedCurrentPassword)
+				return false;
+
+			// Hash new password and update
+			var hashedNewPassword = HashPassword(changePasswordDto.NewPassword);
+			_accountRepository.UpdatePassword(accountId, hashedNewPassword);
+			_accountRepository.SaveChanges();
+
+			return true;
+		}
+
+		public async Task<bool> ForgotPasswordAsync(ForgotPasswordDTO forgotPasswordDto)
+		{
+			try
+			{
+				// Check if account exists
+				var account = _accountRepository.GetByEmail(forgotPasswordDto.Email);
+				if (account == null)
+					return false;
+
+				// Generate 6-digit reset code
+				var resetCode = GenerateResetCode();
+
+				// Set expiry time (15 minutes from now)
+				var expiry = DateTime.Now.AddMinutes(15);
+
+				// Save token to database
+				_accountRepository.UpdatePasswordResetToken(forgotPasswordDto.Email, resetCode, expiry);
+				_accountRepository.SaveChanges();
+
+				// Send email with reset code
+				await _emailService.SendPasswordResetEmailAsync(forgotPasswordDto.Email, resetCode);
+
+				return true;
+			}
+			catch (Exception)
+			{
+				return false;
+			}
+		}
+
+		public bool ResetPassword(ResetPasswordDTO resetPasswordDto)
+		{
+			// Verify token
+			var account = _accountRepository.GetAccountByResetToken(resetPasswordDto.Email, resetPasswordDto.ResetCode);
+			if (account == null)
+				return false;
+
+			// Hash new password and update
+			var hashedNewPassword = HashPassword(resetPasswordDto.NewPassword);
+			_accountRepository.UpdatePassword(account.AccountId, hashedNewPassword);
+
+			// Clear reset token
+			_accountRepository.ClearPasswordResetToken(resetPasswordDto.Email);
+			_accountRepository.SaveChanges();
+
+			return true;
+		}
+
+		private string GenerateResetCode()
+		{
+			// Generate random 6-digit code
+			var random = new Random();
+			return random.Next(100000, 999999).ToString();
+		}
 
         private string HashPassword(string password)
         {
