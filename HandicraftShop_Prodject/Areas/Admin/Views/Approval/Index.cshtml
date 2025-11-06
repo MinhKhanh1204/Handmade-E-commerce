@@ -1,0 +1,84 @@
+﻿@{
+    ViewData["Title"] = "Approval Management";
+    Layout = "_Layout"; // nếu bạn đã tích hợp NiceAdmin Layout
+}
+
+@model dynamic
+
+<main>
+    <div class="pagetitle">
+        <h1>Approval Management</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                <li class="breadcrumb-item active">Approval</li>
+            </ol>
+        </nav>
+    </div>
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-success">@TempData["Message"]</div>
+    }
+
+    <section class="section">
+        <div class="card shadow-sm">
+            <div class="card-body pt-3">
+
+                <ul class="nav nav-tabs" id="approvalTabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#products">Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#categories">Categories</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#articles">Articles</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#vouchers">Vouchers</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content pt-3">
+                    <!-- PRODUCTS -->
+                    <div id="products" class="tab-pane fade show active">
+                        <partial name="_ApprovalTableProducts" model="Model.Products" />
+                    </div>
+
+                    <!-- CATEGORIES -->
+                    <div id="categories" class="tab-pane fade">
+                        <partial name="_ApprovalTableCategories" model="Model.Categories" />
+                    </div>
+
+                    <!-- ARTICLES -->
+                    <div id="articles" class="tab-pane fade">
+                        <partial name="_ApprovalTableArticles" model="Model.Articles" />
+                    </div>
+
+                    <!-- VOUCHERS -->
+                    <div id="vouchers" class="tab-pane fade">
+                        <partial name="_ApprovalTableVouchers" model="Model.Vouchers" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+@section Scripts {
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/approvalHub")
+            .build();
+
+        connection.on("ReceiveApproval", (type, id, status, user) => {
+            const msg = `${type} #${id} has been ${status} by ${user}`;
+            alert(msg);
+            location.reload();
+        });
+
+        connection.start();
+    </script>
+}

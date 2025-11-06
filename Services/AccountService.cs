@@ -75,7 +75,7 @@ namespace Services
 				Phone = registerDto.Phone,
                 Address = registerDto.Address,
 				Status = "Active"
-			};
+            };
 
 			_accountRepository.AddCustomer(customer);
 			_accountRepository.SaveChanges();

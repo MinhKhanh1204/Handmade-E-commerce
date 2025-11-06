@@ -1,0 +1,179 @@
+﻿@model BussinessObject.Order
+
+@{
+    ViewData["Title"] = "Edit Order";
+}
+
+<section class="section py-4">
+    <div class="container">
+        <!-- Title & Back -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold text-primary mb-0">
+                <i class="bi bi-pencil-square me-2"></i>Edit Order
+                <small class="text-muted">#@Model.OrderId</small>
+            </h2>
+            <a asp-area="Admin" asp-controller="Orders" asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Back to List
+            </a>
+        </div>
+
+        <!-- Main Card -->
+        <div class="card shadow-lg border-0 rounded-4">
+            <div class="card-body p-4">
+
+                <form asp-action="Edit" method="post">
+                    <input type="hidden" asp-for="OrderId" />
+
+                    <!-- CUSTOMER / STAFF INFO -->
+                    <h5 class="fw-semibold border-bottom pb-2 mb-3 text-secondary">
+                        <i class="bi bi-person-circle me-2"></i>Customer & Staff Info
+                    </h5>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Customer</label>
+                            <input type="text" class="form-control shadow-sm"
+                                   value="@Model.Customer?.FullName" readonly />
+                            <input type="hidden" asp-for="CustomerId" />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label asp-for="VoucherId" class="form-label fw-semibold">Voucher</label>
+                            <select asp-for="VoucherId" class="form-select shadow-sm" asp-items="ViewBag.VoucherId"></select>
+                            <span asp-validation-for="VoucherId" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <!-- ORDER INFO -->
+                    <h5 class="fw-semibold border-bottom pb-2 mb-3 text-secondary">
+                        <i class="bi bi-cart-check me-2"></i>Order Information
+                    </h5>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <label asp-for="OrderDate" class="form-label fw-semibold">Order Date</label>
+                            <input asp-for="OrderDate" type="datetime-local" class="form-control shadow-sm" />
+                            <span asp-validation-for="OrderDate" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label asp-for="TotalAmount" class="form-label fw-semibold">Total Amount ($)</label>
+                            <input asp-for="TotalAmount" class="form-control shadow-sm" />
+                            <span asp-validation-for="TotalAmount" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label asp-for="UpdatedAt" class="form-label fw-semibold">Last Updated</label>
+                            <input asp-for="UpdatedAt" type="datetime-local" class="form-control shadow-sm" readonly />
+                        </div>
+                    </div>
+
+                    <!-- PAYMENT & SHIPPING -->
+                    <h5 class="fw-semibold border-bottom pb-2 mb-3 text-secondary">
+                        <i class="bi bi-wallet2 me-2"></i>Payment & Shipping
+                    </h5>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <label asp-for="PaymentMethod" class="form-label fw-semibold">Payment Method</label>
+                            <input asp-for="PaymentMethod" class="form-control shadow-sm" placeholder="e.g., Credit Card" />
+                            <span asp-validation-for="PaymentMethod" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label asp-for="PaymentStatus" class="form-label fw-semibold">Payment Status</label>
+                            <select asp-for="PaymentStatus" class="form-select shadow-sm">
+                                <option value="Pending">Pending</option>
+                                <option value="Paid">Paid</option>
+                                <option value="Refunded">Refunded</option>
+                            </select>
+                            <span asp-validation-for="PaymentStatus" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label asp-for="ShippingStatus" class="form-label fw-semibold">Shipping Status</label>
+                            <select asp-for="ShippingStatus" class="form-select shadow-sm">
+                                <option value="Pending">Pending</option>
+                                <option value="Approved">Approved</option>
+                                <option value="Delivered">Delivered</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
+                            <span asp-validation-for="ShippingStatus" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <!-- ADDRESS & NOTE -->
+                    <h5 class="fw-semibold border-bottom pb-2 mb-3 text-secondary">
+                        <i class="bi bi-geo-alt me-2"></i>Address & Notes
+                    </h5>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="ShippingAddress" class="form-label fw-semibold">Shipping Address</label>
+                            <textarea asp-for="ShippingAddress" class="form-control shadow-sm" rows="3"></textarea>
+                            <span asp-validation-for="ShippingAddress" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Note" class="form-label fw-semibold">Note</label>
+                            <textarea asp-for="Note" class="form-control shadow-sm" rows="3" placeholder="Any special request..."></textarea>
+                            <span asp-validation-for="Note" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <!-- BUTTONS -->
+                    <div class="text-end mt-4">
+                        <button type="submit" class="btn btn-primary px-4">
+                            <i class="bi bi-save me-1"></i> Save Changes
+                        </button>
+                        <a asp-action="Index" class="btn btn-outline-secondary px-4 ms-2">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+<style>
+    body {
+        background-color: #f9fafc;
+    }
+
+    .section {
+        background-color: #f9fafc;
+    }
+
+    .card {
+        background-color: #ffffff;
+        transition: all 0.3s ease;
+    }
+
+        .card:hover {
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+
+    label {
+        color: #495057;
+        font-weight: 600;
+    }
+
+    h5 {
+        color: #0d6efd;
+    }
+
+    textarea, input, select {
+        border-radius: 0.5rem !important;
+    }
+
+    button i {
+        vertical-align: middle;
+    }
+</style>

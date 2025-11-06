@@ -1,0 +1,36 @@
+﻿@model IEnumerable<BussinessObject.Product>
+
+<table class="table datatable">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Material</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>@p.ProductName</td>
+                <td>@p.Material</td>
+                <td>@p.Price?.ToString("C")</td>
+                <td><span class="badge bg-warning">@p.Status</span></td>
+                <td>
+                    <form asp-action="Approve" method="post" class="d-inline">
+                        <input type="hidden" name="type" value="product" />
+                        <input type="hidden" name="id" value="@p.ProductId" />
+                        <button type="submit" class="btn btn-success btn-sm"><i class="bi bi-check"></i> Approve</button>
+                    </form>
+                    <form asp-action="Reject" method="post" class="d-inline">
+                        <input type="hidden" name="type" value="product" />
+                        <input type="hidden" name="id" value="@p.ProductId" />
+                        <button type="submit" class="btn btn-danger btn-sm"><i class="bi bi-x"></i> Reject</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
