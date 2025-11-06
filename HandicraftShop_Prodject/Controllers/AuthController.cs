@@ -48,11 +48,14 @@ namespace HandicraftShop_Prodject.Controllers
 					switch (firstRole)
 					{
 						case "Admin":
-							return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+                            HttpContext.Session.SetString("StaffId", account.AccountId);
+                            return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
 						case "Employee":
-							return RedirectToAction("Index", "Dashboard", new { area = "Employee" });
+                            HttpContext.Session.SetString("StaffId", account.AccountId);
+                            return RedirectToAction("Index", "Dashboard", new { area = "Employee" });
 						default:
-							return RedirectToAction("Index", "Home");
+                            HttpContext.Session.SetString("CustomerId", account.AccountId);
+                            return RedirectToAction("Index", "Home");
 					}
 				}
 

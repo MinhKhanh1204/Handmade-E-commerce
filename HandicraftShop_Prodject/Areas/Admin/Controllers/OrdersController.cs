@@ -118,7 +118,7 @@ namespace HandicraftShop_Prodject.Areas.Admin.Controllers
             if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(actionType))
                 return Json(new { success = false, message = "Invalid parameters." });
 
-            var staffId = "STF001"; // => sau này lấy từ Session/Login
+            var staffId = HttpContext.Session.GetString("StaffId"); // => sau này lấy từ Session/Login
             bool result = false;
             string newStatus = "";
 
