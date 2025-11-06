@@ -39,8 +39,208 @@
     ======================================================== -->
 </head>
 
-<body class="index-page">
+<!-- 🔹 Chatbox floating bottom right -->
+<style>
+    /* Chat icon */
+    #chat-icon {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #007bff;
+        color: white;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        z-index: 1000;
+        font-size: 28px;
+        transition: transform 0.2s;
+    }
 
+        #chat-icon:hover {
+            transform: scale(1.1);
+        }
+
+    /* Chat box fixed */
+    #chat-box {
+        position: fixed;
+        bottom: 90px;
+        right: 20px;
+        width: 360px; /* fixed width */
+        height: 400px; /* fixed height */
+        background: #f9f9f9;
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        display: none;
+        flex-direction: column;
+        overflow: hidden;
+        z-index: 1001;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Header */
+    #chat-header {
+        background: #007bff;
+        color: white;
+        padding: 12px;
+        font-weight: bold;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        #chat-header span {
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+    /* Messages area */
+    #chat-messages {
+        flex: 1;
+        padding: 12px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        background: #f0f0f0;
+        min-height: 0; /* for scroll to work */
+    }
+
+    /* Message bubble */
+    .message {
+        padding: 10px 14px;
+        border-radius: 15px;
+        max-width: 70%;
+        word-wrap: break-word;
+        font-size: 14px;
+    }
+
+    .user-msg {
+        align-self: flex-end;
+        background-color: #007bff;
+        color: white;
+        border-bottom-right-radius: 0;
+    }
+
+    .ai-msg {
+        align-self: flex-start;
+        background-color: #e5e5ea;
+        color: black;
+        border-bottom-left-radius: 0;
+    }
+
+    /* Input area */
+    #chat-input-area {
+        display: flex;
+        border-top: 1px solid #ddd;
+        background: white;
+    }
+
+    #chat-input {
+        flex: 1;
+        padding: 12px;
+        border: none;
+        outline: none;
+        font-size: 14px;
+    }
+
+    #chat-send {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background 0.2s;
+    }
+
+        #chat-send:hover {
+            background: #0056b3;
+        }
+</style>
+
+<div id="chat-icon">💭</div>
+
+<div id="chat-box">
+    <div id="chat-header">
+        Chat AI
+        <span id="close-chat">✖</span>
+    </div>
+    <div id="chat-messages"></div>
+    <div id="chat-input-area">
+        <input id="chat-input" type="text" placeholder="Type your message..." />
+        <button id="chat-send">Send</button>
+    </div>
+</div>
+
+<script>
+    const chatIcon = document.getElementById('chat-icon');
+    const chatBox = document.getElementById('chat-box');
+    const closeChat = document.getElementById('close-chat');
+    const chatMessages = document.getElementById('chat-messages');
+    const chatInput = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('chat-send');
+
+    chatIcon.onclick = () => chatBox.style.display = 'flex';
+    closeChat.onclick = () => chatBox.style.display = 'none';
+
+    function addMessage(text, isUser) {
+        const msgDiv = document.createElement('div');
+        msgDiv.classList.add('message', isUser ? 'user-msg' : 'ai-msg');
+        msgDiv.textContent = text;
+        chatMessages.appendChild(msgDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    async function sendMessage() {
+        const msg = chatInput.value.trim();
+        if (!msg) return;
+
+        addMessage(msg, true);
+        chatInput.value = '';
+        sendBtn.disabled = true;
+        sendBtn.textContent = 'Sending...';
+
+        const loadingDiv = document.createElement('div');
+        loadingDiv.classList.add('message', 'ai-msg');
+        loadingDiv.style.fontStyle = 'italic';
+        loadingDiv.style.color = '#666';
+        loadingDiv.textContent = 'AI is typing...';
+        chatMessages.appendChild(loadingDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        try {
+            const response = await fetch('/GeminiChat/SendMessage', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: msg })
+            });
+
+            loadingDiv.remove();
+
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            const data = await response.json();
+            addMessage(data.reply || 'No response', false);
+        } catch (err) {
+            loadingDiv.remove();
+            addMessage(`Error: ${err.message}`, false);
+        } finally {
+            sendBtn.disabled = false;
+            sendBtn.textContent = 'Send';
+        }
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendMessage();
+    });
+</script>
+
+<body class="index-page">
     <header id="header" class="header position-relative">
         <!-- Top Bar -->
         <div class="top-bar py-2">

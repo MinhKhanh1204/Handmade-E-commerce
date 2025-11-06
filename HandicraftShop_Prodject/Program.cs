@@ -1,4 +1,4 @@
-using DataAccessObject;
+﻿using DataAccessObject;
 using Microsoft.EntityFrameworkCore;
 using Repositories;
 using Services;
@@ -23,13 +23,15 @@ builder.Services.AddScoped<IStaffService, StaffService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession();
 
+// ⚡ Thêm dòng này để dùng HttpClient gọi Gemini API
+builder.Services.AddHttpClient();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -42,11 +44,13 @@ app.UseAuthorization();
 
 app.UseSession();
 
+// Route cho area
 app.MapControllerRoute(
     name: "areas",
     pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}"
 );
 
+// Route mặc định
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
