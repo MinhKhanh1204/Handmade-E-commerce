@@ -38,7 +38,15 @@ namespace HandicraftShop_Prodject.Controllers
 				if (account != null)
 				{
 					HttpContext.Session.SetString("AccountId", account.AccountId.ToString());
-					HttpContext.Session.SetString("Username", account.Username);
+					if (account.AccountId.Contains("STF"))
+					{
+                        HttpContext.Session.SetString("StaffId", account.AccountId.ToString());
+                    }
+					else if (account.AccountId.Contains("CUS"))
+					{
+                        HttpContext.Session.SetString("CustomerId", account.AccountId.ToString());
+                    }
+                    HttpContext.Session.SetString("Username", account.Username);
 					return RedirectToAction("Index", "Home");
 				}
 

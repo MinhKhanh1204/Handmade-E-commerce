@@ -56,7 +56,7 @@ namespace Repositories
                 query = query.Where(o => o.OrderDate <= to.Value);
 
             if (!string.IsNullOrEmpty(paymentStatus))
-                query = query.Where(o => o.PaymentStatus == paymentStatus);
+                query = query.Where(o => o.PaymentMethod == paymentStatus);
 
             // Tab logic
             if (tabStatus == "pending")

@@ -26,7 +26,7 @@ namespace HandicraftShop_Prodject.Controllers
             if (string.IsNullOrEmpty(customerId))
             {
                 // Giả định lấy từ session hoặc login user
-                customerId = "CUS002";
+                customerId = HttpContext.Session.GetString("CustomerId");
             }
 
             var orders = await _orderService.SearchOrdersAsync(customerId, null, null, null, null, "pending");
@@ -37,8 +37,7 @@ namespace HandicraftShop_Prodject.Controllers
         [HttpGet]
         public async Task<IActionResult> Search(string? orderId, DateTime? fromDate, DateTime? toDate, string? paymentStatus, string? status)
         {
-            //var customerId = HttpContext.Session.GetString("CustomerId");
-            var customerId = "CUS002"; ;
+            var customerId = HttpContext.Session.GetString("CustomerId");
             if (string.IsNullOrEmpty(customerId))
                 return Unauthorized();
 

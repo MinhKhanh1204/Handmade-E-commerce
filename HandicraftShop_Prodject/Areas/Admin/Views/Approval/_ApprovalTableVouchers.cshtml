@@ -1,0 +1,47 @@
+﻿@model IEnumerable<BussinessObject.Voucher>
+
+<table class="table datatable">
+    <thead>
+        <tr>
+            <th>Voucher</th>
+            <th>Code</th>
+            <th>Discount (%)</th>
+            <th>Expiry Date</th>
+            <th>Active</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var v in Model)
+        {
+            <tr>
+                <td>@v.VoucherName</td>
+                <td>@v.Code</td>
+                <td>@v.DiscountPercentage</td>
+                <td>@v.ExpiryDate?.ToString("dd/MM/yyyy")</td>
+                <td>
+                    @if (v.IsActive == true)
+                    {
+                        <span class="badge bg-success">Active</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">Pending</span>
+                    }
+                </td>
+                <td>
+                    <form asp-action="Approve" method="post" class="d-inline">
+                        <input type="hidden" name="type" value="voucher" />
+                        <input type="hidden" name="id" value="@v.VoucherId" />
+                        <button type="submit" class="btn btn-success btn-sm"><i class="bi bi-check"></i> Approve</button>
+                    </form>
+                    <form asp-action="Reject" method="post" class="d-inline">
+                        <input type="hidden" name="type" value="voucher" />
+                        <input type="hidden" name="id" value="@v.VoucherId" />
+                        <button type="submit" class="btn btn-danger btn-sm"><i class="bi bi-x"></i> Reject</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

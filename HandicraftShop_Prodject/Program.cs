@@ -1,4 +1,5 @@
-using DataAccessObject;
+﻿using DataAccessObject;
+using HandicraftShop_Project.Hubs;
 using Microsoft.EntityFrameworkCore;
 using Repositories;
 using Services;
@@ -12,14 +13,19 @@ builder.Services.AddDbContext<MyStoreContext>(options =>
 
 // Register Repository and Service
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<IApprovalRepository, ApprovalRepository>();
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IStatisticRepository, StatisticRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IStatisticService, StatisticService>();
+builder.Services.AddScoped<IApprovalService, ApprovalService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession();
+builder.Services.AddSignalR();
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30); // session h?t h?n sau 30 ph�t
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // session h?t h?n sau 30 phút
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
@@ -41,7 +47,8 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.UseSession();
-
+app.MapHub<ApprovalHub>("/approvalHub");
+app.MapHub<DashboardHub>("/dashboardHub");
 app.MapControllerRoute(
     name: "areas",
     pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}"
