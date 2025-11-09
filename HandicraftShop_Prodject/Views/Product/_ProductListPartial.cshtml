@@ -19,7 +19,7 @@
                             {
                                 <span class="product-label" style="background-color: #ff6b6b; color: var(--contrast-color);">Sale</span>
                             }
-                            <img src="assets/img/product/@item.ImageUrl" alt="Product Image" class="main-img" loading="lazy">
+                            <img src= @Url.Content($"~/images/{item.ProductId}/{item.ImageUrl}") alt="Product Image" class="main-img" loading="lazy">
                             <div class="product-overlay">
                                 <div class="product-quick-actions">
                                     <button type="button" class="quick-action-btn">
