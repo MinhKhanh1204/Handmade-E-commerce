@@ -17,6 +17,7 @@ namespace Services
             _context = context;
         }
 
+        // Return all staffs (including Inactive) so admin Index shows deleted/inactive staffs.
         public List<StaffDTO> GetAll()
         {
             return _context.Staffs
@@ -62,12 +63,23 @@ namespace Services
             };
         }
 
+        // Add staff: ensure unique StaffId (avoid PK violation)
         public void Add(StaffDTO staffDto)
         {
+            // If no id provided or id collides, generate a unique one
+            var requestedId = staffDto.StaffId;
+            if (string.IsNullOrWhiteSpace(requestedId) ||
+                _context.Staffs.Any(s => s.StaffId == requestedId) ||
+                _context.Accounts.Any(a => a.AccountId == requestedId))
+            {
+                requestedId = GenerateNewStaffId();
+            }
+
+            // Prepare account and staff entities
             var account = new Account
             {
-                AccountId = staffDto.StaffId,
-                Username = staffDto.Username ?? staffDto.StaffId,
+                AccountId = requestedId,
+                Username = staffDto.Username ?? requestedId,
                 Email = staffDto.Email ?? "default@email.com",
                 Password = staffDto.Password ?? "123456",
                 CreatedAt = DateTime.Now,
@@ -77,7 +89,7 @@ namespace Services
 
             var staff = new Staff
             {
-                StaffId = staffDto.StaffId,
+                StaffId = requestedId,
                 FullName = staffDto.FullName,
                 DateOfBirth = staffDto.DateOfBirth,
                 Gender = staffDto.Gender,
@@ -85,12 +97,39 @@ namespace Services
                 CitizenId = staffDto.CitizenId,
                 Address = staffDto.Address,
                 HireDate = staffDto.HireDate,
-                Status = staffDto.Status,
+                Status = staffDto.Status ?? "Active",
                 StaffNavigation = account
             };
             _context.Staffs.Add(staff);
 
             _context.SaveChanges();
+
+            // update caller DTO id (useful if controller shows created id)
+            staffDto.StaffId = requestedId;
+        }
+
+        // Helper: generate next available STFxxx id using DB values (Staffs and Accounts)
+        private string GenerateNewStaffId()
+        {
+            // Collect existing ids that look like STF###
+            var staffIds = _context.Staffs.Select(s => s.StaffId)
+                              .Concat(_context.Accounts.Select(a => a.AccountId))
+                              .Where(id => id != null && id.StartsWith("STF"))
+                              .AsEnumerable()
+                              .ToList();
+
+            int max = 0;
+            foreach (var id in staffIds)
+            {
+                if (id.Length > 3)
+                {
+                    var numPart = id.Substring(3);
+                    if (int.TryParse(numPart, out int n) && n > max)
+                        max = n;
+                }
+            }
+
+            return $"STF{(max + 1).ToString("D3")}";
         }
 
         public void Update(StaffDTO staffDto)
@@ -117,6 +156,7 @@ namespace Services
             _context.SaveChanges();
         }
 
+        // Soft-delete staff & account by marking Status = "Deleted"
         public void Delete(string staffId)
         {
             var staff = _context.Staffs
@@ -125,11 +165,11 @@ namespace Services
 
             if (staff == null) return;
 
-            _context.Staffs.Remove(staff);
-
+            staff.Status = "Deleted";
             if (staff.StaffNavigation != null)
-                _context.Accounts.Remove(staff.StaffNavigation);
+                staff.StaffNavigation.Status = "Deleted";
 
+            _context.Staffs.Update(staff);
             _context.SaveChanges();
         }
 

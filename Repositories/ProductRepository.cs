@@ -142,19 +142,19 @@ namespace Repositories
             }
         }
 
+        // Soft-delete: set Status = "Inactive" (do not remove DB row or product files)
         public void DeleteProduct(string productId)
         {
             try
             {
                 using var db = new MyStoreContext();
                 var p = db.Products
-                          .Include(p => p.ProductImages)
                           .FirstOrDefault(p => p.ProductId == productId);
 
                 if (p != null)
                 {
-                    db.ProductImages.RemoveRange(p.ProductImages);
-                    db.Products.Remove(p);
+                    p.Status = "Inactive";
+                    db.Products.Update(p);
                     db.SaveChanges();
                 }
             }
