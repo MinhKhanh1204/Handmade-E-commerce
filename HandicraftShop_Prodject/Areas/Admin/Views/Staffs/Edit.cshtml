@@ -23,9 +23,11 @@
                     <form asp-area="Admin" asp-controller="Staffs" asp-action="Edit" method="post">
                         @Html.AntiForgeryToken()
 
-                        <!-- Hidden field để gửi về controller -->
+                        <!-- Hidden fields to send required readonly values back to controller -->
                         <input type="hidden" asp-for="StaffId" />
-                        <input type="hidden" asp-for="HireDate" />
+                        <input type="hidden" name="DateOfBirth" value="@(Model.DateOfBirth?.ToString("yyyy-MM-dd"))" />
+                        <input type="hidden" name="CitizenId" value="@(Model.CitizenId ?? "")" />
+                        <input type="hidden" name="HireDate" value="@(Model.HireDate?.ToString("yyyy-MM-dd"))" />
                         <input type="hidden" asp-for="CreatedAt" />
 
                         <div class="row g-3">

@@ -41,9 +41,14 @@ namespace Repositories
             _context.SaveChanges();
         }
 
+        // Soft-delete: set status to "Inactive" instead of removing DB row
         public void Delete(Staff staff)
         {
-            _context.Staffs.Remove(staff);
+            staff.Status = "Inactive";
+            if (staff.StaffNavigation != null)
+                staff.StaffNavigation.Status = "Inactive";
+
+            _context.Staffs.Update(staff);
             _context.SaveChanges();
         }
     }
