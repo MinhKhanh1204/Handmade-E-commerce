@@ -1,4 +1,4 @@
-﻿using Azure;
+using Azure;
 using BussinessObject;
 using DTO;
 using Repositories;
@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Services
 {
@@ -95,6 +97,18 @@ namespace Services
                 .ToList();
 
             return items;
+        }
+
+        public List<Product> GetProducts() => _productRepository.GetProducts();
+        public void SaveProduct(Product product) => _productRepository.SaveProduct(product);
+        public void UpdateProduct(Product product) => _productRepository.UpdateProduct(product);
+        public void DeleteProduct(string productId) => _productRepository.DeleteProduct(productId);
+
+        // Map to DTO
+        public List<ProductDTO> GetProductDTOs()
+        {
+            var products = _productRepository.GetProducts();
+            return products.Select(p => ProductDTO.FromEntity(p)).ToList();
         }
     }
 }
