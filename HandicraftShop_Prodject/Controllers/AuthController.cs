@@ -52,7 +52,7 @@ namespace HandicraftShop_Prodject.Controllers
                             return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
 						case "Employee":
                             HttpContext.Session.SetString("StaffId", account.AccountId);
-                            return RedirectToAction("Index", "Dashboard", new { area = "Employee" });
+                            return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
 						default:
                             HttpContext.Session.SetString("CustomerId", account.AccountId);
                             return RedirectToAction("Index", "Home");

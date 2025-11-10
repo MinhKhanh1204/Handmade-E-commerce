@@ -55,18 +55,45 @@ namespace Repositories
             {
                 using var db = new MyStoreContext();
 
-                // Save article first to get ArticleId
-                db.Articles.Add(article);
-                db.SaveChanges();
-
-                // Add article images after ArticleId is generated
-                if (article.ArticleImages != null && article.ArticleImages.Count > 0)
+                // Store images separately IMMEDIATELY to avoid collection modification issues
+                // Copy image data to a new list before any EF operations
+                var imagesToAdd = new List<ArticleImage>();
+                if (article.ArticleImages != null)
                 {
                     foreach (var img in article.ArticleImages)
                     {
+                        imagesToAdd.Add(new ArticleImage
+                        {
+                            ImageUrl = img.ImageUrl,
+                            IsMain = img.IsMain
+                        });
+                    }
+                }
+
+                // Create new article without images to avoid tracking issues
+                var newArticle = new Article
+                {
+                    AuthorId = article.AuthorId,
+                    Title = article.Title,
+                    Content = article.Content,
+                    Category = article.Category,
+                    Status = article.Status,
+                    CreatedAt = article.CreatedAt,
+                    UpdatedAt = article.UpdatedAt
+                };
+
+                // Save article first to get ArticleId
+                db.Articles.Add(newArticle);
+                db.SaveChanges();
+
+                // Add article images after ArticleId is generated
+                if (imagesToAdd.Count > 0)
+                {
+                    foreach (var img in imagesToAdd)
+                    {
                         var newImage = new ArticleImage
                         {
-                            ArticleId = article.ArticleId,
+                            ArticleId = newArticle.ArticleId,
                             ImageUrl = img.ImageUrl,
                             IsMain = img.IsMain
                         };
@@ -103,10 +130,12 @@ namespace Repositories
                 // Replace images only when new ones provided
                 if (article.ArticleImages != null && article.ArticleImages.Count > 0)
                 {
-                    if (existing.ArticleImages != null && existing.ArticleImages.Count > 0)
+                    // Get existing images as list first to avoid collection modification issues
+                    var existingImagesList = existing.ArticleImages?.ToList() ?? new List<ArticleImage>();
+                    
+                    if (existingImagesList.Count > 0)
                     {
-                        db.ArticleImages.RemoveRange(existing.ArticleImages);
-                        existing.ArticleImages.Clear();
+                        db.ArticleImages.RemoveRange(existingImagesList);
                     }
 
                     foreach (var img in article.ArticleImages)

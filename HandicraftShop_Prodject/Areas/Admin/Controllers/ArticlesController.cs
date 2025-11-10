@@ -74,10 +74,24 @@ namespace HandicraftShop_Prodject.Areas.Admin.Controllers
                     return View(articleDto);
                 }
 
-                // Get files from Request.Form.Files - same approach as Product controller
-                var files = (imageFiles != null && imageFiles.Count > 0)
-                            ? imageFiles
-                            : Request.Form.Files.Where(f => f.Name.StartsWith("imageFiles")).ToList();
+                // Get files from Request.Form.Files - convert to list immediately to avoid collection modification issues
+                List<IFormFile> files;
+                if (imageFiles != null && imageFiles.Count > 0)
+                {
+                    files = imageFiles;
+                }
+                else
+                {
+                    // Convert to list immediately to avoid "Collection was modified" error
+                    files = new List<IFormFile>();
+                    foreach (var file in Request.Form.Files)
+                    {
+                        if (file.Name.StartsWith("imageFiles"))
+                        {
+                            files.Add(file);
+                        }
+                    }
+                }
 
                 var article = new Article
                 {
@@ -88,14 +102,17 @@ namespace HandicraftShop_Prodject.Areas.Admin.Controllers
                     Status = articleDto.Status ?? "Draft"
                 };
 
-                // Upload images if provided - using same approach as Product controller
-                article.ArticleImages = new List<ArticleImage>();
+                // Upload images if provided - store separately to avoid collection modification issues
+                var articleImages = new List<ArticleImage>();
                 
                 if (files != null && files.Count > 0)
                 {
                     // Use same path structure as Product: wwwroot/uploads/articles
                     var uploadsRoot = Path.Combine(_webHostEnvironment.WebRootPath ?? "wwwroot", "uploads", "articles");
                     Directory.CreateDirectory(uploadsRoot);
+
+                    // Convert isMainFlags to list to avoid collection modification issues
+                    var isMainList = isMainFlags?.ToList() ?? new List<bool>();
 
                     for (int i = 0; i < files.Count; i++)
                     {
@@ -115,22 +132,26 @@ namespace HandicraftShop_Prodject.Areas.Admin.Controllers
                             // Create relative URL like Product: /uploads/articles/{fileName}
                             var relativeUrl = $"/uploads/articles/{fileName}";
 
-                            article.ArticleImages.Add(new ArticleImage
+                            articleImages.Add(new ArticleImage
                             {
                                 ImageUrl = relativeUrl,
-                                IsMain = isMainFlags != null && i < isMainFlags.Count && isMainFlags[i]
+                                IsMain = i < isMainList.Count && isMainList[i]
                             });
                         }
                     }
                 }
 
                 // Only save article if there are no critical errors
-                if (ModelState.IsValid || article.ArticleImages.Count > 0)
+                if (ModelState.IsValid || articleImages.Count > 0)
                 {
+                    // Attach images to article only right before saving to avoid tracking issues
+                    article.ArticleImages = articleImages;
+                    
                     _articleService.SaveArticle(article);
-                    if (article.ArticleImages.Count > 0)
+                    
+                    if (articleImages.Count > 0)
                     {
-                        TempData["SuccessMessage"] = $"Article created successfully with {article.ArticleImages.Count} image(s)!";
+                        TempData["SuccessMessage"] = $"Article created successfully with {articleImages.Count} image(s)!";
                     }
                     else
                     {
@@ -203,10 +224,24 @@ namespace HandicraftShop_Prodject.Areas.Admin.Controllers
                 }
             }
 
-            // Upload new images if provided - using same approach as Product controller
-            var newFiles = (imageFiles != null && imageFiles.Count > 0)
-                          ? imageFiles
-                          : Request.Form.Files.Where(f => f.Name.StartsWith("imageFiles")).ToList();
+            // Upload new images if provided - convert to list immediately to avoid collection modification issues
+            List<IFormFile> newFiles;
+            if (imageFiles != null && imageFiles.Count > 0)
+            {
+                newFiles = imageFiles;
+            }
+            else
+            {
+                // Convert to list immediately to avoid "Collection was modified" error
+                newFiles = new List<IFormFile>();
+                foreach (var file in Request.Form.Files)
+                {
+                    if (file.Name.StartsWith("imageFiles"))
+                    {
+                        newFiles.Add(file);
+                    }
+                }
+            }
             
             if (newFiles != null && newFiles.Count > 0)
             {
