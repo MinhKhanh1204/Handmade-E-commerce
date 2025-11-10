@@ -67,9 +67,9 @@ namespace Repositories
 
             return _context.Categories
                 .Where(c => c.Status != "Deleted" &&
-                           (c.CategoryName.ToLower().Contains(term) ||
+                           ((c.CategoryName != null && c.CategoryName.ToLower().Contains(term)) ||
                             (c.Description != null && c.Description.ToLower().Contains(term))))
-                .OrderBy(c => c.CategoryName)
+                .OrderBy(c => c.CategoryName ?? "")
                 .ToList();
         }
     }

@@ -22,8 +22,15 @@ namespace HandicraftShop_Prodject.Areas.Admin.Controllers
         }
 
         // GET: Admin/Categories
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? searchTerm)
         {
+            ViewBag.SearchTerm = searchTerm;
+            
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                return View(_categoryService.SearchCategories(searchTerm));
+            }
+            
             return View(_categoryService.GetCategories());
         }
 
