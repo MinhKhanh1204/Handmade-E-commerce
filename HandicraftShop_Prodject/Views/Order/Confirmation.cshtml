@@ -1,0 +1,18 @@
+﻿@model BussinessObject.Order
+@{
+    ViewData["Title"] = "Order Confirmation";
+}
+
+<section class="container py-5 text-center">
+    <div class="card shadow-sm p-5">
+        <h2 class="text-success fw-bold mb-3">🎉 Thank you for your order!</h2>
+        <p>Your order <strong>#@Model.OrderId</strong> has been placed successfully.</p>
+        <p><strong>Payment method:</strong> @Model.PaymentMethod</p>
+        <p><strong>Shipping address:</strong> @Model.ShippingAddress</p>
+
+        <div class="mt-4">
+            <a href="/Product" class="btn btn-outline-primary me-2">Continue Shopping</a>
+            <a href="/Order/Details/@Model.OrderId" class="btn btn-success">View Order Details</a>
+        </div>
+    </div>
+</section>
