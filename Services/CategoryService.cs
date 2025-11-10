@@ -14,7 +14,6 @@ namespace Services
     public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository _categoryRepository;
-        private readonly MyStoreContext _context = new MyStoreContext();
 
         public CategoryService(ICategoryRepository categoryRepository)
         {
@@ -27,34 +26,41 @@ namespace Services
 
         public IEnumerable<Category> GetCategories()
         {
-            return _context.Categories.ToList();
+            return _categoryRepository.GetAllCategories();
         }
 
         public Category? GetCategoryById(int id)
         {
-            return _context.Categories.FirstOrDefault(c => c.CategoryId == id);
+            return _categoryRepository.GetCategoryById(id);
         }
 
         public void AddCategory(Category category)
         {
-            _context.Categories.Add(category);
-            _context.SaveChanges();
+            _categoryRepository.AddCategory(category);
         }
 
         public void UpdateCategory(Category category)
         {
-            _context.Categories.Update(category);
-            _context.SaveChanges();
+            _categoryRepository.UpdateCategory(category);
         }
 
         public void DeleteCategory(int id)
         {
-            var cat = _context.Categories.FirstOrDefault(c => c.CategoryId == id);
+            var cat = _categoryRepository.GetCategoryById(id);
             if (cat != null)
             {
-                _context.Categories.Remove(cat);
-                _context.SaveChanges();
+                _categoryRepository.DeleteCategory(id);
             }
+        }
+
+        public bool CategoryExists(int id)
+        {
+            return _categoryRepository.Exists(id);
+        }
+
+        public IEnumerable<Category> SearchCategories(string searchTerm)
+        {
+            return _categoryRepository.Search(searchTerm);
         }
     }
 }

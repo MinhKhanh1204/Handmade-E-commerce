@@ -50,5 +50,27 @@ namespace Repositories
         {
             return _context.Categories.ToList();
         }
+
+        public bool Exists(int id)
+        {
+            return _context.Categories.Any(c => c.CategoryId == id && c.Status != "Deleted");
+        }
+
+        public IEnumerable<Category> Search(string searchTerm)
+        {
+            if (string.IsNullOrWhiteSpace(searchTerm))
+            {
+                return GetAllCategories();
+            }
+
+            var term = searchTerm.ToLower().Trim();
+
+            return _context.Categories
+                .Where(c => c.Status != "Deleted" &&
+                           (c.CategoryName.ToLower().Contains(term) ||
+                            (c.Description != null && c.Description.ToLower().Contains(term))))
+                .OrderBy(c => c.CategoryName)
+                .ToList();
+        }
     }
 }

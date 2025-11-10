@@ -16,5 +16,7 @@ namespace Services
         void AddCategory(Category category);
         void UpdateCategory(Category category);
         void DeleteCategory(int id);
+        bool CategoryExists(int id);
+        IEnumerable<Category> SearchCategories(string searchTerm);
     }
 }

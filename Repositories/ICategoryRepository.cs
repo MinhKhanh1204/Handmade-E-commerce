@@ -16,5 +16,7 @@ namespace Repositories
         void AddCategory(Category category);
         void UpdateCategory(Category category);
         void DeleteCategory(int id);
+        bool Exists(int id);
+        IEnumerable<Category> Search(string searchTerm);
     }
 }
