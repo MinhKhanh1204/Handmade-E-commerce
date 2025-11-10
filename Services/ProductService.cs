@@ -104,10 +104,10 @@ namespace Services
         public void UpdateProduct(Product product) => _productRepository.UpdateProduct(product);
         public void DeleteProduct(string productId) => _productRepository.DeleteProduct(productId);
 
-        // Map to DTO
+        // Map to DTO - use GetAllProducts so deleted products are excluded
         public List<ProductDTO> GetProductDTOs()
         {
-            var products = _productRepository.GetProducts();
+            var products = _productRepository.GetAllProducts().AsEnumerable();
             return products.Select(p => ProductDTO.FromEntity(p)).ToList();
         }
     }
