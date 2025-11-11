@@ -10,10 +10,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Services;
 using DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HandicraftShop_Prodject.Areas.Staff.Controllers
 {
     [Area("Staff")]
+    [Authorize(Roles = "Admin,Staff")]
     public class ProductsController : Controller
     {
         private readonly IProductService _productService;
@@ -106,6 +108,18 @@ namespace HandicraftShop_Prodject.Areas.Staff.Controllers
             if (ModelState.IsValid)
             {
                 product.CreatedAt = DateTime.Now;
+
+                // If current user is staff, force Pending status. Admin may set status via form.
+                if (User.IsInRole("Staff") && !User.IsInRole("Admin"))
+                {
+                    product.Status = "Pending";
+                }
+                else
+                {
+                    // if admin didn't provide status, default to Active
+                    if (string.IsNullOrWhiteSpace(product.Status)) product.Status = "Active";
+                }
+
                 product.ProductImages = new List<ProductImage>();
 
                 var uploadsRoot = Path.Combine(_env.WebRootPath ?? "wwwroot", "uploads", "products", product.ProductId);
@@ -136,6 +150,7 @@ namespace HandicraftShop_Prodject.Areas.Staff.Controllers
                 }
 
                 _productService.SaveProduct(product);
+                TempData["success"] = "Product added." + (product.Status == "Pending" ? " Waiting for admin approval." : "");
                 return RedirectToAction(nameof(Index));
             }
 
@@ -215,7 +230,11 @@ namespace HandicraftShop_Prodject.Areas.Staff.Controllers
             existing.Price = product.Price;
             existing.Discount = product.Discount;
             existing.StockQuantity = product.StockQuantity;
-            existing.Status = product.Status;
+            // Only allow Admin to update status
+            if (User.IsInRole("Admin") && !User.IsInRole("Staff"))
+            {
+                existing.Status = product.Status;
+            }
             existing.CategoryId = product.CategoryId;
 
             if (ProductImages != null && ProductImages.Length > 0)
