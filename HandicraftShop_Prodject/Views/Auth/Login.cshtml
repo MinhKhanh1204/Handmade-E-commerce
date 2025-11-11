@@ -13,7 +13,18 @@
 <section id="login-register" class="login-register section">
 
 	<div class="container" data-aos="fade-up" data-aos-delay="100">
+		<!-- Alert Messages -->
 
+		@if (TempData["ErrorMessage"] != null)
+		{
+			<div class="container mt-3">
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+					<i class="bi bi-exclamation-triangle-fill me-2"></i>
+					<strong>Error!</strong> @TempData["ErrorMessage"]
+					<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+				</div>
+			</div>
+		}
 		<div class="row justify-content-center">
 			<div class="col-lg-5">
 				<div class="login-register-wraper">

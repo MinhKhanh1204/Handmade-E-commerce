@@ -6,6 +6,7 @@ using DTO.Statistics;
 namespace HandicraftShop_Prodject.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class DashboardController : Controller
     {
         private readonly IStatisticService _statService;

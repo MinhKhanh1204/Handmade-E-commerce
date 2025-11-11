@@ -7,14 +7,14 @@ namespace HandicraftShop_Prodject.Controllers
     public class CartController : Controller
     {
         private readonly CartService _cartService;
-        private readonly OrderService _orderService;
+        private readonly IOrderService _orderService;
         private readonly IProductService _productService;
         private readonly VNPayService _vnpay;
         private readonly IConfiguration _config;
 
         public CartController(
             CartService cartService,
-            OrderService orderService,
+            IOrderService orderService,
             IProductService productService,
             VNPayService vnpay,
             IConfiguration config)

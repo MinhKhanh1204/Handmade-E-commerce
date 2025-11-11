@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using BussinessObject;
@@ -40,25 +41,28 @@ namespace Services
 
         public StaffDTO? GetById(string staffId)
         {
-            var s = _context.Staffs
-                .Include(s => s.StaffNavigation)
+            var staff = _context.Staffs
+                .Include(staff => staff.StaffNavigation)
                 .FirstOrDefault(x => x.StaffId == staffId);
 
-            if (s == null) return null;
+            if (staff == null) return null;
+
+            var roles = staff.StaffNavigation?.UserRoles
+        .Where(ur => ur.Status == "Active")
+        .Select(ur => ur.Role.RoleName)
+        .ToList();
 
             return new StaffDTO
             {
-                StaffId = s.StaffId,
-                FullName = s.FullName,
-                DateOfBirth = s.DateOfBirth,
-                Gender = s.Gender,
-                Phone = s.Phone,
-                CitizenId = s.CitizenId,
-                Address = s.Address,
-                HireDate = s.HireDate,
-                Status = s.Status,
-                Username = s.StaffNavigation.Username,
-                Email = s.StaffNavigation.Email
+                StaffId = staff.StaffId,
+                FullName = staff.FullName,
+                Gender = staff.Gender,
+                Phone = staff.Phone,
+                Address = staff.Address,
+                AvatarUrl = staff.StaffNavigation?.Avatar,
+                Email = staff.StaffNavigation?.Email,
+                Username = staff.StaffNavigation?.Username,
+                Roles = roles // Thêm property Roles: List<string>
             };
         }
 

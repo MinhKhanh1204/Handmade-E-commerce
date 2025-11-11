@@ -1,12 +1,14 @@
 using BussinessObject;
 using HandicraftShop_Prodject.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services;
 
 namespace HandicraftShop_Prodject.Areas.Admin.Controllers
 {
 	[Area("Admin")]
-	public class VoucherController : Controller
+    [Authorize(Roles = "Admin,Employee")]
+    public class VoucherController : Controller
 	{
 		private readonly IVoucherService _voucherService;
 

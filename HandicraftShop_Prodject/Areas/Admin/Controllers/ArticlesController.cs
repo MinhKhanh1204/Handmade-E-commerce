@@ -1,15 +1,17 @@
-using BussinessObject;
-using DTO;
-using Microsoft.AspNetCore.Mvc;
-using Services;
 using System;
 using System.IO;
 using System.Linq;
+using BussinessObject;
+using DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Services;
 
 namespace HandicraftShop_Prodject.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin,Employee")]
     public class ArticlesController : Controller
     {
         private readonly IArticleService _articleService;

@@ -1,14 +1,16 @@
-using Microsoft.AspNetCore.Mvc;
-using Services;
 using BussinessObject;
 using DataAccessObject;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Services;
 
 namespace HandicraftShop_Prodject.Areas.Admin.Controllers
 {
 	[Area("Admin")]
-	public class CustomerController : Controller
+    [Authorize(Roles = "Admin,Employee")]
+    public class CustomerController : Controller
 	{
 		private readonly ICustomerService _customerService;
 		private readonly MyStoreContext _context;

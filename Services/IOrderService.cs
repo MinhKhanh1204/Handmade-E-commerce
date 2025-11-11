@@ -30,5 +30,9 @@ namespace Services
 
         //UC_63: View details of a specific order for staff
         Task<Order?> GetOrderByIdForStaffAsync(string orderId);
+        Task UpdatePaymentAsync(string orderId, string paymentMethod, string status, string note);
+        Task<bool> HasCustomerPurchasedProductAsync(string customerId, string productId);
+
+        Task<Order> CreateOrderFromCartAsync(string customerId, string paymentMethod, string shippingAddress);
     }
 }

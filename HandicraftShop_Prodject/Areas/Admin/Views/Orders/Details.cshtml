@@ -24,7 +24,7 @@
         </div>
 
         <!-- Main Card -->
-        <div class="card shadow-lg border-0 rounded-4">
+        <div class="card shadow-lg border-0 rounded-4 mb-4">
             <div class="card-body p-4">
                 <!-- CUSTOMER & STAFF -->
                 <h5 class="fw-semibold border-bottom pb-2 mb-3 text-secondary">
@@ -58,7 +58,7 @@
                     </div>
                     <div class="col-md-4">
                         <p class="mb-1 text-muted">Total Amount</p>
-                        <p class="fw-semibold text-success">$@Model.TotalAmount?.ToString("N2")</p>
+                        <p class="fw-semibold text-success">@Model.TotalAmount?.ToString("N2") VND</p>
                     </div>
                     <div class="col-md-4">
                         <p class="mb-1 text-muted">Last Updated</p>
@@ -88,9 +88,9 @@
                     <div class="col-md-4">
                         <p class="mb-1 text-muted">Shipping Status</p>
                         <span class="badge bg-@(
-                                                          Model.ShippingStatus == "Pending" ? "warning text-dark" :
-                                                          Model.ShippingStatus == "Approved" ? "info text-dark" :
-                                                          Model.ShippingStatus == "Delivered" ? "success" : "danger") px-3 py-2">
+                                                            Model.ShippingStatus == "Pending" ? "warning text-dark" :
+                                                            Model.ShippingStatus == "Approved" ? "info text-dark" :
+                                                            Model.ShippingStatus == "Delivered" ? "success" : "danger") px-3 py-2">
                             @Model.ShippingStatus
                         </span>
                     </div>
@@ -117,6 +117,52 @@
                 </div>
             </div>
         </div>
+
+        <!-- ORDER ITEMS -->
+        <div class="card shadow-lg border-0 rounded-4">
+            <div class="card-body p-4">
+                <h5 class="fw-semibold border-bottom pb-2 mb-3 text-secondary">
+                    <i class="bi bi-box-seam me-2"></i>Order Items
+                </h5>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Product</th>
+                                <th class="text-center">Quantity</th>
+                                <th class="text-end">Unit Price</th>
+                                <th class="text-end">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.OrderItems != null && Model.OrderItems.Any())
+                            {
+                                int index = 1;
+                                foreach (var item in Model.OrderItems)
+                                {
+                                    <tr>
+                                        <td>@index</td>
+                                        <td>@item.Product?.ProductName</td>
+                                        <td class="text-center">@item.Quantity</td>
+                                        <td class="text-end">@item.UnitPrice?.ToString("N2") VND</td>
+                                        <td class="text-end">@(item.Quantity* item.UnitPrice) VND</td>
+                                    </tr>
+                                    index++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted">No items found.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
@@ -138,11 +184,7 @@
             box-shadow: 0 8px 20px rgba(0,0,0,0.08);
         }
 
-    h2 {
-        color: #0d6efd;
-    }
-
-    h5 {
+    h2, h5 {
         color: #0d6efd;
     }
 
@@ -157,5 +199,9 @@
 
     .bg-light {
         background-color: #f8f9fa !important;
+    }
+
+    .table th, .table td {
+        vertical-align: middle;
     }
 </style>

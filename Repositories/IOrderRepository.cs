@@ -37,5 +37,8 @@ namespace Repositories
 
         //UC_63: View details of a specific order for staff
         Task<Order?> GetOrderByIdForStaffAsync(string orderId);
+        Task<Order> CreateAsync(Order order);
+        Task UpdatePaymentStatusAsync(string orderId, string paymentMethod, string paymentStatus, string note);
+        Task<bool> HasCustomerPurchasedProductAsync(string customerId, string productId);
     }
 }

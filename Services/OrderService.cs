@@ -7,15 +7,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Services
 {
-    public class OrderService
+    public class OrderService : IOrderService
     {
-        private readonly OrderRepository _orderRepo;
+        private readonly IOrderRepository _orderRepo;
         private readonly CartRepository _cartRepo;
-
-        public OrderService(OrderRepository orderRepo, CartRepository cartRepo)
+        private IProductRepository _productRepository;
+        public OrderService(IOrderRepository orderRepo, CartRepository cartRepo, IProductRepository productRepository)
         {
             _orderRepo = orderRepo;
             _cartRepo = cartRepo;
+            _productRepository = productRepository;
+
         }
 
         public async Task<Order> CreateOrderFromCartAsync(string customerId, string paymentMethod, string shippingAddress)
@@ -31,7 +33,7 @@ namespace Services
                 ShippingAddress = shippingAddress,
                 PaymentMethod = paymentMethod,
                 PaymentStatus = "Pending",
-                ShippingStatus = "Processing",
+                ShippingStatus = "Pending",
                 OrderItems = new List<OrderItem>()
             };
 
@@ -55,6 +57,8 @@ namespace Services
 
                 order.OrderItems.Add(orderItem);
                 total += (unitPrice - (unitPrice * discount / 100M)) * qty;
+                product.StockQuantity -= qty;
+                _productRepository.UpdateProduct(product);
             }
 
             order.TotalAmount = total;
@@ -64,7 +68,6 @@ namespace Services
 
             return created;
         }
-
         public async Task UpdatePaymentAsync(string orderId, string paymentMethod, string status, string note)
         {
             await _orderRepo.UpdatePaymentStatusAsync(orderId, paymentMethod, status, note);
@@ -72,7 +75,7 @@ namespace Services
 
         public async Task<Order?> GetOrderByIdAsync(string orderId)
         {
-            return await _orderRepo.GetByIdAsync(orderId);
+            return await _orderRepo.GetOrderByIdAsync(orderId);
         }
         // UC_33: View orders
         public async Task<List<Order>> GetOrdersByCustomerAsync(string customerId)

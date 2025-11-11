@@ -1,6 +1,18 @@
 ﻿@using HandicraftShop_Prodject.Utils
 @using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor HttpContextAccessor
+@inject Services.CartService CartService
+
+@{
+    string? customerId = Context.Session.GetString("CustomerId");
+    int cartCount = 0;
+
+    if (!string.IsNullOrEmpty(customerId))
+    {
+        var cart = CartService.GetCartByCustomerId(customerId);
+        cartCount = cart?.CartItems?.Count ?? 0;
+    }
+}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -251,7 +263,7 @@
                         <div class="top-bar-item">
                             <i class="bi bi-telephone-fill me-2"></i>
                             <span>Need help? Call us: </span>
-                            <a href="tel:+1234567890">+1 (234) 567-890</a>
+                            <a href="tel:+0968020458">(84+) 0968020458 </a>
                         </div>
                     </div>
 
@@ -286,21 +298,11 @@
                 <div class="d-flex py-3 align-items-center justify-content-between">
 
                     <!-- Logo -->
-                    <a href="index.html" class="logo d-flex align-items-center">
+                    <a href="/" class="logo d-flex align-items-center">
                         <!-- Uncomment the line below if you also wish to use an image logo -->
                         <!-- <img src="~/assets/img/logo.webp" alt=""> -->
                         <h1 class="sitename">Handicraft</h1>
                     </a>
-
-                    <!-- Search -->
-                    <form class="search-form desktop-search-form">
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Search for products">
-                            <button class="btn" type="submit">
-                                <i class="bi bi-search"></i>
-                            </button>
-                        </div>
-                    </form>
 
                     <!-- Actions -->
                     <div class="header-actions d-flex align-items-center justify-content-end">
@@ -320,7 +322,7 @@
                             </button>
                             <div class="dropdown-menu">
                                 <div class="dropdown-header">
-                                    <h6>Welcome to <span class="sitename">eStore</span></h6>
+                                    <h6>Welcome to <span class="sitename">Handicrapshop</span></h6>
                                     @if (userData != null)
                                     {
                                         <p class="mb-0">Hello, @userData.Username</p>
@@ -331,17 +333,9 @@
                                         <i class="bi bi-person-circle me-2"></i>
                                         <span>My Profile</span>
                                     </a>
-                                    <a class="dropdown-item d-flex align-items-center" href="/Account/Profile">
+                                    <a class="dropdown-item d-flex align-items-center" href="/Orders">
                                         <i class="bi bi-bag-check me-2"></i>
                                         <span>My Orders</span>
-                                    </a>
-                                    <a class="dropdown-item d-flex align-items-center" href="/Account/Profile">
-                                        <i class="bi bi-heart me-2"></i>
-                                        <span>My Wishlist</span>
-                                    </a>
-                                    <a class="dropdown-item d-flex align-items-center" href="/Account/Profile">
-                                        <i class="bi bi-gear me-2"></i>
-                                        <span>Settings</span>
                                     </a>
                                 </div>
                                 <div class="dropdown-footer">
@@ -358,17 +352,12 @@
                             </div>
                         </div>
 
-                        <!-- Wishlist -->
-                        <a href="account.html" class="header-action-btn d-none d-md-block">
-                            <i class="bi bi-heart"></i>
-                            <span class="badge">0</span>
+                        <!-- Cart -->
+                        <a href="/Cart" class="header-action-btn">
+                            <i class="bi bi-cart3"></i>
+                            <span class="badge">@cartCount</span>
                         </a>
 
-                        <!-- Cart -->
-                        <a href="cart.html" class="header-action-btn">
-                            <i class="bi bi-cart3"></i>
-                            <span class="badge">3</span>
-                        </a>
 
                         <!-- Mobile Navigation Toggle -->
                         <i class="mobile-nav-toggle d-xl-none bi bi-list me-0"></i>
@@ -403,31 +392,20 @@
                                     Voucher
                                 </a>
                             </li>
-                            <li><a href="about.html">About</a></li>
-                            <li><a href="cart.html">Cart</a></li>
-                            <li><a href="checkout.html">Checkout</a></li>
-                            <li class="dropdown">
-                                <a href="#"><span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-                                <ul>
-                                    <li><a href="#">Dropdown 1</a></li>
-                                    <li class="dropdown">
-                                        <a href="#"><span>Deep Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-                                        <ul>
-                                            <li><a href="#">Deep Dropdown 1</a></li>
-                                            <li><a href="#">Deep Dropdown 2</a></li>
-                                            <li><a href="#">Deep Dropdown 3</a></li>
-                                            <li><a href="#">Deep Dropdown 4</a></li>
-                                            <li><a href="#">Deep Dropdown 5</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="#">Dropdown 2</a></li>
-                                    <li><a href="#">Dropdown 3</a></li>
-                                    <li><a href="#">Dropdown 4</a></li>
-                                </ul>
+                            <li>
+                                <a class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Cart" ? "active" : "")"
+                                   asp-controller="Cart" asp-action="Index">
+                                    Cart
+                                </a>
                             </li>
-
+                            <li>
+                                <a class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Articles" ? "active" : "")"
+                                   asp-controller="Articles" asp-action="Index">
+                                    Articles
+                                </a>
+                            </li>
                             <!-- Products Mega Menu 1 -->
-                            <li class="products-megamenu-1">
+                            @* <li class="products-megamenu-1">
                                 <a href="#"><span>Megamenu 1</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
 
                                 <!-- Products Mega Menu 1 Mobile View -->
@@ -701,9 +679,9 @@
 
                                 </div><!-- End Products Mega Menu 1 Desktop View -->
 
-                            </li><!-- End Products Mega Menu 1 -->
+                            </li><!-- End Products Mega Menu 1 --> *@
                             <!-- Products Mega Menu 2 -->
-                            <li class="products-megamenu-2">
+                            @* <li class="products-megamenu-2">
                                 <a href="#"><span>Megamenu 2</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
 
                                 <!-- Products Mega Menu 2 Mobile View -->
@@ -990,7 +968,7 @@
 
                             </li><!-- End Products Mega Menu 2 -->
 
-                            <li><a href="contact.html">Contact</a></li>
+                            <li><a href="contact.html">Contact</a></li> *@
 
                         </ul>
                     </nav>
@@ -999,7 +977,7 @@
         </div>
 
         <!-- Mobile Search Form -->
-        <div class="collapse" id="mobileSearch">
+        @* <div class="collapse" id="mobileSearch">
             <div class="container">
                 <form class="search-form">
                     <div class="input-group">
@@ -1010,7 +988,7 @@
                     </div>
                 </form>
             </div>
-        </div>
+        </div> *@
 
     </header>
 
@@ -1021,25 +999,6 @@
     </main>
 
     <footer id="footer" class="footer">
-        <div class="footer-newsletter">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-8 text-center">
-                        <h2>Join Our Newsletter</h2>
-                        <p>Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals.</p>
-                        <form action="forms/newsletter.php" method="post" class="php-email-form">
-                            <div class="newsletter-form d-flex">
-                                <input type="email" name="email" placeholder="Your email address" required="">
-                                <button type="submit">Subscribe</button>
-                            </div>
-                            <div class="loading">Loading</div>
-                            <div class="error-message"></div>
-                            <div class="sent-message">Your subscription request has been sent. Thank you!</div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <div class="footer-main">
             <div class="container">
@@ -1049,66 +1008,18 @@
                             <a href="index.html" class="logo">
                                 <span class="sitename">Handicraft</span>
                             </a>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in nibh vehicula, facilisis magna ut, consectetur lorem.</p>
                             <div class="footer-contact mt-4">
                                 <div class="contact-item">
-                                    <i class="bi bi-geo-alt"></i>
-                                    <span>123 Fashion Street, New York, NY 10001</span>
-                                </div>
-                                <div class="contact-item">
                                     <i class="bi bi-telephone"></i>
-                                    <span>+1 (555) 123-4567</span>
+                                    <span>(84+) 968020458</span>
                                 </div>
                                 <div class="contact-item">
                                     <i class="bi bi-envelope"></i>
-                                    <span>hello@example.com</span>
+                                    <span>khanhtmce180220@fpt.edu.vn</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="col-lg-2 col-md-6 col-sm-6">
-                        <div class="footer-widget">
-                            <h4>Shop</h4>
-                            <ul class="footer-links">
-                                <li><a href="category.html">New Arrivals</a></li>
-                                <li><a href="category.html">Bestsellers</a></li>
-                                <li><a href="category.html">Women's Clothing</a></li>
-                                <li><a href="category.html">Men's Clothing</a></li>
-                                <li><a href="category.html">Accessories</a></li>
-                                <li><a href="category.html">Sale</a></li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-2 col-md-6 col-sm-6">
-                        <div class="footer-widget">
-                            <h4>Support</h4>
-                            <ul class="footer-links">
-                                <li><a href="support.html">Help Center</a></li>
-                                <li><a href="account.html">Order Status</a></li>
-                                <li><a href="shiping-info.html">Shipping Info</a></li>
-                                <li><a href="return-policy.html">Returns &amp; Exchanges</a></li>
-                                <li><a href="#">Size Guide</a></li>
-                                <li><a href="contact.html">Contact Us</a></li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-2 col-md-6 col-sm-6">
-                        <div class="footer-widget">
-                            <h4>Company</h4>
-                            <ul class="footer-links">
-                                <li><a href="about.html">About Us</a></li>
-                                <li><a href="about.html">Careers</a></li>
-                                <li><a href="about.html">Press</a></li>
-                                <li><a href="about.html">Affiliates</a></li>
-                                <li><a href="about.html">Responsibility</a></li>
-                                <li><a href="about.html">Investors</a></li>
-                            </ul>
-                        </div>
-                    </div>
-
                     <div class="col-lg-3 col-md-6 col-sm-6">
                         <div class="footer-widget">
                             <h4>Download Our App</h4>
@@ -1122,17 +1033,6 @@
                                     <i class="bi bi-google-play"></i>
                                     <span>Google Play</span>
                                 </a>
-                            </div>
-                            <div class="social-links mt-4">
-                                <h5>Follow Us</h5>
-                                <div class="social-icons">
-                                    <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
-                                    <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
-                                    <a href="#" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
-                                    <a href="#" aria-label="TikTok"><i class="bi bi-tiktok"></i></a>
-                                    <a href="#" aria-label="Pinterest"><i class="bi bi-pinterest"></i></a>
-                                    <a href="#" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -1162,15 +1062,7 @@
                 </div>
 
                 <div class="copyright text-center">
-                    <p>© <span>Copyright</span> <strong class="sitename">eStore</strong>. All Rights Reserved.</p>
-                </div>
-
-                <div class="credits">
-                    <!-- All the links in the footer should remain intact. -->
-                    <!-- You can delete the links only if you've purchased the pro version. -->
-                    <!-- Licensing information: https://bootstrapmade.com/license/ -->
-                    <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
-                    Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+                    <p>© <span>Copyright</span> <strong class="sitename">Handicrapshop</strong>. All Rights Reserved.</p>
                 </div>
 
             </div>

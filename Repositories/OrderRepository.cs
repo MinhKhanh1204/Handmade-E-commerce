@@ -84,12 +84,31 @@ namespace Repositories
         // UC_36: Cancel order
         public async Task<bool> CancelOrderAsync(string orderId, string cancelReason)
         {
-            var order = await _context.Orders.FirstOrDefaultAsync(o => o.OrderId == orderId);
-            if (order == null) return false;
+            // 🔹 Lấy đơn hàng
+            var order = await _context.Orders
+                .Include(o => o.OrderItems) // Lấy luôn danh sách sản phẩm
+                .FirstOrDefaultAsync(o => o.OrderId == orderId);
 
+            if (order == null)
+                return false;
+
+            // 🔹 Không cho hủy nếu đã giao hoặc đã hủy
             if (order.ShippingStatus == "Cancelled" || order.ShippingStatus == "Delivered")
-                return false; // Không thể hủy nếu đã giao hoặc đã hủy
+                return false;
 
+            // 🔹 Hoàn lại số lượng tồn kho
+            foreach (var item in order.OrderItems)
+            {
+                var product = await _context.Products.FirstOrDefaultAsync(p => p.ProductId == item.ProductId);
+                if (product != null)
+                {
+                    product.StockQuantity += item.Quantity; // cộng lại
+                    _context.Products.Update(product);
+
+                }
+            }
+
+            // 🔹 Cập nhật trạng thái đơn hàng
             order.ShippingStatus = "Cancelled";
             order.PaymentStatus = "Refunded";
             order.Note = (order.Note ?? "") + $" [Cancelled: {cancelReason} - {DateTime.Now:yyyy-MM-dd HH:mm}]";
@@ -97,8 +116,11 @@ namespace Repositories
 
             _context.Orders.Update(order);
             await _context.SaveChangesAsync();
+
+
             return true;
         }
+
 
         public async Task<IEnumerable<Order>> GetAllOrdersForStaffAsync()
         {
@@ -141,8 +163,28 @@ namespace Repositories
 
         public async Task<bool> UpdateOrderStatusAsync(string orderId, string newStatus, string staffId)
         {
-            var order = await _context.Orders.FirstOrDefaultAsync(o => o.OrderId == orderId);
+            var order = await _context.Orders
+                .Include(o => o.OrderItems) // lấy luôn danh sách sản phẩm
+                .FirstOrDefaultAsync(o => o.OrderId == orderId);
+
             if (order == null) return false;
+
+            // Nếu hủy đơn, hoàn lại tồn kho
+            if (newStatus == "Cancelled")
+            {
+                if (order.ShippingStatus == "Delivered" || order.ShippingStatus == "Cancelled")
+                    return false; // không cho hủy nếu đã giao hoặc đã hủy
+
+                foreach (var item in order.OrderItems)
+                {
+                    var product = await _context.Products.FirstOrDefaultAsync(p => p.ProductId == item.ProductId);
+                    if (product != null)
+                    {
+                        product.StockQuantity += item.Quantity;
+                        _context.Products.Update(product);
+                    }
+                }
+            }
 
             order.ShippingStatus = newStatus;
             order.StaffId = staffId;
@@ -152,6 +194,7 @@ namespace Repositories
             await _context.SaveChangesAsync();
             return true;
         }
+
 
 
         public async Task<bool> UpdateOrderAsync(Order updatedOrder)

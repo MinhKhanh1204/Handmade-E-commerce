@@ -60,6 +60,10 @@ namespace DTO
         public string? AvatarUrl { get; set; } // đường dẫn lưu DB
 
         public DateTime? CreatedAt { get; set; }
+
+        public List<string>? Roles { get; set; }
+
+        public string? RoleName { get; set; }
     }
 
     public class AgeLimitAttribute : ValidationAttribute

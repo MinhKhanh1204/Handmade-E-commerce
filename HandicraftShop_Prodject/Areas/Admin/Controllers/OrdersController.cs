@@ -1,6 +1,7 @@
-﻿using DataAccessObject;
-using BussinessObject;
+﻿using BussinessObject;
+using DataAccessObject;
 using HandicraftShop_Prodject.Areas.Admin.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Services;
@@ -8,6 +9,7 @@ using Services;
 namespace HandicraftShop_Prodject.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin,Employee")]
     public class OrdersController : Controller
     {
         private readonly IOrderService _orderService;

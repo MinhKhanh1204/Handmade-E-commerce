@@ -6,6 +6,7 @@ using Services;
 namespace HandicraftShop_Prodject.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class ApprovalController : Controller
     {
         private readonly IApprovalService _service;

@@ -22,20 +22,22 @@
                             <img src= @Url.Content($"~/images/{item.ProductId}/{item.ImageUrl}") alt="Product Image" class="main-img" loading="lazy">
                             <div class="product-overlay">
                                 <div class="product-quick-actions">
-                                    <button type="button" class="quick-action-btn">
-                                        <i class="bi bi-heart"></i>
-                                    </button>
-                                    <button type="button" class="quick-action-btn">
-                                        <i class="bi bi-arrow-repeat"></i>
-                                    </button>
-                                    <button type="button" class="quick-action-btn">
-                                        <i class="bi bi-eye"></i>
-                                    </button>
+                                     <a href="/Product/Detail/@item.ProductId"
+                                         class="btn-quickview"
+                                         aria-label="Xem chi tiết sản phẩm">
+                                         <i class="bi bi-eye"></i>
+                                     </a>
                                 </div>
                                 @if (item.StockQuantity > 0)
                                 {
                                     <div class="add-to-cart-container">
-                                        <button type="button" class="add-to-cart-btn">Add to Cart</button>
+                                        <form asp-controller="Cart" asp-action="Add" method="post" class="d-inline">
+                                            <input type="hidden" name="productId" value="@item.ProductId" />
+                                            <input type="hidden" name="quantity" class="quantity-value" value="1" />
+                                            <button type="submit" class="btn btn-primary add-to-cart-btn">
+                                                <i class="bi bi-cart-plus"></i> Add to Cart
+                                            </button>
+                                        </form>
                                     </div>
                                 }else{
                                     <div class="product-tags">

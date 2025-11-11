@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BussinessObject;
 using DataAccessObject;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ using Services;
 namespace HandicraftShop_Prodject.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin,Employee")]
     public class CategoriesController : Controller
     {
         private readonly ICategoryService _categoryService;
