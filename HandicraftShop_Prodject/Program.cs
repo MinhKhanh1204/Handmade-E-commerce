@@ -1,14 +1,14 @@
-﻿using DataAccessObject;
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using HandicraftShop_Project.Hubs;
 using Microsoft.EntityFrameworkCore;
+using DataAccessObject;
 using Repositories;
 using Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
+builder.Services.AddControllersWithViews(); 
 builder.Services.AddDbContext<MyStoreContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnectionString"),
@@ -42,13 +42,26 @@ builder.Services.AddScoped<VNPayService>();
 
 builder.Services.AddHttpContextAccessor();
 
+builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(60);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
-
+builder.Services.AddScoped<IStatisticRepository, StatisticRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IStatisticService, StatisticService>();
+builder.Services.AddScoped<IApprovalService, ApprovalService>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSession();
+builder.Services.AddSignalR();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // session h?t h?n sau 30 phút
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 				.AddCookie(option =>
 				{
@@ -74,25 +87,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 				});
 
 
-builder.Services.AddScoped<IStatisticRepository, StatisticRepository>();
-builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-builder.Services.AddScoped<IOrderService, OrderService>();
-builder.Services.AddScoped<IStatisticService, StatisticService>();
-builder.Services.AddScoped<IApprovalService, ApprovalService>();
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddSession();
-builder.Services.AddSignalR();
-builder.Services.AddSession(options =>
-{
-    options.IdleTimeout = TimeSpan.FromMinutes(30); // session h?t h?n sau 30 phút
-    options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;
-});
-// ⚡ Thêm dòng này để dùng HttpClient gọi Gemini API
-builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
+// --- Middleware pipeline ---
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -101,23 +99,17 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.UseSession();
-app.MapHub<ApprovalHub>("/approvalHub");
-app.MapHub<DashboardHub>("/dashboardHub");
 
-// Route cho area
+// --- Routes ---
 app.MapControllerRoute(
     name: "areas",
     pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}"
 );
-
-// Route mặc định
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}"
