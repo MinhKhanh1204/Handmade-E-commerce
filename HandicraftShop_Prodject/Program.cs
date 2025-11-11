@@ -61,7 +61,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 					options.Fields.Add("email");
 					options.Fields.Add("picture");
 					options.SaveTokens = true;
-					options.SlidingExpiration = true; // Tự động gia hạn cookie khi user hoạt động
 					// Không set ExpireTimeSpan để dùng thời gian từ AuthenticationProperties
 				});
 
