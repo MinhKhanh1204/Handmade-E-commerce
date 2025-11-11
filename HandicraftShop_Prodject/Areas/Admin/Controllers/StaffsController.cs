@@ -1,14 +1,16 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using BussinessObject;
 using DTO;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Services;
 
 namespace HandicraftShop_Prodject.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin")]
     public class StaffsController : Controller
     {
         private readonly IStaffService _staffService;
@@ -18,11 +20,11 @@ namespace HandicraftShop_Prodject.Areas.Admin.Controllers
             _staffService = staffService;
         }
 
+        #region Index
         public IActionResult Index(string searchString, int page = 1, int pageSize = 10)
         {
             var staffs = _staffService.GetAll().AsQueryable();
 
-            // Search theo StaffId, FullName hoặc Phone
             if (!string.IsNullOrEmpty(searchString))
             {
                 staffs = staffs.Where(s =>
@@ -35,13 +37,11 @@ namespace HandicraftShop_Prodject.Areas.Admin.Controllers
             int totalRecords = staffs.Count();
             int totalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
 
-            // Lấy dữ liệu phân trang
             var pagedStaffs = staffs
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
 
-            // Truyền dữ liệu pagination & search về view
             ViewBag.CurrentPage = page;
             ViewBag.PageSize = pageSize;
             ViewBag.TotalPages = totalPages;
@@ -49,7 +49,9 @@ namespace HandicraftShop_Prodject.Areas.Admin.Controllers
 
             return View(pagedStaffs);
         }
+        #endregion
 
+        #region Create
         public IActionResult Create()
         {
             var staffDto = new StaffDTO
@@ -70,18 +72,61 @@ namespace HandicraftShop_Prodject.Areas.Admin.Controllers
                 return View(staffDto);
             }
 
+            // Upload avatar nếu có
+            if (staffDto.Avatar != null && staffDto.Avatar.Length > 0)
+            {
+                staffDto.AvatarUrl = SaveAvatar(staffDto.Avatar);
+            }
+
+            if (!string.IsNullOrEmpty(staffDto.Password))
+            {
+                staffDto.Password = HashPassword(staffDto.Password);
+            }
+
             _staffService.Add(staffDto);
             return RedirectToAction(nameof(Index));
         }
+        #endregion
 
+        #region Edit
+        // GET: Admin/Staffs/Edit/{id}
         public IActionResult Edit(string id)
         {
             if (string.IsNullOrEmpty(id))
                 return BadRequest();
 
-            var staffDto = _staffService.GetById(id);
-            if (staffDto == null)
+            var staff = _staffService.GetByIdEntity(id);
+            if (staff == null)
                 return NotFound();
+
+            var staffDto = new StaffDTO
+            {
+                StaffId = staff.StaffId,
+                FullName = staff.FullName,
+                Gender = staff.Gender,
+                Phone = staff.Phone,
+                Address = staff.Address,
+                Status = staff.Status,
+                DateOfBirth = staff.DateOfBirth,
+                HireDate = staff.HireDate,
+                CitizenId = staff.CitizenId,
+                AvatarUrl = staff.StaffNavigation?.Avatar,
+                Email = staff.StaffNavigation?.Email,
+                Username = staff.StaffNavigation?.Username
+            };
+
+            // Chuẩn bị SelectList cho dropdown
+            ViewBag.Genders = new List<SelectListItem>
+    {
+        new SelectListItem { Text = "Male", Value = "Male" },
+        new SelectListItem { Text = "Female", Value = "Female" }
+    };
+
+            ViewBag.Statuses = new List<SelectListItem>
+    {
+        new SelectListItem { Text = "Active", Value = "Active" },
+        new SelectListItem { Text = "Inactive", Value = "Inactive" }
+    };
 
             return View(staffDto);
         }
@@ -93,23 +138,64 @@ namespace HandicraftShop_Prodject.Areas.Admin.Controllers
             if (!ModelState.IsValid)
                 return View(staffDto);
 
-            // Lấy entity từ DB để giữ các trường không edit
             var staff = _staffService.GetByIdEntity(staffDto.StaffId);
             if (staff == null)
                 return NotFound();
 
-            // Cập nhật các trường cho phép
+            // Cập nhật thông tin Staff
             staff.FullName = staffDto.FullName;
             staff.Gender = staffDto.Gender;
             staff.Phone = staffDto.Phone;
             staff.Address = staffDto.Address;
             staff.Status = staffDto.Status;
 
-            _staffService.UpdateEntity(staff);
+            if (staff.StaffNavigation != null)
+            {
+                staff.StaffNavigation.Username = staffDto.Username ?? staff.StaffNavigation.Username;
+                staff.StaffNavigation.Email = staffDto.Email ?? staff.StaffNavigation.Email;
 
+                if (staffDto.Avatar != null && staffDto.Avatar.Length > 0)
+                    staff.StaffNavigation.Avatar = SaveAvatar(staffDto.Avatar);
+            }
+
+            _staffService.UpdateEntity(staff);
             return RedirectToAction(nameof(Index));
         }
 
+
+        #endregion
+
+        #region Details
+        public IActionResult Details(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                return BadRequest();
+
+            var staff = _staffService.GetByIdEntity(id);
+            if (staff == null)
+                return NotFound();
+
+            var staffDto = new StaffDTO
+            {
+                StaffId = staff.StaffId,
+                FullName = staff.FullName,
+                Gender = staff.Gender,
+                Phone = staff.Phone,
+                Address = staff.Address,
+                Status = staff.Status,
+                DateOfBirth = staff.DateOfBirth,
+                HireDate = staff.HireDate,
+                CitizenId = staff.CitizenId,
+                AvatarUrl = staff.StaffNavigation?.Avatar,
+                Email = staff.StaffNavigation?.Email,
+                Username = staff.StaffNavigation?.Username
+            };
+
+            return View(staffDto);
+        }
+        #endregion
+
+        #region Delete
         public IActionResult Delete(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -129,17 +215,27 @@ namespace HandicraftShop_Prodject.Areas.Admin.Controllers
             _staffService.Delete(id);
             return RedirectToAction(nameof(Index));
         }
+        #endregion
 
-        public IActionResult Details(string id)
+        #region Helpers
+        private string SaveAvatar(IFormFile avatar)
         {
-            if (string.IsNullOrEmpty(id))
-                return BadRequest();
+            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(avatar.FileName)}";
+            var path = Path.Combine("wwwroot/images/avatars", fileName);
+            using (var stream = new FileStream(path, FileMode.Create))
+            {
+                avatar.CopyTo(stream);
+            }
+            return $"/images/avatars/{fileName}";
+        }
 
-            var staffDto = _staffService.GetById(id);
-            if (staffDto == null)
-                return NotFound();
-
-            return View(staffDto);
+        private string HashPassword(string password)
+        {
+            using (var sha256 = System.Security.Cryptography.SHA256.Create())
+            {
+                var bytes = sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                return BitConverter.ToString(bytes).Replace("-", "").ToLower();
+            }
         }
 
         private string GenerateStaffId()
@@ -160,5 +256,6 @@ namespace HandicraftShop_Prodject.Areas.Admin.Controllers
 
             return $"STF{(lastNumber + 1).ToString("D3")}";
         }
+        #endregion
     }
 }

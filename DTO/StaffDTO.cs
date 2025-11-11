@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace DTO
 {
@@ -14,7 +15,7 @@ namespace DTO
 
         [Required(ErrorMessage = "Date of birth is required.")]
         [AgeLimit(18, ErrorMessage = "Staff must be at least 18 years old.")]
-        public DateOnly? DateOfBirth { get; set; }
+        public DateTime? DateOfBirth { get; set; }
 
         [Required(ErrorMessage = "Gender is required.")]
         public string? Gender { get; set; }
@@ -33,14 +34,31 @@ namespace DTO
 
         [Required(ErrorMessage = "Hire date is required.")]
         [HireDateValid(ErrorMessage = "Hire date cannot be in the future or before the date of birth.")]
-        public DateOnly? HireDate { get; set; }
+        public DateTime? HireDate { get; set; }
 
         [Required(ErrorMessage = "Status is required.")]
         public string? Status { get; set; }
 
+        // --- Authentication fields ---
+        [Required(ErrorMessage = "Username is required.")]
+        [StringLength(30, MinimumLength = 3, ErrorMessage = "Username must be 3–30 characters.")]
+        [RegularExpression(@"^[a-zA-Z0-9_.-]+$", ErrorMessage = "Username cannot contain special characters.")]
         public string? Username { get; set; }
+
+        [Required(ErrorMessage = "Email is required.")]
+        [EmailAddress(ErrorMessage = "Invalid email format.")]
         public string? Email { get; set; }
+
+        [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be at least 6 characters.")]
         public string? Password { get; set; }
+
+        [Compare("Password", ErrorMessage = "Confirm password does not match.")]
+        public string? ConfirmPassword { get; set; }
+
+        // --- Avatar upload ---
+        public IFormFile? Avatar { get; set; } // file upload
+        public string? AvatarUrl { get; set; } // đường dẫn lưu DB
+
         public DateTime? CreatedAt { get; set; }
     }
 
@@ -55,17 +73,14 @@ namespace DTO
 
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
-            if (value is DateOnly dob)
+            if (value is DateTime dob)
             {
-                var today = DateOnly.FromDateTime(DateTime.Today);
+                var today = DateTime.Today;
                 int age = today.Year - dob.Year;
-                if (dob.AddYears(age) > today)
-                    age--;
+                if (dob.Date > today.AddYears(-age)) age--;
 
                 if (age < _minAge)
-                {
                     return new ValidationResult($"Staff must be at least {_minAge} years old.");
-                }
             }
 
             return ValidationResult.Success;
@@ -76,17 +91,17 @@ namespace DTO
     {
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
-            if (value is not DateOnly hireDate)
-                return ValidationResult.Success;
+            if (value is DateTime hireDate)
+            {
+                var staff = (StaffDTO)validationContext.ObjectInstance;
+                var today = DateTime.Today;
 
-            var staff = (StaffDTO)validationContext.ObjectInstance;
+                if (hireDate.Date > today)
+                    return new ValidationResult("Hire date cannot be in the future.");
 
-            var today = DateOnly.FromDateTime(DateTime.Today);
-            if (hireDate > today)
-                return new ValidationResult("Hire date cannot be in the future.");
-
-            if (staff.DateOfBirth.HasValue && hireDate < staff.DateOfBirth.Value)
-                return new ValidationResult("Hire date cannot be earlier than the date of birth.");
+                if (staff.DateOfBirth.HasValue && hireDate.Date < staff.DateOfBirth.Value.Date)
+                    return new ValidationResult("Hire date cannot be earlier than the date of birth.");
+            }
 
             return ValidationResult.Success;
         }

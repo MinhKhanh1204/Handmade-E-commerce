@@ -17,7 +17,6 @@ namespace Services
             _context = context;
         }
 
-        // Return all staffs (including Inactive) so admin Index shows deleted/inactive staffs.
         public List<StaffDTO> GetAll()
         {
             return _context.Staffs
@@ -63,10 +62,8 @@ namespace Services
             };
         }
 
-        // Add staff: ensure unique StaffId (avoid PK violation)
         public void Add(StaffDTO staffDto)
         {
-            // If no id provided or id collides, generate a unique one
             var requestedId = staffDto.StaffId;
             if (string.IsNullOrWhiteSpace(requestedId) ||
                 _context.Staffs.Any(s => s.StaffId == requestedId) ||
@@ -75,7 +72,9 @@ namespace Services
                 requestedId = GenerateNewStaffId();
             }
 
-            // Prepare account and staff entities
+            // Thêm: Gán avatar path nếu có
+            string avatarUrl = staffDto.AvatarUrl ?? "/images/avatars/default.png"; // fallback ảnh mặc định
+
             var account = new Account
             {
                 AccountId = requestedId,
@@ -83,7 +82,8 @@ namespace Services
                 Email = staffDto.Email ?? "default@email.com",
                 Password = staffDto.Password ?? "123456",
                 CreatedAt = DateTime.Now,
-                Status = "Active"
+                Status = "Active",
+                Avatar = avatarUrl // ✅ Lưu avatar vào cột Avatar của bảng Accounts
             };
             _context.Accounts.Add(account);
 
@@ -103,15 +103,11 @@ namespace Services
             _context.Staffs.Add(staff);
 
             _context.SaveChanges();
-
-            // update caller DTO id (useful if controller shows created id)
             staffDto.StaffId = requestedId;
         }
 
-        // Helper: generate next available STFxxx id using DB values (Staffs and Accounts)
         private string GenerateNewStaffId()
         {
-            // Collect existing ids that look like STF###
             var staffIds = _context.Staffs.Select(s => s.StaffId)
                               .Concat(_context.Accounts.Select(a => a.AccountId))
                               .Where(id => id != null && id.StartsWith("STF"))
@@ -129,7 +125,7 @@ namespace Services
                 }
             }
 
-            return $"STF{(max + 1).ToString("D3")}";
+            return $"STF{(max + 1):D3}";
         }
 
         public void Update(StaffDTO staffDto)
@@ -140,7 +136,6 @@ namespace Services
 
             if (staff == null) return;
 
-            // Chỉ update các trường cho phép
             staff.FullName = staffDto.FullName;
             staff.Gender = staffDto.Gender;
             staff.Phone = staffDto.Phone;
@@ -156,7 +151,6 @@ namespace Services
             _context.SaveChanges();
         }
 
-        // Soft-delete staff & account by marking Status = "Deleted"
         public void Delete(string staffId)
         {
             var staff = _context.Staffs
@@ -173,7 +167,6 @@ namespace Services
             _context.SaveChanges();
         }
 
-        // Entity trực tiếp (dùng cho Edit giữ nguyên các trường readonly)
         public Staff GetByIdEntity(string staffId)
         {
             return _context.Staffs

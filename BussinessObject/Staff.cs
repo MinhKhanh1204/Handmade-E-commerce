@@ -8,7 +8,7 @@ public partial class Staff
 
     public string? FullName { get; set; }
 
-    public DateOnly? DateOfBirth { get; set; }
+    public DateTime? DateOfBirth { get; set; }
 
     public string? Gender { get; set; }
 
@@ -18,7 +18,7 @@ public partial class Staff
 
     public string? Address { get; set; }
 
-    public DateOnly? HireDate { get; set; }
+    public DateTime? HireDate { get; set; }
 
     public string? Status { get; set; }
 
