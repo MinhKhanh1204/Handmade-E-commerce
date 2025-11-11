@@ -1,0 +1,139 @@
+@model BussinessObject.Customer
+@{
+	ViewData["Title"] = "Edit Customer";
+}
+
+<div class="pagetitle">
+	<h1>Edit Customer</h1>
+	<nav>
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item"><a href="/Admin/Dashboard">Home</a></li>
+			<li class="breadcrumb-item"><a href="/Admin/Customer">Customer Management</a></li>
+			<li class="breadcrumb-item active">Edit</li>
+		</ol>
+	</nav>
+</div>
+
+<section class="section">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title">Edit Customer Information</h5>
+
+					<form action="/Admin/Customer/Edit/@Model.CustomerId" method="post" enctype="multipart/form-data">
+						@Html.AntiForgeryToken()
+						<div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+						<div class="row">
+							<div class="col-md-3 text-center">
+								@{
+									var avatar = Model.CustomerNavigation?.Avatar;
+									var cacheBuster = DateTime.UtcNow.Ticks;
+									var avatarPath = string.IsNullOrEmpty(avatar)
+										? "/assets/img/person/default.jpg"
+										: $"/assets/img/person/{avatar}?v={cacheBuster}";
+								}
+								<img id="avatarPreview" src="@avatarPath" alt="avatar" style="width:140px;height:140px;border-radius:50%;object-fit:cover;" />
+								<div class="mt-2">
+									<input id="avatarInput" type="file" name="Avatar" class="form-control" accept="image/*" />
+									<small class="text-muted">Chọn ảnh để cập nhật Avatar</small>
+								</div>
+							</div>
+							<div class="col-md-9">
+								<div class="row">
+									<div class="col-md-6">
+										<div class="row mb-3">
+											<label asp-for="CustomerId" class="col-sm-4 col-form-label">Customer ID</label>
+											<div class="col-sm-8">
+												<input asp-for="CustomerId" class="form-control" readonly />
+											</div>
+										</div>
+										<div class="row mb-3">
+											<label asp-for="FullName" class="col-sm-4 col-form-label">Full Name *</label>
+											<div class="col-sm-8">
+												<input asp-for="FullName" class="form-control" />
+												<span asp-validation-for="FullName" class="text-danger"></span>
+											</div>
+										</div>
+										<div class="row mb-3">
+											<label asp-for="DateOfBirth" class="col-sm-4 col-form-label">Date of Birth</label>
+											<div class="col-sm-8">
+												<input asp-for="DateOfBirth" class="form-control" />
+												<span asp-validation-for="DateOfBirth" class="text-danger"></span>
+											</div>
+										</div>
+										<div class="row mb-3">
+											<label asp-for="Gender" class="col-sm-4 col-form-label">Gender</label>
+											<div class="col-sm-8">
+												<select asp-for="Gender" class="form-select">
+													<option value="">-- Select Gender --</option>
+													<option value="Male">Male</option>
+													<option value="Female">Female</option>
+													<option value="Other">Other</option>
+												</select>
+												<span asp-validation-for="Gender" class="text-danger"></span>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="row mb-3">
+											<label asp-for="Phone" class="col-sm-4 col-form-label">Phone *</label>
+											<div class="col-sm-8">
+												<input asp-for="Phone" class="form-control" />
+												<span asp-validation-for="Phone" class="text-danger"></span>
+											</div>
+										</div>
+										<div class="row mb-3">
+											<label asp-for="Address" class="col-sm-4 col-form-label">Address</label>
+											<div class="col-sm-8">
+												<textarea asp-for="Address" class="form-control" rows="3"></textarea>
+												<span asp-validation-for="Address" class="text-danger"></span>
+											</div>
+										</div>
+										<div class="row mb-3">
+											<label asp-for="Status" class="col-sm-4 col-form-label">Status *</label>
+											<div class="col-sm-8">
+												<select asp-for="Status" class="form-select">
+													<option value="">-- Select Status --</option>
+													<option value="Active">Active</option>
+													<option value="Inactive">Inactive</option>
+												</select>
+												<span asp-validation-for="Status" class="text-danger"></span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="text-end">
+							<button type="submit" class="btn btn-primary"><i class="bi bi-check-circle"></i> Update Customer</button>
+							<a href="/Admin/Customer" class="btn btn-secondary"><i class="bi bi-x-circle"></i> Cancel</a>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+@section Scripts {
+	<script>
+		(function () {
+			const input = document.getElementById('avatarInput');
+			const preview = document.getElementById('avatarPreview');
+			if (input && preview) {
+				input.addEventListener('change', function () {
+					const file = this.files && this.files[0];
+					if (file) {
+						const url = URL.createObjectURL(file);
+						preview.src = url;
+					}
+				});
+			}
+		})();
+	</script>
+}
+

@@ -1,0 +1,67 @@
+@model IEnumerable<BussinessObject.Customer>
+@{
+	ViewData["Title"] = "Customer Management";
+}
+
+<div class="pagetitle">
+	<h1>Customer Management</h1>
+	<nav>
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item"><a href="/Admin/Dashboard">Home</a></li>
+			<li class="breadcrumb-item active">Customer Management</li>
+		</ol>
+	</nav>
+	</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+	<div class="alert alert-success alert-dismissible fade show" role="alert">
+		@TempData["SuccessMessage"]
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+	<div class="alert alert-danger alert-dismissible fade show" role="alert">
+		@TempData["ErrorMessage"]
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+}
+
+<section class="section">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title">Customer List</h5>
+
+					<div class="row mb-3">
+						<div class="col-md-12">
+							<form method="get" action="/Admin/Customer" class="d-flex">
+								<input type="text" id="searchInput" name="searchString" class="form-control me-2" placeholder="Search by ID, Name, Phone, Address, Status..." value="@ViewData["CurrentFilter"]" autocomplete="off">
+								<button type="submit" id="searchBtn" class="btn btn-primary"><i class="bi bi-search"></i> Search</button>
+								<a href="/Admin/Customer" id="clearBtn" class="btn btn-secondary ms-2"><i class="bi bi-arrow-clockwise"></i> Clear</a>
+							</form>
+						</div>
+					</div>
+
+					@await Html.PartialAsync("_CustomerTable", Model)
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+@section Scripts {
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			const clearBtn = document.getElementById('clearBtn');
+			clearBtn.addEventListener('click', function (e) {
+				e.preventDefault();
+				window.location.href = '/Admin/Customer';
+			});
+		});
+	</script>
+}
+
+

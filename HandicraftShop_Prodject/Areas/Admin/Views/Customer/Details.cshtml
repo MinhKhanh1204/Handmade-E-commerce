@@ -1,0 +1,62 @@
+@model BussinessObject.Customer
+@{
+	ViewData["Title"] = "Customer Details";
+}
+
+<div class="pagetitle">
+	<h1>Customer Details</h1>
+	<nav>
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item"><a href="/Admin/Dashboard">Home</a></li>
+			<li class="breadcrumb-item"><a href="/Admin/Customer">Customer Management</a></li>
+			<li class="breadcrumb-item active">Details</li>
+		</ol>
+	</nav>
+</div>
+
+<section class="section">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title">Customer Information</h5>
+
+					<div class="row">
+						<div class="col-md-3 text-center">
+							@{
+								var avatar = Model.CustomerNavigation?.Avatar;
+								var cacheBuster = DateTime.UtcNow.Ticks;
+								var avatarPath = string.IsNullOrEmpty(avatar)
+									? "/assets/img/person/default.jpg"
+									: $"/assets/img/person/{avatar}?v={cacheBuster}";
+							}
+							<img src="@avatarPath" alt="avatar" style="width:140px;height:140px;border-radius:50%;object-fit:cover;" />
+						</div>
+						<div class="col-md-9">
+							<div class="row">
+								<div class="col-md-6">
+									<div class="mb-2"><strong>Customer ID:</strong> @Model.CustomerId</div>
+									<div class="mb-2"><strong>Name:</strong> @Model.FullName</div>
+									<div class="mb-2"><strong>Date of Birth:</strong> @Model.DateOfBirth</div>
+									<div class="mb-2"><strong>Gender:</strong> @Model.Gender</div>
+								</div>
+								<div class="col-md-6">
+									<div class="mb-2"><strong>Phone:</strong> @Model.Phone</div>
+									<div class="mb-2"><strong>Address:</strong> @Model.Address</div>
+									<div class="mb-2"><strong>Status:</strong> <span class="badge @(Model.Status == "Active" ? "bg-success" : "bg-danger")">@Model.Status</span></div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="text-end mt-3">
+						<a href="/Admin/Customer/Edit/@Model.CustomerId" class="btn btn-warning"><i class="bi bi-pencil"></i> Edit Customer</a>
+						<a href="/Admin/Customer" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Back to List</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+
