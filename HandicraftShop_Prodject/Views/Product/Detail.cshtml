@@ -313,7 +313,13 @@
                                         <div class="review-item">
                                             <div class="review-header">
                                                 <div class="reviewer-info">
-                                                    <img src="/assets/img/person/@item.Customer.CustomerNavigation.Avatar" alt="Reviewer" class="reviewer-avatar">
+                                                    @{
+                                                        var reviewerAvatar = item.Customer?.CustomerNavigation?.Avatar;
+                                                        var reviewerAvatarPath = string.IsNullOrEmpty(reviewerAvatar)
+                                                            ? "/assets/img/person/default.jpg"
+                                                            : $"/assets/img/person/{reviewerAvatar}?v=@DateTime.UtcNow.Ticks";
+                                                    }
+                                                    <img src="@reviewerAvatarPath" alt="Reviewer" class="reviewer-avatar">
                                                     <div>
                                                         <h5 class="reviewer-name">@item.Customer.CustomerNavigation.Username</h5>
                                                         <div class="review-date">@Model.CreatedAt?.ToString("dd/MM/yyyy")</div>
