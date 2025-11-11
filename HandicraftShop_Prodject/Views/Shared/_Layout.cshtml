@@ -397,6 +397,12 @@
                                     Product
                                 </a>
                             </li>
+                            <li>
+                                <a class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Voucher" ? "active" : "")"
+                                   asp-controller="Voucher" asp-action="Index">
+                                    Voucher
+                                </a>
+                            </li>
                             <li><a href="about.html">About</a></li>
                             <li><a href="cart.html">Cart</a></li>
                             <li><a href="checkout.html">Checkout</a></li>

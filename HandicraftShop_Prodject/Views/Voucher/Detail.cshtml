@@ -1,0 +1,167 @@
+@model DTO.VoucherDTO
+@{
+    ViewData["Title"] = "Voucher Details";
+}
+<!-- Page Title -->
+<div class="page-title light-background">
+    <div class="container d-lg-flex justify-content-between align-items-center">
+        <h1 class="mb-2 mb-lg-0">Voucher Details</h1>
+        <nav class="breadcrumbs">
+            <ol>
+                <li><a href="/Home">Home</a></li>
+                <li><a href="/Voucher">Vouchers</a></li>
+                <li class="current">Voucher Details</li>
+            </ol>
+        </nav>
+    </div>
+</div><!-- End Page Title -->
+
+<!-- Voucher Detail Section -->
+<section id="voucher-detail" class="voucher-detail section">
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="voucher-detail-card" style="border: 2px dashed #007bff; border-radius: 15px; padding: 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; position: relative; overflow: hidden;">
+                    @if (!Model.IsValid)
+                    {
+                        <div class="voucher-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 1; display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 48px; font-weight: bold; text-transform: uppercase;">Expired</span>
+                        </div>
+                    }
+                    
+                    <div style="position: relative; z-index: 2;">
+                        <!-- Header -->
+                        <div class="text-center mb-4">
+                            <h1 class="mb-2" style="font-size: 36px; font-weight: bold;">@Model.VoucherName</h1>
+                            <div class="voucher-code-display" style="background: rgba(255,255,255,0.2); padding: 15px 30px; border-radius: 8px; display: inline-block; margin-top: 15px;">
+                                <p class="mb-1" style="font-size: 14px; opacity: 0.9; margin: 0;">Voucher Code</p>
+                                <h2 style="font-size: 28px; font-weight: bold; margin: 0; letter-spacing: 3px;">@Model.Code</h2>
+                            </div>
+                        </div>
+
+                        <!-- Discount Badge -->
+                        <div class="text-center mb-4">
+                            <div style="display: inline-block; background: rgba(255,255,255,0.3); padding: 20px 40px; border-radius: 50%;">
+                                <div style="font-size: 48px; font-weight: bold; line-height: 1;">
+                                    @Model.DiscountDisplay
+                                </div>
+                                <div style="font-size: 18px; opacity: 0.9;">DISCOUNT</div>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        @if (!string.IsNullOrEmpty(Model.Description))
+                        {
+                            <div class="mb-4" style="border-top: 1px solid rgba(255,255,255,0.3); border-bottom: 1px solid rgba(255,255,255,0.3); padding: 20px 0;">
+                                <h4 style="font-size: 18px; margin-bottom: 10px;">
+                                    <i class="bi bi-info-circle"></i> Description
+                                </h4>
+                                <p style="font-size: 16px; line-height: 1.6; opacity: 0.95;">@Model.Description</p>
+                            </div>
+                        }
+
+                        <!-- Details Grid -->
+                        <div class="voucher-details-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 30px;">
+                            @if (Model.MinOrderValue.HasValue)
+                            {
+                                <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 10px; text-align: center;">
+                                    <i class="bi bi-cart-check" style="font-size: 32px; margin-bottom: 10px; display: block;"></i>
+                                    <p style="font-size: 12px; opacity: 0.8; margin: 0;">Minimum Order</p>
+                                    <p style="font-size: 18px; font-weight: bold; margin: 5px 0 0 0;">
+                                        @Model.MinOrderValue.Value.ToString("N0") VNĐ
+                                    </p>
+                                </div>
+                            }
+                            
+                            @if (Model.MaxReducing.HasValue)
+                            {
+                                <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 10px; text-align: center;">
+                                    <i class="bi bi-tag" style="font-size: 32px; margin-bottom: 10px; display: block;"></i>
+                                    <p style="font-size: 12px; opacity: 0.8; margin: 0;">Max Reduction</p>
+                                    <p style="font-size: 18px; font-weight: bold; margin: 5px 0 0 0;">
+                                        @Model.MaxReducing.Value.ToString("N0") VNĐ
+                                    </p>
+                                </div>
+                            }
+                            
+                            @if (Model.ExpiryDate.HasValue)
+                            {
+                                <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 10px; text-align: center;">
+                                    <i class="bi bi-calendar-event" style="font-size: 32px; margin-bottom: 10px; display: block;"></i>
+                                    <p style="font-size: 12px; opacity: 0.8; margin: 0;">Expiry Date</p>
+                                    <p style="font-size: 18px; font-weight: bold; margin: 5px 0 0 0;">
+                                        @Model.ExpiryDate.Value.ToString("dd/MM/yyyy")
+                                    </p>
+                                </div>
+                            }
+                            
+                            @if (Model.RemainingQuantity.HasValue)
+                            {
+                                <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 10px; text-align: center;">
+                                    <i class="bi bi-box" style="font-size: 32px; margin-bottom: 10px; display: block;"></i>
+                                    <p style="font-size: 12px; opacity: 0.8; margin: 0;">Remaining</p>
+                                    <p style="font-size: 18px; font-weight: bold; margin: 5px 0 0 0;">
+                                        @Model.RemainingQuantity
+                                    </p>
+                                </div>
+                            }
+                            
+                            @if (Model.MaxUsagePerUser.HasValue)
+                            {
+                                <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 10px; text-align: center;">
+                                    <i class="bi bi-person-check" style="font-size: 32px; margin-bottom: 10px; display: block;"></i>
+                                    <p style="font-size: 12px; opacity: 0.8; margin: 0;">Max Per User</p>
+                                    <p style="font-size: 18px; font-weight: bold; margin: 5px 0 0 0;">
+                                        @Model.MaxUsagePerUser
+                                    </p>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Status Badge -->
+                        <div class="text-center mt-4">
+                            @if (Model.IsValid)
+                            {
+                                <span class="badge" style="background: #28a745; padding: 10px 20px; font-size: 16px;">
+                                    <i class="bi bi-check-circle"></i> Active & Valid
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge" style="background: #dc3545; padding: 10px 20px; font-size: 16px;">
+                                    <i class="bi bi-x-circle"></i> Not Available
+                                </span>
+                            }
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="text-center mt-4">
+                            <a href="/Voucher" class="btn btn-light" style="margin-right: 10px; font-weight: bold;">
+                                <i class="bi bi-arrow-left"></i> Back to Vouchers
+                            </a>
+                            @if (Model.IsValid)
+                            {
+                                <button class="btn btn-warning" style="font-weight: bold;" onclick="copyVoucherCode('@Model.Code')">
+                                    <i class="bi bi-clipboard"></i> Copy Code
+                                </button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section><!-- /Voucher Detail Section -->
+
+@section Scripts {
+    <script>
+        function copyVoucherCode(code) {
+            navigator.clipboard.writeText(code).then(function() {
+                alert('Voucher code copied to clipboard: ' + code);
+            }, function(err) {
+                alert('Failed to copy voucher code');
+            });
+        }
+    </script>
+}
+
