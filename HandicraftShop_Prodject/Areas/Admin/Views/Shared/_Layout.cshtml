@@ -294,6 +294,10 @@
                    asp-area="Admin" asp-controller="Customer" asp-action="Index">
                     <i class="bi bi-people"></i>
                     <span>Customer Management</span>
+                <a class="nav-link collapsed @(ViewContext.RouteData.Values["controller"]?.ToString() == "Voucher" ? "active" : "")"
+                   asp-area="Admin" asp-controller="Voucher" asp-action="Index">
+                    <i class="bi bi-ticket-perforated"></i>
+                    <span>Voucher Management</span>
                 </a>
             </li>
 
