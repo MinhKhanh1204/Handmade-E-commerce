@@ -58,12 +58,20 @@
                                 <span asp-validation-for="Material" class="text-danger"></span>
                             </div>
                             <div class="col-md-6">
-                                <label asp-for="Status" class="form-label">Status</label>
-                                <select asp-for="Status" class="form-select">
-                                    <option value="Active">Active</option>
-                                    <option value="Inactive">Inactive</option>
-                                </select>
-                                <span asp-validation-for="Status" class="text-danger"></span>
+                                <label class="form-label">Status</label>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <select asp-for="Status" class="form-select">
+                                        <option value="Active">Active</option>
+                                        <option value="Pending">Pending</option>
+                                        <option value="Inactive">Inactive</option>
+                                    </select>
+                                }
+                                else
+                                {
+                                    <input type="text" class="form-control" value="Pending" disabled />
+                                    <input type="hidden" asp-for="Status" value="Pending" />
+                                }
                             </div>
                             <div class="col-md-12">
                                 <label asp-for="Description" class="form-label">Description</label>

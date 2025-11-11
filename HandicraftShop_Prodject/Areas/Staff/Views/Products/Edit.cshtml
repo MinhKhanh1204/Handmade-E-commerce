@@ -100,10 +100,19 @@
                             </div>
                             <div class="col-md-6">
                                 <label asp-for="Status" class="form-label">Status</label>
-                                <select asp-for="Status" class="form-select">
-                                    <option value="Active" selected="@(Model.Status == "Active")">Active</option>
-                                    <option value="Inactive" selected="@(Model.Status == "Inactive")">Inactive</option>
-                                </select>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <select asp-for="Status" class="form-select">
+                                        <option value="Active" selected="@(Model.Status == "Active")">Active</option>
+                                        <option value="Pending" selected="@(Model.Status == "Pending")">Pending</option>
+                                        <option value="Inactive" selected="@(Model.Status == "Inactive")">Inactive</option>
+                                    </select>
+                                }
+                                else
+                                {
+                                    <input type="text" class="form-control" value="@Model.Status" readonly />
+                                    <input type="hidden" asp-for="Status" />
+                                }
                                 <span asp-validation-for="Status" class="text-danger"></span>
                             </div>
                             <div class="col-md-6">

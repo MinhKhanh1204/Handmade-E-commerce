@@ -17,103 +17,118 @@
 </div>
 
 <section class="section">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="card shadow-sm p-4">
-                    <form asp-area="Admin" asp-controller="Staffs" asp-action="Edit" method="post">
-                        @Html.AntiForgeryToken()
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm p-4">
+                <form asp-area="Admin" asp-controller="Staffs" asp-action="Edit" method="post" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
 
-                        <!-- Hidden fields to send required readonly values back to controller -->
-                        <input type="hidden" asp-for="StaffId" />
-                        <input type="hidden" name="DateOfBirth" value="@(Model.DateOfBirth?.ToString("yyyy-MM-dd"))" />
-                        <input type="hidden" name="CitizenId" value="@(Model.CitizenId ?? "")" />
-                        <input type="hidden" name="HireDate" value="@(Model.HireDate?.ToString("yyyy-MM-dd"))" />
-                        <input type="hidden" asp-for="CreatedAt" />
+                    <!-- Hidden fields giữ dữ liệu không edit -->
+                    <input type="hidden" asp-for="StaffId" />
+                    <input type="hidden" asp-for="CreatedAt" />
+                    <input type="hidden" asp-for="DateOfBirth" />
+                    <input type="hidden" asp-for="CitizenId" />
+                    <input type="hidden" asp-for="HireDate" />
 
-                        <div class="row g-3">
+                    <!-- Avatar ở trên cùng -->
+                    <div class="text-center mb-4">
+                        @if (!string.IsNullOrEmpty(Model.AvatarUrl))
+                        {
+                            <img src="@Model.AvatarUrl" alt="Avatar" class="rounded-circle mb-2" width="120" height="120" />
+                        }
+                        <input type="file" class="form-control" asp-for="Avatar" accept="image/*" />
+                        <span class="text-danger" asp-validation-for="Avatar"></span>
+                    </div>
 
-                            <!-- Staff ID hiển thị nhưng readonly -->
-                            <div class="col-md-6">
-                                <label class="form-label">Staff ID</label>
-                                <input type="text" class="form-control" value="@Model.StaffId" readonly />
-                            </div>
-
-                            <!-- Full Name editable -->
-                            <div class="col-md-6">
-                                <label class="form-label">Full Name</label>
-                                <input type="text" class="form-control" asp-for="FullName" />
-                                <span class="text-danger" asp-validation-for="FullName"></span>
-                            </div>
-
-                            <!-- Date of Birth readonly -->
-                            <div class="col-md-6">
-                                <label class="form-label">Date of Birth</label>
-                                <input type="text" class="form-control" value="@(Model.DateOfBirth?.ToString("yyyy/MM/dd") ?? "-")" readonly />
-                            </div>
-
-                            <!-- Gender editable -->
-                            <div class="col-md-6">
-                                <label class="form-label">Gender</label>
-                                <select class="form-select" asp-for="Gender">
-                                    <option value="">Select gender</option>
-                                    <option value="Male" selected="@(Model.Gender == "Male" ? "selected" : "")">Male</option>
-                                    <option value="Female" selected="@(Model.Gender == "Female" ? "selected" : "")">Female</option>
-                                </select>
-                                <span class="text-danger" asp-validation-for="Gender"></span>
-                            </div>
-
-                            <!-- Phone editable -->
-                            <div class="col-md-6">
-                                <label class="form-label">Phone</label>
-                                <input type="text" class="form-control" asp-for="Phone" />
-                                <span class="text-danger" asp-validation-for="Phone"></span>
-                            </div>
-
-                            <!-- Citizen ID readonly -->
-                            <div class="col-md-6">
-                                <label class="form-label">Citizen ID</label>
-                                <input type="text" class="form-control" value="@(Model.CitizenId ?? "-")" readonly />
-                            </div>
-
-                            <!-- Address editable -->
-                            <div class="col-md-12">
-                                <label class="form-label">Address</label>
-                                <textarea class="form-control" rows="2" asp-for="Address"></textarea>
-                                <span class="text-danger" asp-validation-for="Address"></span>
-                            </div>
-
-                            <!-- Hire Date readonly -->
-                            <div class="col-md-6">
-                                <label class="form-label">Hire Date</label>
-                                <input type="text" class="form-control" value="@(Model.HireDate?.ToString("yyyy/MM/dd") ?? "-")" readonly />
-                            </div>
-
-                            <!-- Status editable -->
-                            <div class="col-md-6">
-                                <label class="form-label">Status</label>
-                                <select class="form-select" asp-for="Status">
-                                    <option value="Active" selected="@(Model.Status == "Active" ? "selected" : "")">Active</option>
-                                    <option value="Inactive" selected="@(Model.Status == "Inactive" ? "selected" : "")">Inactive</option>
-                                </select>
-                                <span class="text-danger" asp-validation-for="Status"></span>
-                            </div>
-
-                            <!-- Buttons -->
-                            <div class="col-12 text-center mt-4">
-                                <button type="submit" class="btn btn-primary me-2">
-                                    <i class="bi bi-save"></i> Save
-                                </button>
-                                <a asp-area="Admin" asp-action="Index" class="btn btn-secondary ms-2">
-                                    <i class="bi bi-arrow-left"></i> Back
-                                </a>
-                            </div>
-
+                    <!-- Account Info -->
+                    <h5 class="mb-3 border-bottom pb-2">Account Information</h5>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Username</label>
+                            <input class="form-control" asp-for="Username" readonly />
                         </div>
-                    </form>
-                </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Email</label>
+                            <input class="form-control" asp-for="Email" />
+                            <span class="text-danger" asp-validation-for="Email"></span>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label">Status</label>
+                            <select class="form-select" asp-for="Status">
+                                <option value="Active" selected="@(Model.Status == "Active" ? "selected" : null)">Active</option>
+                                <option value="Inactive" selected="@(Model.Status == "Inactive" ? "selected" : null)">Inactive</option>
+                            </select>
+                            <span class="text-danger" asp-validation-for="Status"></span>
+                        </div>
+                    </div>
+
+                    <!-- Personal Info -->
+                    <h5 class="mb-3 border-bottom pb-2">Personal Information</h5>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Full Name</label>
+                            <input class="form-control" asp-for="FullName" />
+                            <span class="text-danger" asp-validation-for="FullName"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Gender</label>
+                            <select class="form-select" asp-for="Gender">
+                                <option value="">Select gender</option>
+                                <option value="Male" selected="@(Model.Gender == "Male" ? "selected" : null)">Male</option>
+                                <option value="Female" selected="@(Model.Gender == "Female" ? "selected" : null)">Female</option>
+                            </select>
+                            <span class="text-danger" asp-validation-for="Gender"></span>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Phone</label>
+                            <input class="form-control" asp-for="Phone" />
+                            <span class="text-danger" asp-validation-for="Phone"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Date of Birth</label>
+                            <input class="form-control" value="@(Model.DateOfBirth?.ToString("yyyy-MM-dd") ?? "-")" readonly />
+                        </div>
+                    </div>
+
+                    <!-- Identification & Work Info -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Citizen ID</label>
+                            <input class="form-control" value="@(Model.CitizenId ?? "-")" readonly />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Hire Date</label>
+                            <input class="form-control" value="@(Model.HireDate?.ToString("yyyy-MM-dd") ?? "-")" readonly />
+                        </div>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="mb-4">
+                        <label class="form-label">Address</label>
+                        <textarea class="form-control" rows="2" asp-for="Address"></textarea>
+                        <span class="text-danger" asp-validation-for="Address"></span>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary me-2">
+                            <i class="bi bi-save"></i> Save Changes
+                        </button>
+                        <a asp-area="Admin" asp-action="Index" class="btn btn-secondary ms-2">
+                            <i class="bi bi-arrow-left"></i> Back
+                        </a>
+                    </div>
+                </form>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
