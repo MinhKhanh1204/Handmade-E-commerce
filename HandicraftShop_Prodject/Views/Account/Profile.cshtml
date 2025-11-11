@@ -950,34 +950,35 @@
 									</form>
 								</div>
 
-								<!-- Security Settings -->
-								<div class="settings-section" data-aos="fade-up" data-aos-delay="200">
-									<h3>Security</h3>
-									<form class="php-email-form settings-form">
-										<div class="row g-3">
-											<div class="col-md-12">
-												<label for="currentPassword" class="form-label">Current Password</label>
-												<input type="password" class="form-control" id="currentPassword" required="">
-											</div>
-											<div class="col-md-6">
-												<label for="newPassword" class="form-label">New Password</label>
-												<input type="password" class="form-control" id="newPassword" required="">
-											</div>
-											<div class="col-md-6">
-												<label for="confirmPassword" class="form-label">Confirm Password</label>
-												<input type="password" class="form-control" id="confirmPassword" required="">
-											</div>
+							<!-- Security Settings -->
+							<div class="settings-section" data-aos="fade-up" data-aos-delay="200">
+								<h3>Security</h3>
+								<form class="php-email-form settings-form" asp-controller="Account" asp-action="ChangePassword" method="post">
+									@Html.AntiForgeryToken()
+									<div class="row g-3">
+										<div class="col-md-12">
+											<label for="currentPassword" class="form-label">Current Password</label>
+											<input type="password" class="form-control" name="CurrentPassword" id="currentPassword" required="">
 										</div>
-
-										<div class="form-buttons">
-											<button type="submit" class="btn-save">Update Password</button>
+										<div class="col-md-6">
+											<label for="newPassword" class="form-label">New Password</label>
+											<input type="password" class="form-control" name="NewPassword" id="newPassword" required="">
 										</div>
+										<div class="col-md-6">
+											<label for="confirmPassword" class="form-label">Confirm Password</label>
+											<input type="password" class="form-control" name="ConfirmPassword" id="confirmPassword" required="">
+										</div>
+									</div>
 
-										<div class="loading">Loading</div>
-										<div class="error-message"></div>
-										<div class="sent-message">Your password has been updated successfully!</div>
-									</form>
-								</div>
+									<div class="form-buttons">
+										<button type="submit" class="btn-save">Update Password</button>
+									</div>
+
+									<div class="loading">Loading</div>
+									<div class="error-message"></div>
+									<div class="sent-message">Your password has been updated successfully!</div>
+								</form>
+							</div>
 
 								<!-- Delete Account -->
 								@*  <div class="settings-section danger-zone" data-aos="fade-up" data-aos-delay="300">

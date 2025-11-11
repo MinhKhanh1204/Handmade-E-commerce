@@ -27,6 +27,7 @@ builder.Services.AddScoped<IStaffRepository, StaffRepository>();
 builder.Services.AddScoped<IStaffService, StaffService>();
 builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
 builder.Services.AddScoped<IArticleService, ArticleService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 builder.Services.AddHttpContextAccessor();
 
@@ -60,6 +61,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 					options.Fields.Add("email");
 					options.Fields.Add("picture");
 					options.SaveTokens = true;
+					options.SlidingExpiration = true; // Tự động gia hạn cookie khi user hoạt động
+					// Không set ExpireTimeSpan để dùng thời gian từ AuthenticationProperties
 				});
 
 

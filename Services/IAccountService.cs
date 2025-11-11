@@ -15,5 +15,8 @@ namespace Services
         Account GetAccountByID(string id);
         void UpdateProfile(Account account);
 		Account GetAccountByEmail(string email);
-	}
+		bool ChangePassword(string accountId, ChangePasswordDTO changePasswordDto);
+		Task<bool> ForgotPasswordAsync(ForgotPasswordDTO forgotPasswordDto);
+		bool ResetPassword(ResetPasswordDTO resetPasswordDto);
+    }
 }
