@@ -1,6 +1,5 @@
 ﻿using BussinessObject;
 using DataAccessObject;
-using DTO;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -25,22 +24,23 @@ namespace Repositories
         public IQueryable<Product> GetAllProducts()
         {
             return _context.Products
-                .Include(p => p.ProductImages)
                 .Include(p => p.Category)
+                .Include(p => p.ProductImages)
                 .Include(p => p.Feedbacks)
-                .Where(p => p.Status == "Active");
+                .Where(p => p.Status == "Active")
+                .AsQueryable();
         }
 
         public Product? GetProductById(string productId)
         {
             return _context.Products
-                .Include(p => p.ProductImages)
                 .Include(p => p.Category)
+                .Include(p => p.ProductImages)
                 .Include(p => p.Feedbacks)
-                    .ThenInclude(f => f.Customer)          // include Customer
-                    .ThenInclude(c => c.CustomerNavigation) // include Account
+                    .ThenInclude(f => f.Customer)
+                        .ThenInclude(c => c.CustomerNavigation)
                 .Include(p => p.Feedbacks)
-                    .ThenInclude(f => f.FeedbackImages)    // include FeedbackImages
+                    .ThenInclude(f => f.FeedbackImages)
                 .FirstOrDefault(p => p.ProductId == productId);
         }
         public List<Product> GetProducts()
@@ -162,6 +162,11 @@ namespace Repositories
             {
                 throw new Exception(ex.Message);
             }
+        }
+        public void AddProduct(Product product)
+        {
+            _context.Products.Add(product);
+            _context.SaveChanges();
         }
     }
 }

@@ -210,5 +210,12 @@ namespace Repositories
                 await _context.SaveChangesAsync();
             }
         }
+        public async Task<bool> HasCustomerPurchasedProductAsync(string customerId, string productId)
+        {
+            return await _context.Orders
+                .Include(o => o.OrderItems)
+                .Where(o => o.CustomerId == customerId && o.PaymentStatus == "Paid")
+                .AnyAsync(o => o.OrderItems.Any(oi => oi.ProductId == productId));
+        }
     }
 }

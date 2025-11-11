@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BussinessObject;
 using Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Services
 {
@@ -23,7 +24,6 @@ namespace Services
             if (cart == null || !cart.CartItems.Any())
                 throw new InvalidOperationException("Giỏ hàng trống!");
 
-            // Tính tổng bằng UnitPrice * Quantity (lấy từ product.Price)
             decimal total = 0M;
             var order = new Order
             {
@@ -35,7 +35,6 @@ namespace Services
                 OrderItems = new List<OrderItem>()
             };
 
-            // Tạo OrderItems dựa trên CartItems
             foreach (var ci in cart.CartItems)
             {
                 var product = ci.Product;
@@ -47,7 +46,7 @@ namespace Services
 
                 var orderItem = new OrderItem
                 {
-                    OrderId = order.OrderId,      // nếu OrderId được generate later trong repo, repo có thể gán lại; để an toàn set null/ignore
+                    OrderId = order.OrderId,
                     ProductId = ci.ProductId,
                     Quantity = qty,
                     UnitPrice = unitPrice,
@@ -60,10 +59,7 @@ namespace Services
 
             order.TotalAmount = total;
 
-            // Lưu order (OrderRepository.CreateAsync sẽ gán OrderId, OrderDate, ... và SaveChanges)
             var created = await _orderRepo.CreateAsync(order);
-
-            // Xóa giỏ hàng
             await _cartRepo.ClearCartAsync(customerId);
 
             return created;
@@ -74,7 +70,6 @@ namespace Services
             await _orderRepo.UpdatePaymentStatusAsync(orderId, paymentMethod, status, note);
         }
 
-        // Thêm helper nếu cần:
         public async Task<Order?> GetOrderByIdAsync(string orderId)
         {
             return await _orderRepo.GetByIdAsync(orderId);
@@ -122,6 +117,13 @@ namespace Services
         public async Task<Order?> GetOrderByIdForStaffAsync(string orderId)
         {
             return await _orderRepo.GetOrderByIdForStaffAsync(orderId);
+
+        /// <summary>
+        /// ✅ Kiểm tra xem customer đã mua sản phẩm này chưa
+        /// </summary>
+        public async Task<bool> HasCustomerPurchasedProductAsync(string customerId, string productId)
+        {
+            return await _orderRepo.HasCustomerPurchasedProductAsync(customerId, productId);
         }
     }
 }

@@ -4,62 +4,82 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 
-namespace Services
+public class MoMoService
 {
-    public class MoMoService
+    private readonly IConfiguration _config;
+    public MoMoService(IConfiguration config) => _config = config;
+
+   public async Task<(bool Success, string PayUrl, string OrderId, string Message)> CreatePaymentAsync(
+    decimal amount, string orderId, string orderInfo, string returnUrl, string notifyUrl)
+{
+    var partnerCode = _config["MoMo:PartnerCode"];
+    var accessKey = _config["MoMo:AccessKey"];
+    var secretKey = _config["MoMo:SecretKey"];
+    var endpoint = _config["MoMo:Endpoint"];
+
+    var requestId = Guid.NewGuid().ToString();
+    var requestType = "captureMoMoWallet";
+    var extraData = "";
+
+    // ✅ MoMo yêu cầu amount phải là kiểu long, không có .0000
+    var amountStr = ((long)amount).ToString();
+
+    // ✅ Chuỗi rawHash đúng chuẩn API captureMoMoWallet
+    var rawHash =
+        $"partnerCode={partnerCode}" +
+        $"&accessKey={accessKey}" +
+        $"&requestId={requestId}" +
+        $"&amount={amountStr}" +
+        $"&orderId={orderId}" +
+        $"&orderInfo={orderInfo}" +
+        $"&returnUrl={returnUrl}" +
+        $"&notifyUrl={notifyUrl}" +
+        $"&extraData={extraData}";
+
+    var signature = HmacSHA256(secretKey, rawHash);
+
+    Console.WriteLine("=== MoMo DEBUG ===");
+    Console.WriteLine($"RawHash: {rawHash}");
+    Console.WriteLine($"Signature: {signature}");
+    Console.WriteLine("==================");
+
+    var payload = new
     {
-        private readonly IConfiguration _config;
-        private readonly HttpClient _http;
+        partnerCode,
+        accessKey,
+        requestId,
+        amount = amountStr,
+        orderId,
+        orderInfo,
+        returnUrl,
+        notifyUrl,
+        extraData,
+        requestType,
+        signature,
+        lang = "vi"
+    };
 
-        public MoMoService(IConfiguration config)
-        {
-            _config = config;
-            _http = new HttpClient();
-        }
+    using var client = new HttpClient();
+    var content = new StringContent(System.Text.Json.JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
+    var response = await client.PostAsync(endpoint, content);
+    var responseBody = await response.Content.ReadAsStringAsync();
 
-        public async Task<(bool success, string payUrl, string id, string message)> CreatePaymentAsync(decimal amount, string orderId, string orderInfo, string returnUrl, string notifyUrl)
-        {
-            string endpoint = _config["MoMo:Endpoint"];
-            string partnerCode = _config["MoMo:PartnerCode"];
-            string accessKey = _config["MoMo:AccessKey"];
-            string secretKey = _config["MoMo:SecretKey"];
+    if (!response.IsSuccessStatusCode)
+        return (false, "", orderId, responseBody);
 
-            var requestId = Guid.NewGuid().ToString();
-            var orderIdFull = $"{orderId}_{DateTime.Now.Ticks}";
-            var rawHash = $"accessKey={accessKey}&amount={amount}&extraData=&ipnUrl={notifyUrl}&orderId={orderIdFull}&orderInfo={orderInfo}&partnerCode={partnerCode}&redirectUrl={returnUrl}&requestId={requestId}&requestType=captureWallet";
+    var json = System.Text.Json.JsonDocument.Parse(responseBody);
+    var payUrl = json.RootElement.GetProperty("payUrl").GetString();
 
-            string signature = HmacSHA256(rawHash, secretKey);
+    return (true, payUrl!, orderId, "OK");
+}
 
-            var payload = new
-            {
-                partnerCode,
-                partnerName = "Test",
-                storeId = "MomoTestStore",
-                requestId,
-                amount = amount.ToString(),
-                orderId = orderIdFull,
-                orderInfo,
-                redirectUrl = returnUrl,
-                ipnUrl = notifyUrl,
-                requestType = "captureWallet",
-                extraData = "",
-                lang = "vi",
-                signature
-            };
+private static string HmacSHA256(string key, string message)
+{
+    var keyBytes = Encoding.UTF8.GetBytes(key);
+    var messageBytes = Encoding.UTF8.GetBytes(message);
+    using var hmac = new HMACSHA256(keyBytes);
+    var hashBytes = hmac.ComputeHash(messageBytes);
+    return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+}
 
-            var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
-            var response = await _http.PostAsync(endpoint, content);
-            var body = await response.Content.ReadAsStringAsync();
-
-            var json = JsonSerializer.Deserialize<Dictionary<string, object>>(body);
-            return (true, json["payUrl"].ToString(), orderIdFull, "OK");
-        }
-
-        private static string HmacSHA256(string message, string secret)
-        {
-            var hash = new HMACSHA256(Encoding.UTF8.GetBytes(secret));
-            var bytes = hash.ComputeHash(Encoding.UTF8.GetBytes(message));
-            return BitConverter.ToString(bytes).Replace("-", "").ToLower();
-        }
-    }
 }
