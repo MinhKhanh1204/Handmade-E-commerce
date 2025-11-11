@@ -1,0 +1,172 @@
+@model List<DTO.ArticleDTO>
+@{
+    ViewData["Title"] = "Articles";
+}
+
+<!-- Page Title with Gradient -->
+<div class="page-title light-background" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 60px 0;">
+    <div class="container d-lg-flex justify-content-between align-items-center">
+        <h1 class="mb-2 mb-lg-0" style="font-size: 2.5rem; font-weight: 700; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">
+            <i class="bi bi-journal-text me-2"></i>Articles & Blog
+        </h1>
+        <nav class="breadcrumbs">
+            <ol style="background: rgba(255,255,255,0.2); padding: 10px 20px; border-radius: 25px;">
+                <li><a href="/Home" style="color: white;">Home</a></li>
+                <li class="current" style="color: white;">Articles</li>
+            </ol>
+        </nav>
+    </div>
+</div><!-- End Page Title -->
+
+<div class="container" style="padding-top: 40px; padding-bottom: 60px;">
+    <!-- Modern Filter Section -->
+    <section id="article-filter" class="mb-5" data-aos="fade-up">
+        <div class="filter-card" style="background: white; border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+            <div class="row g-4 align-items-end">
+                <div class="col-md-6 col-lg-4">
+                    @if (ViewBag.Categories != null && ((List<string>)ViewBag.Categories).Count > 0)
+                    {
+                        <div class="filter-item">
+                            <label class="form-label fw-bold mb-2" style="color: #667eea;">
+                                <i class="bi bi-funnel me-2"></i>Category
+                            </label>
+                            <select class="form-select modern-select" id="categoryFilter" style="border-radius: 10px; border: 2px solid #e9ecef; padding: 12px; transition: all 0.3s;">
+                                <option value="">All Categories</option>
+                                @foreach (var cat in (List<string>)ViewBag.Categories)
+                                {
+                                    <option value="@cat" selected="@(ViewBag.Category == cat)">@cat</option>
+                                }
+                            </select>
+                        </div>
+                    }
+                </div>
+                <div class="col-md-6 col-lg-6">
+                    <div class="filter-item search-form">
+                        <label class="form-label fw-bold mb-2" style="color: #667eea;">
+                            <i class="bi bi-search me-2"></i>Search Articles
+                        </label>
+                        <div class="input-group modern-search">
+                            <input type="text" value="@ViewBag.Search" class="form-control modern-input" id="articleSearch" 
+                                   placeholder="Search by title or content..." 
+                                   style="border-radius: 10px 0 0 10px; border: 2px solid #e9ecef; padding: 12px 20px; transition: all 0.3s;">
+                            <button id="btnSearch" class="btn search-btn-modern" type="button" 
+                                    style="border-radius: 0 10px 10px 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; padding: 12px 25px; color: white; transition: all 0.3s;">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-2">
+                    <button type="button" class="btn btn-outline-primary w-100" id="btnReset" 
+                            style="border-radius: 10px; padding: 12px; border: 2px solid #667eea; color: #667eea; transition: all 0.3s;">
+                        <i class="bi bi-arrow-clockwise me-2"></i>Reset
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Articles List -->
+    <div id="article-list">
+        @Html.Partial("_ArticleListPartial", Model)
+    </div>
+</div>
+
+<style>
+    .modern-select:focus {
+        border-color: #667eea !important;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25) !important;
+        outline: none;
+    }
+    
+    .modern-input:focus {
+        border-color: #667eea !important;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25) !important;
+        outline: none;
+    }
+    
+    .search-btn-modern:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    .search-btn-modern:active {
+        transform: translateY(0);
+    }
+    
+    #btnReset:hover {
+        background: #667eea !important;
+        color: white !important;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+</style>
+
+@section Scripts {
+    <script>
+        // Load articles with AJAX
+        function loadArticles(search, category, page) {
+            $.ajax({
+                url: '/Articles/Index',
+                type: 'GET',
+                data: {
+                    search: search,
+                    category: category,
+                    page: page
+                },
+                headers: { "X-Requested-With": "XMLHttpRequest" },
+                success: function (response) {
+                    $("#article-list").html(response);
+                },
+                error: function () {
+                    alert("Cannot load articles.");
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            // Search button click
+            $("#btnSearch").click(function () {
+                const search = $("#articleSearch").val();
+                const category = $("#categoryFilter").val();
+                loadArticles(search, category, 1);
+            });
+
+            // Enter key to search
+            $("#articleSearch").keypress(function (e) {
+                if (e.which === 13) {
+                    $("#btnSearch").click();
+                }
+            });
+
+            // Category filter change
+            $("#categoryFilter").change(function () {
+                const search = $("#articleSearch").val();
+                const category = $(this).val();
+                loadArticles(search, category, 1);
+            });
+
+            // Reset button
+            $("#btnReset").click(function () {
+                $("#articleSearch").val("");
+                $("#categoryFilter").val("");
+                loadArticles("", "", 1);
+            });
+
+            // Pagination click
+            $(document).on("click", ".page-link-modern", function (e) {
+                e.preventDefault();
+                const page = $(this).data("page");
+                const search = $("#articleSearch").val();
+                const category = $("#categoryFilter").val();
+                loadArticles(search, category, page);
+                
+                // Smooth scroll to top
+                $('html, body').animate({
+                    scrollTop: $("#article-list").offset().top - 100
+                }, 500);
+            });
+        });
+    </script>
+}
+

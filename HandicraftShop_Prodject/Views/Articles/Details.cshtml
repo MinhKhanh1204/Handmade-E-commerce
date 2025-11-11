@@ -1,0 +1,123 @@
+@model DTO.ArticleDTO
+@{
+    ViewData["Title"] = Model.Title ?? "Article Details";
+}
+
+<!-- Page Title -->
+<div class="page-title light-background">
+    <div class="container d-lg-flex justify-content-between align-items-center">
+        <h1 class="mb-2 mb-lg-0">@Model.Title</h1>
+        <nav class="breadcrumbs">
+            <ol>
+                <li><a href="/Home">Home</a></li>
+                <li><a href="/Articles">Articles</a></li>
+                <li class="current">Article Details</li>
+            </ol>
+        </nav>
+    </div>
+</div><!-- End Page Title -->
+
+<!-- Article Details Section -->
+<section id="article-details" class="article-details section">
+    <div class="container" data-aos="fade-up">
+        <div class="row">
+            <!-- Article Content -->
+            <div class="col-lg-8">
+                <article class="article-content">
+                    <!-- Article Header -->
+                    <div class="article-header mb-4">
+                        @if (!string.IsNullOrEmpty(Model.Category))
+                        {
+                            <span class="badge bg-primary mb-2">@Model.Category</span>
+                        }
+                        <h1 class="article-title mb-3">@Model.Title</h1>
+                        <div class="article-meta d-flex flex-wrap gap-3 text-muted mb-3">
+                            <span><i class="bi bi-person"></i> @(Model.AuthorName ?? "Unknown")</span>
+                            <span><i class="bi bi-calendar"></i> @(Model.CreatedAt?.ToString("MMMM dd, yyyy") ?? "")</span>
+                            @if (Model.UpdatedAt.HasValue && Model.UpdatedAt != Model.CreatedAt)
+                            {
+                                <span><i class="bi bi-pencil"></i> Updated: @Model.UpdatedAt.Value.ToString("MMMM dd, yyyy")</span>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Article Images -->
+                    @if (Model.ArticleImages != null && Model.ArticleImages.Count > 0)
+                    {
+                        <div class="article-images mb-4">
+                            @foreach (var img in Model.ArticleImages)
+                            {
+                                <div class="article-image-item mb-3">
+                                    <img src="@img.ImageUrl" alt="@Model.Title" class="img-fluid rounded" loading="lazy" style="width: 100%; max-height: 500px; object-fit: contain;">
+                                </div>
+                            }
+                        </div>
+                    }
+
+                    <!-- Article Body -->
+                    <div class="article-body">
+                        <div class="article-content-text">
+                            @Html.Raw(Model.Content?.Replace("\n", "<br/>"))
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <aside class="article-sidebar">
+                    <!-- Back to Articles -->
+                    <div class="sidebar-widget mb-4">
+                        <a href="/Articles" class="btn btn-outline-primary w-100">
+                            <i class="bi bi-arrow-left"></i> Back to Articles
+                        </a>
+                    </div>
+
+                    <!-- Article Info -->
+                    <div class="sidebar-widget card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Article Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-2">
+                                    <strong>Category:</strong> 
+                                    <span>@(Model.Category ?? "N/A")</span>
+                                </li>
+                                <li class="mb-2">
+                                    <strong>Author:</strong> 
+                                    <span>@(Model.AuthorName ?? "Unknown")</span>
+                                </li>
+                                <li class="mb-2">
+                                    <strong>Published:</strong> 
+                                    <span>@(Model.CreatedAt?.ToString("MMMM dd, yyyy") ?? "N/A")</span>
+                                </li>
+                                @if (Model.UpdatedAt.HasValue && Model.UpdatedAt != Model.CreatedAt)
+                                {
+                                    <li class="mb-2">
+                                        <strong>Last Updated:</strong> 
+                                        <span>@Model.UpdatedAt.Value.ToString("MMMM dd, yyyy")</span>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .article-content-text {
+        line-height: 1.8;
+        font-size: 1.1rem;
+    }
+    .article-content-text p {
+        margin-bottom: 1.5rem;
+    }
+    .article-image-item img {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+</style>
+

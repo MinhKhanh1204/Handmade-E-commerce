@@ -1,0 +1,243 @@
+@model DTO.ArticleDTO
+
+@{
+    ViewData["Title"] = "Create Article";
+}
+
+<div class="pagetitle">
+    <h1>Create Article</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-area="Admin" asp-controller="Articles" asp-action="Index">Article Management</a>
+            </li>
+            <li class="breadcrumb-item active">Create</li>
+        </ol>
+    </nav>
+</div>
+
+<section class="section">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-sm p-4">
+                <form asp-area="Admin" asp-controller="Articles" asp-action="Create" method="post" enctype="multipart/form-data" id="articleForm">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="AuthorId" />
+                    
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <ul class="mb-0">
+                                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                {
+                                    <li>@error.ErrorMessage</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-12">
+                            <label class="form-label">Title <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" asp-for="Title" placeholder="Enter article title" />
+                            <span class="text-danger" asp-validation-for="Title"></span>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Category</label>
+                            <input type="text" class="form-control" asp-for="Category" placeholder="Enter category" />
+                            <span class="text-danger" asp-validation-for="Category"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Status <span class="text-danger">*</span></label>
+                            <select class="form-select" asp-for="Status">
+                                <option value="Draft">Draft</option>
+                                <option value="Published">Published</option>
+                                <option value="Archived">Archived</option>
+                            </select>
+                            <span class="text-danger" asp-validation-for="Status"></span>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-12">
+                            <label class="form-label">Content <span class="text-danger">*</span></label>
+                            <textarea class="form-control" rows="10" asp-for="Content" placeholder="Enter article content"></textarea>
+                            <span class="text-danger" asp-validation-for="Content"></span>
+                        </div>
+                    </div>
+
+                    <!-- Article Images -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-12">
+                            <label class="form-label">Article Images</label>
+                            <div id="imageContainer">
+                                <div class="image-item mb-3">
+                                    <div class="border rounded p-2">
+                                        <input type="file" class="form-control image-file mb-2" accept="image/*" name="imageFiles[0]" />
+                                        <div class="image-preview-container" style="display: none;">
+                                            <img class="image-preview img-thumbnail" style="max-width: 200px; max-height: 200px; object-fit: cover;" />
+                                        </div>
+                                        <div class="d-flex align-items-center gap-2 mt-2">
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input is-main" title="Set as main image" />
+                                                <label class="form-check-label">Main Image</label>
+                                            </div>
+                                            <button type="button" class="btn btn-danger btn-sm remove-image">Remove</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-secondary mt-2" id="addImageBtn">
+                                <i class="bi bi-plus-circle"></i> Add Image
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12 text-center">
+                            <button type="submit" class="btn btn-primary me-2">
+                                <i class="bi bi-save"></i> Create
+                            </button>
+                            <a asp-area="Admin" asp-action="Index" class="btn btn-secondary ms-2">
+                                <i class="bi bi-arrow-left"></i> Back
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const imageContainer = document.getElementById('imageContainer');
+            const addImageBtn = document.getElementById('addImageBtn');
+            const articleForm = document.getElementById('articleForm');
+
+            // Add preview functionality to existing file inputs
+            document.querySelectorAll('.image-file').forEach(function(fileInput) {
+                const previewContainer = fileInput.closest('.image-item').querySelector('.image-preview-container');
+                const previewImg = fileInput.closest('.image-item').querySelector('.image-preview');
+                
+                fileInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            previewImg.src = e.target.result;
+                            previewContainer.style.display = 'block';
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        previewContainer.style.display = 'none';
+                    }
+                });
+            });
+
+            // Add new image input
+            addImageBtn.addEventListener('click', function () {
+                const imageItem = document.createElement('div');
+                imageItem.className = 'image-item mb-3';
+                const currentIndex = document.querySelectorAll('.image-item').length;
+                imageItem.innerHTML = `
+                    <div class="border rounded p-2">
+                        <input type="file" class="form-control image-file mb-2" accept="image/*" name="imageFiles[${currentIndex}]" />
+                        <div class="image-preview-container" style="display: none;">
+                            <img class="image-preview img-thumbnail" style="max-width: 200px; max-height: 200px; object-fit: cover;" />
+                        </div>
+                        <div class="d-flex align-items-center gap-2 mt-2">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input is-main" title="Set as main image" />
+                                <label class="form-check-label">Main Image</label>
+                            </div>
+                            <button type="button" class="btn btn-danger btn-sm remove-image">Remove</button>
+                        </div>
+                    </div>
+                `;
+                imageContainer.appendChild(imageItem);
+                
+                // Add preview functionality to new file input
+                const newFileInput = imageItem.querySelector('.image-file');
+                const previewContainer = imageItem.querySelector('.image-preview-container');
+                const previewImg = imageItem.querySelector('.image-preview');
+                
+                newFileInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            previewImg.src = e.target.result;
+                            previewContainer.style.display = 'block';
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        previewContainer.style.display = 'none';
+                    }
+                });
+            });
+
+            // Remove image input
+            imageContainer.addEventListener('click', function (e) {
+                if (e.target.classList.contains('remove-image')) {
+                    e.target.closest('.image-item').remove();
+                    // Re-index file inputs after removal
+                    document.querySelectorAll('.image-item').forEach(function (item, index) {
+                        const fileInput = item.querySelector('.image-file');
+                        if (fileInput) {
+                            fileInput.name = 'imageFiles[' + index + ']';
+                        }
+                    });
+                }
+            });
+
+            // Handle form submission - collect image files and main flags
+            articleForm.addEventListener('submit', function (e) {
+                const isMainFlags = [];
+                let validFileIndex = 0;
+
+                // Remove all existing hidden inputs for isMainFlags to avoid duplicates
+                document.querySelectorAll('input[name^="isMainFlags"]').forEach(function (input) {
+                    input.remove();
+                });
+
+                // Collect all file inputs and re-index them
+                document.querySelectorAll('.image-item').forEach(function (item) {
+                    const fileInput = item.querySelector('.image-file');
+                    const isMainCheckbox = item.querySelector('.is-main');
+                    
+                    if (fileInput && !fileInput.disabled) {
+                        if (fileInput.files && fileInput.files.length > 0) {
+                            // Re-index file input for proper model binding
+                            fileInput.name = 'imageFiles[' + validFileIndex + ']';
+                            isMainFlags.push(isMainCheckbox ? isMainCheckbox.checked : false);
+                            validFileIndex++;
+                        } else {
+                            // Remove empty file inputs completely
+                            item.remove();
+                        }
+                    }
+                });
+
+                // Add hidden inputs for isMainFlags
+                isMainFlags.forEach(function (isMain, index) {
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = 'isMainFlags[' + index + ']';
+                    hiddenInput.value = isMain;
+                    articleForm.appendChild(hiddenInput);
+                });
+
+                // Debug: Log what we're sending
+                console.log('Submitting form with', validFileIndex, 'image files');
+                console.log('isMainFlags:', isMainFlags);
+            });
+        });
+    </script>
+}
+
