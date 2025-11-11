@@ -1,7 +1,10 @@
 ﻿@model BussinessObject.Product
+@using HandicraftShop_Prodject.Utils
 @{
     ViewData["Title"] = "Product Detail Page";
+    var currentUser = AccountUtils.GetUserData(User);
 }
+
 <!-- Page Title -->
 <div class="page-title light-background">
     <div class="container d-lg-flex justify-content-between align-items-center">
@@ -9,54 +12,61 @@
         <nav class="breadcrumbs">
             <ol>
                 <li><a href="/Home">Home</a></li>
-                <li class="current">Product Details</li>
+                <li><a href="/Product">Products</a></li>
+                <li class="current">@Model.ProductName</li>
             </ol>
         </nav>
     </div>
-</div><!-- End Page Title -->
+</div>
+
+<!-- Alert Messages -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="container mt-3">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            <strong>Success!</strong> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="container mt-3">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <strong>Error!</strong> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    </div>
+}
+
 <!-- Product Details Section -->
 <section id="product-details" class="product-details section">
-
     <div class="container" data-aos="fade-up" data-aos-delay="100">
-
         <div class="row">
             <!-- Product Images -->
             <div class="col-lg-6 mb-5 mb-lg-0" data-aos="fade-right" data-aos-delay="200">
                 <div class="product-images">
                     <div class="main-image-container mb-3">
                         <div class="image-zoom-container">
-                            <img src="/assets/img/product/@Model.ProductImages.First().ImageUrl" alt="Product Image" class="img-fluid main-image drift-zoom" id="main-product-image" data-zoom="/assets/img/product/@Model.ProductImages.First().ImageUrl">
+                            <img src="/assets/img/product/@Model.ProductImages.First().ImageUrl" 
+                                 alt="@Model.ProductName" 
+                                 class="img-fluid main-image" 
+                                 id="main-product-image">
                         </div>
                     </div>
 
                     <div class="product-thumbnails">
                         <div class="swiper product-thumbnails-slider init-swiper">
-                            <script type="application/json" class="swiper-config">
-                                {
-                                  "loop": false,
-                                  "speed": 400,
-                                  "slidesPerView": 4,
-                                  "spaceBetween": 10,
-                                  "navigation": {
-                                    "nextEl": ".swiper-button-next",
-                                    "prevEl": ".swiper-button-prev"
-                                  },
-                                  "breakpoints": {
-                                    "320": {
-                                      "slidesPerView": 3
-                                    },
-                                    "576": {
-                                      "slidesPerView": 4
-                                    }
-                                  }
-                                }
-                            </script>
                             <div class="swiper-wrapper">
                                 @foreach (var item in Model.ProductImages)
-                                    {
-                                    <div class="swiper-slide thumbnail-item active" data-image="/assets/img/product/@item.ImageUrl">
-                                    <img src="/assets/img/product/@item.ImageUrl" alt="Product Thumbnail" class="img-fluid">
-                                </div>
+                                {
+                                    <div class="swiper-slide thumbnail-item @(Model.ProductImages.First() == item ? "active" : "")" 
+                                         data-image="/assets/img/product/@item.ImageUrl">
+                                        <img src="/assets/img/product/@item.ImageUrl" alt="Thumbnail" class="img-fluid">
+                                    </div>
                                 }
                             </div>
                             <div class="swiper-button-next"></div>
@@ -73,29 +83,26 @@
                         <span class="product-category">@Model.Category.CategoryName</span>
                         @{
                             var avgRating = Model.Feedbacks.Any()
-                            ? Math.Round(Model.Feedbacks.Average(f => f.Rating ?? 0), 1)
-                            : 0;
+                                ? Math.Round(Model.Feedbacks.Average(f => f.Rating ?? 0), 1)
+                                : 0;
                         }
                         <div class="product-rating">
                             @for (var i = 1; i <= 5; i++)
                             {
                                 if (avgRating >= i)
                                 {
-                                // Sao vàng đầy
                                     <i class="bi bi-star-fill text-warning"></i>
                                 }
                                 else if (avgRating >= i - 0.5)
                                 {
-                                // Sao nửa vàng
                                     <i class="bi bi-star-half text-warning"></i>
                                 }
                                 else
                                 {
-                                // Sao rỗng
                                     <i class="bi bi-star text-warning"></i>
                                 }
                             }
-                            <span class="rating-count">(@Model.Feedbacks.Count)</span>
+                            <span class="rating-count">(@Model.Feedbacks.Count reviews)</span>
                         </div>
                     </div>
 
@@ -104,14 +111,18 @@
                     <div class="product-price-container mb-4">
                         @{
                             var originalPrice = Model.Price ?? 0;
-                            var discountedPrice = originalPrice - Model.Discount ?? 0;
+                            var discount = Model.Discount ?? 0;
+                            var discountedPrice = originalPrice - (originalPrice * discount / 100);
                         }
-                        @if (originalPrice != discountedPrice){
+                        @if (discount > 0)
+                        {
                             <span class="current-price">@discountedPrice.ToString("N0") VNĐ</span>
-                            <span class="original-price">@Model.Price?.ToString("N0") VNĐ</span>
-                            <span class="discount-badge">@Model.Discount?.ToString("N0") VNĐ</span>
-                        }else{
-                            <span class="current-price">@Model.Price?.ToString("N0") VNĐ</span>
+                            <span class="original-price">@originalPrice.ToString("N0") VNĐ</span>
+                            <span class="discount-badge">-@discount.ToString("N0")%</span>
+                        }
+                        else
+                        {
+                            <span class="current-price">@originalPrice.ToString("N0") VNĐ</span>
                         }
                     </div>
 
@@ -120,38 +131,54 @@
                     </div>
 
                     <div class="product-availability mb-4">
-                        @if (@Model.StockQuantity > 0){
+                        @if (Model.StockQuantity > 0)
+                        {
                             <i class="bi bi-check-circle-fill text-success"></i>
                             <span>In Stock</span>
                             <span class="stock-count">(@Model.StockQuantity items left)</span>
-                        }else{
+                        }
+                        else
+                        {
                             <i class="bi bi-x-circle-fill text-danger"></i>
-                            <span>Out Stock</span>
+                            <span>Out of Stock</span>
                         }
                     </div>
 
                     <!-- Quantity Selector -->
-                    <div class="product-quantity mb-4">
-                        <h6 class="option-title">Quantity:</h6>
-                        <div class="quantity-selector">
-                            <button class="quantity-btn decrease">
-                                <i class="bi bi-dash"></i>
-                            </button>
-                            <input type="number" class="quantity-input" value="1" min="1" max="24">
-                            <button class="quantity-btn increase">
-                                <i class="bi bi-plus"></i>
-                            </button>
+                    @if (Model.StockQuantity > 0)
+                    {
+                        <div class="product-quantity mb-4">
+                            <h6 class="option-title">Quantity:</h6>
+                            <div class="quantity-selector">
+                                <button class="quantity-btn decrease" type="button">
+                                    <i class="bi bi-dash"></i>
+                                </button>
+                                <input type="number" class="quantity-input" value="1" min="1" max="@Model.StockQuantity">
+                                <button class="quantity-btn increase" type="button">
+                                    <i class="bi bi-plus"></i>
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                    }
 
                     <!-- Action Buttons -->
                     <div class="product-actions">
-                        <button class="btn btn-primary add-to-cart-btn">
-                            <i class="bi bi-cart-plus"></i> Add to Cart
-                        </button>
-                        <button class="btn btn-outline-primary buy-now-btn">
-                            <i class="bi bi-lightning-fill"></i> Buy Now
-                        </button>
+                        @if (Model.StockQuantity > 0)
+                        {
+                            <form asp-controller="Cart" asp-action="Add" method="post" class="d-inline">
+                                <input type="hidden" name="productId" value="@Model.ProductId" />
+                                <input type="hidden" name="quantity" class="quantity-value" value="1" />
+                                <button type="submit" class="btn btn-primary add-to-cart-btn">
+                                    <i class="bi bi-cart-plus"></i> Add to Cart
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <button class="btn btn-primary" disabled>
+                                <i class="bi bi-cart-x"></i> Out of Stock
+                            </button>
+                        }
                         <button class="btn btn-outline-secondary wishlist-btn">
                             <i class="bi bi-heart"></i>
                         </button>
@@ -161,7 +188,7 @@
                     <div class="additional-info mt-4">
                         <div class="info-item">
                             <i class="bi bi-truck"></i>
-                            <span>Free shipping on orders over $50</span>
+                            <span>Free shipping on orders over 500,000 VNĐ</span>
                         </div>
                         <div class="info-item">
                             <i class="bi bi-arrow-repeat"></i>
@@ -169,7 +196,7 @@
                         </div>
                         <div class="info-item">
                             <i class="bi bi-shield-check"></i>
-                            <span>2-year warranty</span>
+                            <span>1-year warranty</span>
                         </div>
                     </div>
                 </div>
@@ -182,24 +209,38 @@
                 <div class="product-details-tabs">
                     <ul class="nav nav-tabs" id="productTabs" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab" aria-controls="description" aria-selected="true">Description</button>
+                            <button class="nav-link active" id="description-tab" data-bs-toggle="tab" 
+                                    data-bs-target="#description" type="button">
+                                Description
+                            </button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab" aria-controls="reviews" aria-selected="false">Reviews (@Model.Feedbacks.Count)</button>
+                            <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" 
+                                    data-bs-target="#reviews" type="button">
+                                Reviews (@Model.Feedbacks.Count)
+                            </button>
                         </li>
                     </ul>
+
                     <div class="tab-content" id="productTabsContent">
                         <!-- Description Tab -->
-                        <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
+                        <div class="tab-pane fade show active" id="description" role="tabpanel">
                             <div class="product-description">
                                 <h4>Product Overview</h4>
                                 <p>@Model.Description</p>
+                                
+                                @if (!string.IsNullOrEmpty(Model.Material))
+                                {
+                                    <h5 class="mt-4">Material</h5>
+                                    <p>@Model.Material</p>
+                                }
                             </div>
                         </div>
 
                         <!-- Reviews Tab -->
-                        <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+                        <div class="tab-pane fade" id="reviews" role="tabpanel">
                             <div class="product-reviews">
+                                <!-- Reviews Summary -->
                                 <div class="reviews-summary">
                                     <div class="overall-rating">
                                         <div class="rating-number">@avgRating</div>
@@ -208,17 +249,14 @@
                                             {
                                                 if (avgRating >= i)
                                                 {
-                                                // Sao vàng đầy
                                                     <i class="bi bi-star-fill text-warning"></i>
                                                 }
                                                 else if (avgRating >= i - 0.5)
                                                 {
-                                                // Sao nửa vàng
                                                     <i class="bi bi-star-half text-warning"></i>
                                                 }
                                                 else
                                                 {
-                                                // Sao rỗng
                                                     <i class="bi bi-star text-warning"></i>
                                                 }
                                             }
@@ -230,13 +268,13 @@
                                         var feedbacks = Model.Feedbacks;
                                         var totalFeedback = feedbacks.Count();
                                         var ratingCounts = Enumerable.Range(1, 5)
-                                        .Select(r => new
-                                        {
-                                            Star = r,
-                                            Count = feedbacks.Count(f => f.Rating == r)
-                                        })
-                                        .OrderByDescending(r => r.Star) // hiển thị từ 5 sao xuống 1 sao
-                                        .ToList();
+                                            .Select(r => new
+                                            {
+                                                Star = r,
+                                                Count = feedbacks.Count(f => f.Rating == r)
+                                            })
+                                            .OrderByDescending(r => r.Star)
+                                            .ToList();
                                     }
 
                                     <div class="rating-breakdown">
@@ -244,9 +282,9 @@
                                         {
                                             var percentage = totalFeedback > 0 ? (r.Count * 100.0 / totalFeedback) : 0;
                                             <div class="rating-bar">
-                                                <div class="rating-label">@r.Star @((r.Star == 1) ? "star" : "stars")</div>
+                                                <div class="rating-label">@r.Star ⭐</div>
                                                 <div class="progress">
-                                                    <div class="progress-bar" role="progressbar" style="width: @percentage%;" aria-valuenow="percentage" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    <div class="progress-bar bg-warning" style="width: @percentage%"></div>
                                                 </div>
                                                 <div class="rating-count">@r.Count</div>
                                             </div>
@@ -254,87 +292,181 @@
                                     </div>
                                 </div>
 
-                                <div class="review-form-container">
-                                    <h4>Write a Review</h4>
-                                    <form class="review-form">
-                                        <div class="rating-select mb-4">
-                                            <label class="form-label">Your Rating</label>
-                                            <div class="star-rating">
-                                                <input type="radio" id="star5" name="rating" value="5"><label for="star5" title="5 stars"><i class="bi bi-star-fill"></i></label>
-                                                <input type="radio" id="star4" name="rating" value="4"><label for="star4" title="4 stars"><i class="bi bi-star-fill"></i></label>
-                                                <input type="radio" id="star3" name="rating" value="3"><label for="star3" title="3 stars"><i class="bi bi-star-fill"></i></label>
-                                                <input type="radio" id="star2" name="rating" value="2"><label for="star2" title="2 stars"><i class="bi bi-star-fill"></i></label>
-                                                <input type="radio" id="star1" name="rating" value="1"><label for="star1" title="1 star"><i class="bi bi-star-fill"></i></label>
-                                            </div>
-                                        </div>
+                                <!-- Write Review Form (Only for logged in users who purchased) -->
+                                @if (currentUser != null)
+                                {
+                                    var userFeedback = Model.Feedbacks.FirstOrDefault(f => f.CustomerId == currentUser.AccountId);
+                                    
+                                    @if (userFeedback == null)
+                                    {
+                                        <div class="review-form-container mt-5">
+                                            <h4>Write a Review</h4>
+                                            <p class="text-muted">Share your experience with this product</p>
+                                            
+                                            <form asp-controller="Feedback" asp-action="Add" method="post" class="review-form">
+                                                <input type="hidden" name="productId" value="@Model.ProductId" />
+                                                
+                                                <div class="mb-3">
+                                                    <label class="form-label">Your Rating *</label>
+                                                    <div class="star-rating-input">
+                                                        @for (int i = 5; i >= 1; i--)
+                                                        {
+                                                            <input type="radio" id="star@(i)" name="rating" value="@i" required />
+                                                            <label for="star@(i)" title="@i stars">
+                                                                <i class="bi bi-star-fill"></i>
+                                                            </label>
+                                                        }
+                                                    </div>
+                                                </div>
 
-                                        <div class="row g-3 mb-3">
-                                            <div class="col-md-6">
-                                                <label for="review-name" class="form-label">Your Name</label>
-                                                <input type="text" class="form-control" id="review-name" required="">
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label for="review-email" class="form-label">Your Email</label>
-                                                <input type="email" class="form-control" id="review-email" required="">
-                                            </div>
-                                        </div>
+                                                <div class="mb-3">
+                                                    <label for="comment" class="form-label">Your Review *</label>
+                                                    <textarea class="form-control" id="comment" name="comment" 
+                                                              rows="4" required 
+                                                              placeholder="Tell others what you think about this product..."></textarea>
+                                                </div>
 
-                                        <div class="mb-3">
-                                            <label for="review-title" class="form-label">Review Title</label>
-                                            <input type="text" class="form-control" id="review-title" required="">
+                                                <button type="submit" class="btn btn-primary">
+                                                    <i class="bi bi-send-fill"></i> Submit Review
+                                                </button>
+                                            </form>
                                         </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="alert alert-info mt-4">
+                                        <i class="bi bi-info-circle me-2"></i>
+                                        Please <a asp-controller="Auth" asp-action="Login" class="alert-link">login</a> to write a review.
+                                    </div>
+                                }
 
-                                        <div class="mb-4">
-                                            <label for="review-content" class="form-label">Your Review</label>
-                                            <textarea class="form-control" id="review-content" rows="4" required=""></textarea>
-                                            <div class="form-text">Tell others what you think about this product. Be honest and helpful!</div>
-                                        </div>
-
-                                        <div class="d-grid">
-                                            <button type="submit" class="btn btn-primary">Submit Review</button>
-                                        </div>
-                                    </form>
-                                </div>
-
+                                <!-- Reviews List -->
                                 <div class="reviews-list mt-5">
                                     <h4>Customer Reviews</h4>
 
-                                   @foreach (var item in Model.Feedbacks)
+                                    @if (Model.Feedbacks.Any())
                                     {
-                                        <div class="review-item">
-                                            <div class="review-header">
-                                                <div class="reviewer-info">
-                                                    <img src="/assets/img/person/@item.Customer.CustomerNavigation.Avatar" alt="Reviewer" class="reviewer-avatar">
-                                                    <div>
-                                                        <h5 class="reviewer-name">@item.Customer.CustomerNavigation.Username</h5>
-                                                        <div class="review-date">@Model.CreatedAt?.ToString("dd/MM/yyyy")</div>
+                                        @foreach (var feedback in Model.Feedbacks.OrderByDescending(f => f.CreatedAt))
+                                        {
+                                            <div class="review-item">
+                                                <div class="review-header">
+                                                    <div class="reviewer-info">
+                                                        <img src="/assets/img/person/@(feedback.Customer?.CustomerNavigation?.Avatar ?? "default-avatar.jpg")" 
+                                                             alt="Avatar" 
+                                                             class="reviewer-avatar">
+                                                        <div>
+                                                            <h5 class="reviewer-name">@(feedback.Customer?.CustomerNavigation?.Username ?? "Anonymous")</h5>
+                                                            <div class="review-date">@feedback.CreatedAt?.ToString("dd/MM/yyyy HH:mm")</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="review-rating">
+                                                        @for (var i = 1; i <= 5; i++)
+                                                        {
+                                                            if (feedback.Rating >= i)
+                                                            {
+                                                                <i class="bi bi-star-fill text-warning"></i>
+                                                            }
+                                                            else
+                                                            {
+                                                                <i class="bi bi-star text-warning"></i>
+                                                            }
+                                                        }
                                                     </div>
                                                 </div>
-                                                <div class="review-rating">
-                                                    @for (var i = 1; i <= 5; i++)
-                                                    {
-                                                        if (item.Rating >= i)
-                                                        {
-                                                        // Sao vàng đầy
-                                                            <i class="bi bi-star-fill text-warning"></i>
-                                                        }
-                                                        else if (item.Rating >= i - 0.5)
-                                                        {
-                                                        // Sao nửa vàng
-                                                            <i class="bi bi-star-half text-warning"></i>
-                                                        }
-                                                        else
-                                                        {
-                                                        // Sao rỗng
-                                                            <i class="bi bi-star text-warning"></i>
-                                                        }
-                                                    }
+                                                
+                                                <div class="review-content">
+                                                    <p>@feedback.Comment</p>
                                                 </div>
+
+                                                @if (feedback.FeedbackImages.Any())
+                                                {
+                                                    <div class="review-images">
+                                                        @foreach (var img in feedback.FeedbackImages)
+                                                        {
+                                                            <img src="/assets/img/feedback/@img.ImageUrl" alt="Review Image" class="img-thumbnail">
+                                                        }
+                                                    </div>
+                                                }
+
+                                                @* Show Edit/Delete if this is user's feedback *@
+                                                @if (currentUser != null && feedback.CustomerId == currentUser.AccountId)
+                                                {
+                                                    <div class="review-actions mt-3">
+                                                        <button class="btn btn-sm btn-outline-primary" 
+                                                                data-bs-toggle="modal" 
+                                                                data-bs-target="#editModal@(feedback.FeedbackId)">
+                                                            <i class="bi bi-pencil"></i> Edit
+                                                        </button>
+                                                        
+                                                        <form asp-controller="Feedback" asp-action="Delete" method="post" 
+                                                              class="d-inline" 
+                                                              onsubmit="return confirm('Are you sure you want to delete this review?');">
+                                                            <input type="hidden" name="feedbackId" value="@feedback.FeedbackId" />
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                                <i class="bi bi-trash"></i> Delete
+                                                            </button>
+                                                        </form>
+                                                    </div>
+
+                                                    @* Edit Modal *@
+<div class="modal fade" id="editModal@(feedback.FeedbackId)" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-controller="Feedback" asp-action="Edit" method="post">
+                <input type="hidden" name="feedbackId" value="@feedback.FeedbackId" />
+                
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Your Review</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Your Rating</label>
+                        <select name="rating" class="form-select" required>
+                            @{
+                                var ratings = new[] 
+                                { 
+                                    new { Value = 5, Label = "⭐⭐⭐⭐⭐ Excellent" },
+                                    new { Value = 4, Label = "⭐⭐⭐⭐ Good" },
+                                    new { Value = 3, Label = "⭐⭐⭐ Average" },
+                                    new { Value = 2, Label = "⭐⭐ Poor" },
+                                    new { Value = 1, Label = "⭐ Terrible" }
+                                };
+                            }
+                            @foreach (var r in ratings)
+                            {
+                                                                                    <option value="@r.Value" selected="@(feedback.Rating == r.Value)">
+                                                                                        @r.Label
+                                                                                    </option>
+                            }
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Your Review</label>
+                        <textarea name="comment" class="form-control" rows="4" required>@feedback.Comment</textarea>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Review</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+                                                }
                                             </div>
-                                            <h5 class="review-title">Comment</h5>
-                                            <div class="review-content">
-                                                <p>@item.Comment</p>
-                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div class="alert alert-info">
+                                            <i class="bi bi-info-circle me-2"></i>
+                                            No reviews yet. Be the first to review this product!
                                         </div>
                                     }
                                 </div>
@@ -345,4 +477,53 @@
             </div>
         </div>
     </div>
-</section><!-- /Product Details Section -->
+</section>
+
+@section Scripts {
+    <script>
+        // Quantity selector
+        document.querySelector('.quantity-input').addEventListener('change', function() {
+            document.querySelector('.quantity-value').value = this.value;
+        });
+        
+        document.querySelector('.increase').addEventListener('click', function() {
+            let input = document.querySelector('.quantity-input');
+            let max = parseInt(input.getAttribute('max'));
+            if (parseInt(input.value) < max) {
+                input.value = parseInt(input.value) + 1;
+                document.querySelector('.quantity-value').value = input.value;
+            }
+        });
+        
+        document.querySelector('.decrease').addEventListener('click', function() {
+            let input = document.querySelector('.quantity-input');
+            if (parseInt(input.value) > 1) {
+                input.value = parseInt(input.value) - 1;
+                document.querySelector('.quantity-value').value = input.value;
+            }
+        });
+
+        // Thumbnail click
+        document.querySelectorAll('.thumbnail-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.thumbnail-item').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('main-product-image').src = this.dataset.image;
+            });
+        });
+
+        // Star rating input
+        document.querySelectorAll('.star-rating-input label').forEach(label => {
+            label.addEventListener('mouseover', function() {
+                let star = parseInt(this.getAttribute('for').replace('star', ''));
+                document.querySelectorAll('.star-rating-input label').forEach((l, idx) => {
+                    if (idx >= (5 - star)) {
+                        l.classList.add('hover');
+                    } else {
+                        l.classList.remove('hover');
+                    }
+                });
+            });
+        });
+    </script>
+}

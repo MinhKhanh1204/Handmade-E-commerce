@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Services;
 using HandicraftShop_Prodject.Utils;
-using BussinessObject;
 
 namespace HandicraftShop_Prodject.Controllers
 {
@@ -9,66 +8,144 @@ namespace HandicraftShop_Prodject.Controllers
     {
         private readonly CartService _cartService;
         private readonly OrderService _orderService;
-        private readonly MoMoService _momo;
+        private readonly IProductService _productService;
         private readonly VNPayService _vnpay;
         private readonly IConfiguration _config;
 
         public CartController(
             CartService cartService,
             OrderService orderService,
-            MoMoService momo,
+            IProductService productService,
             VNPayService vnpay,
             IConfiguration config)
         {
             _cartService = cartService;
             _orderService = orderService;
-            _momo = momo;
+            _productService = productService;
             _vnpay = vnpay;
             _config = config;
         }
 
-        // 🛒 Xem giỏ hàng
-        public async Task<IActionResult> Index()
+        // 🛒 View Cart
+        public IActionResult Index()
         {
             var account = AccountUtils.GetUserData(User);
             if (account == null)
                 return RedirectToAction("Login", "Auth");
 
-            var cart = await _cartService.GetCartByCustomerIdAsync(account.AccountId);
-
+            var cart = _cartService.GetCartByCustomerId(account.AccountId);
             return View("~/Views/Cart/Index.cshtml", cart);
         }
 
+        // ✅ Add to Cart (UC_23)
         [HttpPost]
-        public async Task<IActionResult> Edit(int cartItemId, int quantity)
+        public IActionResult Add(string productId, int quantity = 1)
+        {
+            var account = AccountUtils.GetUserData(User);
+
+            if (account == null)
+            {
+                TempData["ErrorMessage"] = "Please login to add products to cart!";
+                return RedirectToAction("Login", "Auth", new { returnUrl = Url.Action("Detail", "Product", new { id = productId }) });
+            }
+
+            try
+            {
+                // ✅ Validate product exists
+                if (!_productService.ProductExists(productId))
+                {
+                    TempData["ErrorMessage"] = "Product not found or unavailable!";
+                    return RedirectToAction("Index", "Product");
+                }
+
+                // ✅ Validate stock
+                if (!_productService.IsProductInStock(productId, quantity))
+                {
+                    TempData["ErrorMessage"] = "Not enough stock available!";
+                    return RedirectToAction("Detail", "Product", new { id = productId });
+                }
+
+                // Add to cart
+                _cartService.AddToCart(account.AccountId, productId, quantity);
+
+                var product = _productService.GetProductById(productId);
+                TempData["SuccessMessage"] = $"Added {product?.ProductName} to cart successfully!";
+                return RedirectToAction("Detail", "Product", new { id = productId });
+            }
+            catch (InvalidOperationException ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                return RedirectToAction("Detail", "Product", new { id = productId });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Error adding to cart: {ex.Message}");
+                TempData["ErrorMessage"] = "Failed to add product to cart!";
+                return RedirectToAction("Detail", "Product", new { id = productId });
+            }
+        }
+
+        [HttpPost]
+        public IActionResult Edit(int cartItemId, int quantity)
         {
             var account = AccountUtils.GetUserData(User);
             if (account == null)
                 return RedirectToAction("Login", "Auth");
 
-            await _cartService.UpdateCartItemAsync(cartItemId, quantity);
+            try
+            {
+                _cartService.UpdateCartItem(cartItemId, quantity);
+                TempData["SuccessMessage"] = "Cart updated successfully!";
+            }
+            catch (InvalidOperationException ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Error updating cart: {ex.Message}");
+                TempData["ErrorMessage"] = "Failed to update cart!";
+            }
+
             return RedirectToAction("Index");
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(int cartItemId)
+        public IActionResult Delete(int cartItemId)
         {
             var account = AccountUtils.GetUserData(User);
             if (account == null)
                 return RedirectToAction("Login", "Auth");
 
-            await _cartService.DeleteCartItemAsync(cartItemId);
+            try
+            {
+                _cartService.DeleteCartItem(cartItemId);
+                TempData["SuccessMessage"] = "Item removed from cart!";
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Error deleting cart item: {ex.Message}");
+                TempData["ErrorMessage"] = "Failed to remove item!";
+            }
+
             return RedirectToAction("Index");
         }
 
         [HttpGet]
-        public async Task<IActionResult> Checkout()
+        public IActionResult Checkout()
         {
             var account = AccountUtils.GetUserData(User);
             if (account == null)
                 return RedirectToAction("Login", "Auth");
 
-            var cart = await _cartService.GetCartByCustomerIdAsync(account.AccountId);
+            var cart = _cartService.GetCartByCustomerId(account.AccountId);
+
+            if (cart == null || !cart.CartItems.Any())
+            {
+                TempData["ErrorMessage"] = "Your cart is empty!";
+                return RedirectToAction("Index", "Product");
+            }
+
             return View("~/Views/Order/Checkout.cshtml", cart);
         }
 
@@ -79,31 +156,40 @@ namespace HandicraftShop_Prodject.Controllers
             if (account == null)
                 return RedirectToAction("Login", "Auth");
 
-            var order = await _orderService.CreateOrderFromCartAsync(account.AccountId, paymentMethod, shippingAddress);
-
-            if (paymentMethod == "MoMo")
+            try
             {
-                var cfg = _config.GetSection("MoMo");
-                var (ok, url, id, msg) = await _momo.CreatePaymentAsync(
-                    order.TotalAmount ?? 0M,
-                    order.OrderId,
-                    $"Thanh toán đơn {order.OrderId}",
-                    cfg["ReturnUrl"],
-                    cfg["NotifyUrl"]);
-                if (ok) return Redirect(url);
-            }
+                var order = await _orderService.CreateOrderFromCartAsync(account.AccountId, paymentMethod, shippingAddress);
 
-            if (paymentMethod == "VNPay")
+                // ✅ VNPay
+                if (paymentMethod == "VNPay")
+                {
+                    var returnUrl = Url.Action("VNPayReturn", "Order", null, Request.Scheme);
+                    var clientIp = VNPayService.GetIpAddress(HttpContext);
+                    var url = _vnpay.CreatePaymentUrl(order.OrderId, order.TotalAmount ?? 0M, returnUrl, clientIp);
+                    return Redirect(url);
+                }
+
+                // ✅ COD
+                if (paymentMethod == "COD")
+                {
+                    await _orderService.UpdatePaymentAsync(order.OrderId, "COD", "Pending", "");
+                    return RedirectToAction("Confirmation", "Order", new { id = order.OrderId });
+                }
+
+                TempData["ErrorMessage"] = "Invalid payment method!";
+                return RedirectToAction("Checkout");
+            }
+            catch (InvalidOperationException ex)
             {
-                var cfg = _config.GetSection("VNPay");
-                var url = _vnpay.CreatePaymentUrl(order.OrderId, order.TotalAmount ?? 0M, cfg["ReturnUrl"]);
-                return Redirect(url);
-
+                TempData["ErrorMessage"] = ex.Message;
+                return RedirectToAction("Checkout");
             }
-
-            // COD
-            await _orderService.UpdatePaymentAsync(order.OrderId, "COD", "Pending", "");
-            return RedirectToAction("Confirmation", "Order", new { id = order.OrderId });
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Checkout error: {ex.Message}");
+                TempData["ErrorMessage"] = "Failed to create order!";
+                return RedirectToAction("Checkout");
+            }
         }
     }
 }

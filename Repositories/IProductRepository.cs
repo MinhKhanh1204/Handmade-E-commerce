@@ -1,10 +1,4 @@
 ﻿using BussinessObject;
-using DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Repositories
 {
@@ -12,5 +6,8 @@ namespace Repositories
     {
         IQueryable<Product> GetAllProducts();
         Product? GetProductById(string productId);
+        void AddProduct(Product product);
+        void UpdateProduct(Product product); // ✅ Thêm method này
+        void DeleteProduct(string productId);
     }
 }

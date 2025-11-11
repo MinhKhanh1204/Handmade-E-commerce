@@ -30,7 +30,7 @@ builder.Services.AddScoped<IFeedbackService, FeedbackService>();
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<MoMoService>();
 builder.Services.AddScoped<VNPayService>();
-
+builder.Services.AddScoped<FeedbackService>();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddSession(options =>

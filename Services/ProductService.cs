@@ -1,11 +1,6 @@
 ﻿using BussinessObject;
 using DTO;
 using Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services
 {
@@ -64,6 +59,57 @@ namespace Services
         public Product? GetProductById(string productId)
         {
             return _productRepository.GetProductById(productId);
+        }
+
+        /// <summary>
+        /// ✅ Kiểm tra product có tồn tại và active không
+        /// </summary>
+        public bool ProductExists(string productId)
+        {
+            if (string.IsNullOrWhiteSpace(productId))
+                return false;
+
+            var product = _productRepository.GetProductById(productId);
+            return product != null && product.Status == "Active";
+        }
+
+        /// <summary>
+        /// ✅ Kiểm tra số lượng trong kho có đủ không
+        /// </summary>
+        public bool IsProductInStock(string productId, int quantity)
+        {
+            if (quantity <= 0)
+                return false;
+
+            var product = _productRepository.GetProductById(productId);
+
+            if (product == null || product.Status != "Active")
+                return false;
+
+            return (product.StockQuantity ?? 0) >= quantity;
+        }
+
+        /// <summary>
+        /// ✅ Cập nhật số lượng tồn kho (trừ đi khi đặt hàng)
+        /// </summary>
+        public void UpdateStockQuantity(string productId, int quantity)
+        {
+            if (quantity <= 0)
+                throw new ArgumentException("Quantity must be greater than 0");
+
+            var product = _productRepository.GetProductById(productId);
+
+            if (product == null)
+                throw new InvalidOperationException("Product not found!");
+
+            if (product.Status != "Active")
+                throw new InvalidOperationException("Product is not available!");
+
+            if ((product.StockQuantity ?? 0) < quantity)
+                throw new InvalidOperationException($"Not enough stock! Available: {product.StockQuantity}");
+
+            product.StockQuantity = (product.StockQuantity ?? 0) - quantity;
+            _productRepository.UpdateProduct(product);
         }
     }
 }
