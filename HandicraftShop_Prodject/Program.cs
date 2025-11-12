@@ -42,7 +42,7 @@ builder.Services.AddScoped<MoMoService>();
 builder.Services.AddScoped<VNPayService>();
 builder.Services.AddScoped<FeedbackService>();
 builder.Services.AddHttpContextAccessor();
-
+builder.Services.AddHttpClient();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
