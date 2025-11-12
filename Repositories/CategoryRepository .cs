@@ -41,6 +41,13 @@ namespace Repositories
             var category = _context.Categories.Find(id);
             if (category != null)
             {
+                // Set CategoryId to NULL for all products that reference this category
+                var products = _context.Products.Where(p => p.CategoryId == id).ToList();
+                foreach (var product in products)
+                {
+                    product.CategoryId = null;
+                }
+                
                 _context.Categories.Remove(category);
                 _context.SaveChanges();
             }
@@ -49,6 +56,13 @@ namespace Repositories
         public IEnumerable<Category> GetAllCategories()
         {
             return _context.Categories.ToList();
+        }
+
+        public IEnumerable<Category> GetActiveCategories()
+        {
+            return _context.Categories
+                .Where(c => c.Status != "Inactive" && c.Status != "Deleted")
+                .ToList();
         }
 
         public bool Exists(int id)

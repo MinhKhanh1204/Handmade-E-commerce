@@ -12,6 +12,7 @@ namespace Services
     {
         IEnumerable<Category> GetAllCategories();
         IEnumerable<Category> GetCategories();
+        IEnumerable<Category> GetActiveCategories();
         Category? GetCategoryById(int id);
         void AddCategory(Category category);
         void UpdateCategory(Category category);

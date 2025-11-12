@@ -29,6 +29,11 @@ namespace Services
             return _categoryRepository.GetAllCategories();
         }
 
+        public IEnumerable<Category> GetActiveCategories()
+        {
+            return _categoryRepository.GetActiveCategories();
+        }
+
         public Category? GetCategoryById(int id)
         {
             return _categoryRepository.GetCategoryById(id);

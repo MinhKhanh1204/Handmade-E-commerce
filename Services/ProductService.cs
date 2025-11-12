@@ -23,7 +23,8 @@ namespace Services
 
         public PagedResult<ProductDTO> GetPagedProducts(string? search, int? categoryId, int page, int pageSize)
         {
-            var query = _productRepository.GetAllProducts();
+            var query = _productRepository.GetAllProducts()
+                .Where(p => p.Category == null || (p.Category.Status != "Inactive" && p.Category.Status != "Deleted"));
 
             if (!string.IsNullOrEmpty(search))
                 query = query.Where(p => p.ProductName.Contains(search));
@@ -72,7 +73,8 @@ namespace Services
 
         public IEnumerable<ProductDTO> GetTop4PromotionProducts()
         {
-            var query = _productRepository.GetAllProducts();
+            var query = _productRepository.GetAllProducts()
+                .Where(p => p.Category == null || (p.Category.Status != "Inactive" && p.Category.Status != "Deleted"));
             var items = query
                 .Where(p => p.Discount > 0)
                 .OrderByDescending(p => p.ProductId)
