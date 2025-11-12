@@ -77,35 +77,47 @@ namespace HandicraftShop_Prodject.Controllers
 			}
 			return View(model);
 		}
+        [HttpPost]
+        public IActionResult Register(AuthViewModel model)
+        {
+            // Bỏ validate Login
+            foreach (var key in ModelState.Keys
+                                     .Where(k => k.StartsWith("Login."))
+                                     .ToList())
+            {
+                ModelState.Remove(key);
+            }
 
-		[HttpPost]
-		public IActionResult Register(AuthViewModel model)
-		{
-			foreach (var key in ModelState.Keys
-								 .Where(k => k.StartsWith("Login."))
-								 .ToList())
-			{
-				ModelState.Remove(key);
-			}
-			// Chỉ validate phần Register, bỏ qua Login
-			ModelState.ClearValidationState(nameof(model.Login));
-			TryValidateModel(model.Register, nameof(model.Register));
-			var registerDto = model.Register;
-			if (ModelState.IsValid)
-			{
-				var success = _accountService.Register(registerDto);
-				if (success)
-				{
-					TempData["Success"] = "Account created successfully! Please log in.";
-					return RedirectToAction("Login");
-				}
+            // Validate Register
+            ModelState.ClearValidationState(nameof(model.Login));
+            TryValidateModel(model.Register, nameof(model.Register));
 
-				ModelState.AddModelError("Email", "Email already exists.");
-			}
-			return View("Login", model);
-		}
+            var registerDto = model.Register;
 
-		public async Task<IActionResult> LogoutAsync()
+            if (ModelState.IsValid)
+            {
+                if (_accountService.GetAccountByEmail(registerDto.Email) != null)
+                {
+                    ModelState.AddModelError("Register.Email", "Email already exists.");
+                    return View("Login", model);
+                }
+
+                var success = _accountService.Register(registerDto);
+                if (success)
+                {
+                    TempData["Success"] = "Account created successfully! Please log in.";
+                    return RedirectToAction("Login");
+                }
+
+                ModelState.AddModelError("Register.Email", "Failed to create account.");
+            }
+
+            return View("Login", model);
+        }
+
+
+
+        public async Task<IActionResult> LogoutAsync()
 		{
 			HttpContext.Session.Clear();
 			await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);

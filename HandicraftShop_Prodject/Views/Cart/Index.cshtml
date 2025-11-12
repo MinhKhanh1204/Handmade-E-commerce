@@ -36,7 +36,7 @@
                     <tr>
                         <td>
                             <div class="d-flex align-items-center">
-                                <img src="@item.Product?.ProductImages?.FirstOrDefault()?.ImageUrl" width="60" class="me-3 rounded" />
+                                <img src="~/images/@item.ProductId/@item.Product?.ProductImages?.FirstOrDefault()?.ImageUrl" width="60" class="me-3 rounded" />
                                 <div>
                                     <strong>@item.Product?.ProductName</strong><br />
                                     <small>@item.Product?.Material</small>
@@ -50,8 +50,8 @@
                                 <button type="submit" class="btn btn-sm btn-outline-success ms-2">Update</button>
                             </form>
                         </td>
-                        <td class="text-end">@price.ToString("C0")</td>
-                        <td class="text-end">@total.ToString("C0")</td>
+                        <td class="text-end">@price.ToString("N0") VND</td>
+                        <td class="text-end">@total.ToString("N0") VND</td>
                         <td class="text-end">
                             <form asp-action="Delete" asp-controller="Cart" method="post">
                                 <input type="hidden" name="cartItemId" value="@item.CartItemId" />
@@ -67,7 +67,7 @@
             <h4>
                 Total:
                 <span class="text-primary fw-bold">
-                    @(Model.CartItems.Sum(i => (i.Quantity ?? 0) * (i.Product?.Price ?? 0)).ToString("C0"))
+                    @(Model.CartItems.Sum(i => (i.Quantity ?? 0) * (i.Product?.Price ?? 0)).ToString("N0")) VND
                 </span>
             </h4>
             <a asp-action="Checkout" asp-controller="Cart" class="btn btn-success btn-lg mt-3">

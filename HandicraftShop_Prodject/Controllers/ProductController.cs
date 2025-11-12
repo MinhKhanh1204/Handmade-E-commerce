@@ -16,14 +16,14 @@ namespace HandicraftShop_Prodject.Controllers
         }
         public IActionResult Index(string? search, int? categoryId, int page = 1)
         {
-            var categories = _categoryService.GetAllCategories();
-            if (!categoryId.HasValue)
+            var categories = _categoryService.GetActiveCategories();
+            if (!categoryId.HasValue && categories.Any())
             {
                 categoryId = categories.First().CategoryId;
             }
-                
+
             var result = _productService.GetPagedProducts(search, categoryId, page, 6);
-            
+
             var model = new ProductViewModel
             {
                 Products = result,

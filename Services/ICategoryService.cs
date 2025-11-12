@@ -18,5 +18,7 @@ namespace Services
         void DeleteCategory(int id);
         bool CategoryExists(int id);
         IEnumerable<Category> SearchCategories(string searchTerm);
+
+        IEnumerable<Category> GetActiveCategories();
     }
 }

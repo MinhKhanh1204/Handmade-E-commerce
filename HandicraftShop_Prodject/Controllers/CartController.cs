@@ -39,7 +39,7 @@ namespace HandicraftShop_Prodject.Controllers
 
         // ✅ Add to Cart (UC_23)
         [HttpPost]
-        public IActionResult Add(string productId, int quantity = 1)
+        public IActionResult Add(string productId, int quantity)
         {
             var account = AccountUtils.GetUserData(User);
 

@@ -145,9 +145,9 @@
 							<div class="col-12">
 								<div class="mb-4">
 									<label for="login-register-reg-email" class="form-label">Email address</label>
-									<input type="email" asp-for="Register.Email" class="form-control" id="login-register-reg-email" 
-										   name="Register.Email" autocomplete="email" required="">
-									<span asp-validation-for="Register.Email" class="text-danger"></span>
+											<input type="email" asp-for="Register.Email" class="form-control" id="login-register-reg-email"
+												   name="Register.Email" autocomplete="email" required="">
+											<span asp-validation-for="Register.Email" class="text-danger"></span>
 								</div>
 							</div>
 
@@ -205,3 +205,6 @@
 	</div>
 
 </section><!-- /Login Register Section -->
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

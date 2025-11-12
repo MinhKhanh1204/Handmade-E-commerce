@@ -62,5 +62,10 @@ namespace Services
         {
             return _categoryRepository.Search(searchTerm);
         }
+
+        public IEnumerable<Category> GetActiveCategories()
+        {
+            return _categoryRepository.GetActiveCategories();
+        }
     }
 }

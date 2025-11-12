@@ -43,14 +43,16 @@ namespace Services
         {
             var staff = _context.Staffs
                 .Include(staff => staff.StaffNavigation)
+                    .ThenInclude(user => user.UserRoles)
+                        .ThenInclude(userRole => userRole.Role) // 👈 Load luôn Role
                 .FirstOrDefault(x => x.StaffId == staffId);
 
             if (staff == null) return null;
 
-            var roles = staff.StaffNavigation?.UserRoles
-        .Where(ur => ur.Status == "Active")
-        .Select(ur => ur.Role.RoleName)
-        .ToList();
+            var roles = staff.StaffNavigation?.UserRoles?
+                .Where(ur => ur.Status == "Active")
+                .Select(ur => ur.Role.RoleName)
+                .ToList();
 
             return new StaffDTO
             {
@@ -62,9 +64,10 @@ namespace Services
                 AvatarUrl = staff.StaffNavigation?.Avatar,
                 Email = staff.StaffNavigation?.Email,
                 Username = staff.StaffNavigation?.Username,
-                Roles = roles // Thêm property Roles: List<string>
+                Roles = roles // ✅ List<string> roles
             };
         }
+
 
         public void Add(StaffDTO staffDto)
         {

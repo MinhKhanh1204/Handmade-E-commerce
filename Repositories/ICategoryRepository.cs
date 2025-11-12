@@ -18,5 +18,6 @@ namespace Repositories
         void DeleteCategory(int id);
         bool Exists(int id);
         IEnumerable<Category> Search(string searchTerm);
+        IEnumerable<Category> GetActiveCategories();
     }
 }
